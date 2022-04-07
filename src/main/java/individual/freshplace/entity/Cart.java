@@ -9,30 +9,29 @@ import java.io.Serializable;
 @Table(name = "cart_detail")
 @IdClass(Cart.CartId.class)
 @Getter @Setter
-public class Cart extends BaseEntity{
+public class Cart extends BaseEntity {
 
     @Id
     @ManyToOne
     @JoinColumn(name = "item_seq")
-    private Item item;
+    private Item itemId;
 
     @Id
     @ManyToOne
     @JoinColumn(name = "member_seq")
-    private Member member;
+    private Member memberId;
 
     @Column(name = "item_counting")
-    private Long count;
-
+    private long count;
 
     @EqualsAndHashCode
     @NoArgsConstructor
     @AllArgsConstructor
     static class CartId implements Serializable {
 
-        private Long item;
+        private Long itemId;
 
-        private Long member;
+        private Long memberId;
 
     }
 

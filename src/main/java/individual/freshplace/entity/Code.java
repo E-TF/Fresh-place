@@ -25,7 +25,6 @@ public class Code {
     @Column(name = "code_name")
     private String name;
 
-
     @EqualsAndHashCode
     @NoArgsConstructor
     @AllArgsConstructor

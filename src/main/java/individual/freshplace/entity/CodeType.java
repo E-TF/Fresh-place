@@ -17,12 +17,9 @@ public class CodeType {
     @Column(name = "code_type_name")
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_code_type")
     private CodeType parent;
-
-    @OneToMany(mappedBy = "parent")
-    private List<CodeType> child = new ArrayList<>();
 
     @OneToMany(mappedBy = "codeType")
     private List<Code> codeList = new ArrayList<>();

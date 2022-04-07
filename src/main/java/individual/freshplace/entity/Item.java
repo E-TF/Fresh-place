@@ -3,6 +3,7 @@ package individual.freshplace.entity;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -13,8 +14,7 @@ public class Item {
     @Column(name = "item_seq")
     private Long id;
 
-    @Column(name = "item_name")
-    private String name;
+    private String itemName;
 
     private String description;
 
@@ -29,9 +29,7 @@ public class Item {
 
     private Long salesQuantity;
 
-    @Temporal(TemporalType.DATE)
-    private Date expirationDate;
+    private LocalDate expirationDate;
 
-    @Column(name = "category_code")
-    private String category;
+    private String categoryCode;
 }

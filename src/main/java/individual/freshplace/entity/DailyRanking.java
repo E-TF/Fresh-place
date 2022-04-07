@@ -12,25 +12,24 @@ import java.time.LocalDateTime;
 public class DailyRanking {
 
     @Id
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_seq")
-    private Item item;
+    private Item itemId;
 
     @Id
     @Column(name = "date_by_day")
-    private LocalDateTime day;
+    private LocalDateTime date;
 
     private Long ranking;
-
 
     @EqualsAndHashCode
     @NoArgsConstructor
     @AllArgsConstructor
     static class RankingId implements Serializable {
 
-        private Long item;
+        private Long itemId;
 
-        private LocalDateTime day;
+        private LocalDateTime date;
 
     }
 

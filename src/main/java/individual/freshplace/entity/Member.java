@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Member extends BaseEntity{
+public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_seq")
@@ -21,8 +21,7 @@ public class Member extends BaseEntity{
 
     private String password;
 
-    @Column(name = "member_name")
-    private String name;
+    private String memberName;
 
     private String phNum;
 

@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -28,15 +28,17 @@ public class Member extends BaseEntity {
     private String email;
 
     @Column(name = "member_birth")
-    private LocalDate birth;
+    @Temporal(TemporalType.DATE)
+    private Date birth;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grade_code")
-    private DiscountByGrade gradeCode;
+    private DiscountByGrade grade;
 
     @OneToMany(mappedBy = "member")
     private List<DeliverAddress> addressList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<Order> orderList = new ArrayList<>();
+
 }

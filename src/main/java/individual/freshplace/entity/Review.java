@@ -25,4 +25,5 @@ public class Review extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_detail_seq")
     private OrderDetail orderDetail;
+
 }

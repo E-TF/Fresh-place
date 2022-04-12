@@ -23,4 +23,5 @@ public class CodeType {
 
     @OneToMany(mappedBy = "codeType")
     private List<Code> codeList = new ArrayList<>();
+
 }

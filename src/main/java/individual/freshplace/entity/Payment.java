@@ -15,15 +15,14 @@ public class Payment extends BaseEntity {
     private Long id;
 
     @Column(name = "payment_status_code")
-    private String status;
+    private String statusCode;
 
     @Column(name = "payment_method_code")
-    private String method;
+    private String methodCode;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_seq")
     private Order order;
 
-    @Column(name = "payment_date")
-    private LocalDateTime date;
+    private LocalDateTime paymentDate;
 }

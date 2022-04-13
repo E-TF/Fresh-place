@@ -11,11 +11,9 @@ import java.util.List;
 public class CodeType {
 
     @Id
-    @Column(name = "code_type")
-    private String id;
+    private String codeType;
 
-    @Column(name = "code_type_name")
-    private String name;
+    private String codeTypeName;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_code_type")

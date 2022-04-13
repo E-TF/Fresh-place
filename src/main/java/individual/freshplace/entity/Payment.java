@@ -11,8 +11,7 @@ import java.time.LocalDateTime;
 public class Payment extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "payment_seq")
-    private Long id;
+    private Long paymentSeq;
 
     @Column(name = "payment_status_code")
     private String statusCode;

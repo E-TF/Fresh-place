@@ -9,12 +9,11 @@ import javax.persistence.*;
 public class DailyRanking extends BaseEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ranking_seq")
-    private Long id;
+    private Long rankingSeq;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_seq")
     private Item item;
 
-    private Long ranking;
+    private long ranking;
 }

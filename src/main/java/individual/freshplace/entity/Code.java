@@ -9,13 +9,11 @@ import javax.persistence.*;
 public class Code {
 
     @Id
-    @Column(name = "code_value")
-    private String id;
+    private String codeValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code_type")
     private CodeType codeType;
 
-    @Column(name = "code_name")
-    private String name;
+    private String codeName;
 }

@@ -13,11 +13,9 @@ import java.util.List;
 public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_seq")
-    private Long id;
+    private Long memberSeq;
 
-    @Column(name = "member_id")
-    private String loginId;
+    private String memberId;
 
     private String password;
 
@@ -27,8 +25,7 @@ public class Member extends BaseEntity {
 
     private String email;
 
-    @Column(name = "member_birth")
-    private LocalDate birth;
+    private LocalDate memberBirth;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grade_code")

@@ -10,8 +10,7 @@ import java.time.LocalDate;
 public class Item {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_seq")
-    private Long id;
+    private Long itemSeq;
 
     private String itemName;
 
@@ -20,13 +19,13 @@ public class Item {
     @Column(columnDefinition = "text")
     private String image;
 
-    private Long weight;
+    private long weight;
 
     private String origin;
 
-    private Long inventory;
+    private long inventory;
 
-    private Long salesQuantity;
+    private long salesQuantity;
 
     private LocalDate expirationDate;
 

@@ -10,8 +10,7 @@ import javax.persistence.*;
 public class Cart extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cart_seq")
-    private Long id;
+    private Long cartSeq;
 
     @ManyToOne
     @JoinColumn(name = "item_seq")
@@ -21,6 +20,5 @@ public class Cart extends BaseEntity {
     @JoinColumn(name = "member_seq")
     private Member member;
 
-    @Column(name = "item_counting")
-    private long count;
+    private long itemCounting;
 }

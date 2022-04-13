@@ -10,17 +10,16 @@ import javax.persistence.*;
 public class Review extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_seq")
-    private Long id;
+    private Long reviewSeq;
 
     private String title;
 
     @Column(columnDefinition = "text")
     private String contents;
 
-    private Long views;
+    private long views;
 
-    private Long rating;
+    private long rating;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_detail_seq")

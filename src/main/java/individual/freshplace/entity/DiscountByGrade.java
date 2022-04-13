@@ -12,10 +12,10 @@ public class DiscountByGrade {
 
     @Id
     @Column(name = "grade_code")
-    private String id;
+    private String code;
 
     @Column(name = "grade_name")
     private String name;
 
-    private Long discountRate;
+    private long discountRate;
 }

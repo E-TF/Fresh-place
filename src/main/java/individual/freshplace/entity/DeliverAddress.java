@@ -10,8 +10,7 @@ import javax.persistence.*;
 public class DeliverAddress extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "deliver_add_seq")
-    private Long id;
+    private Long deliverSeq;
 
     @Embedded
     private Address address;

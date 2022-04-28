@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DiscountByGradeRepository extends JpaRepository<DiscountByGrade, String> {
 
-    public DiscountByGrade getById(String gradeCode);
+    public DiscountByGrade findByGradeCode(String gradeCode);
 }

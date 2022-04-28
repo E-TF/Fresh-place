@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class RestApiController {
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private MemberRepository memberRepository;
-    private DiscountByGradeRepository discountByGradeRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MemberRepository memberRepository;
+    private final DiscountByGradeRepository discountByGradeRepository;
 
-    @PostMapping("/join")
+    @PostMapping("/public/join")
     public String join(@RequestBody Member member) {
 
-        DiscountByGrade gradeCode = discountByGradeRepository.getById("01");
+        DiscountByGrade gradeCode = discountByGradeRepository.findByGradeCode("01");
 
         member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
         member.setGradeCode(gradeCode);
@@ -32,10 +32,7 @@ public class RestApiController {
 
     @GetMapping("/member")
     public String list() {
-
-        System.out.println("리스트");
-        return "<h1>list</h1>";
+        System.out.println("라스트");
+        return "리스트";
     }
-
-
 }

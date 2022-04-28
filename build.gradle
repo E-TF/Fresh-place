@@ -30,12 +30,12 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-
-	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
-	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
-	implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
-
 	implementation 'com.auth0:java-jwt:3.19.1'
+
+//	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+//	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+//	implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+//
 }
 
 tasks.named('test') {

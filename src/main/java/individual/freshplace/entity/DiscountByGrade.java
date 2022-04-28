@@ -2,7 +2,6 @@ package individual.freshplace.entity;
 
 import lombok.Getter;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -11,11 +10,9 @@ import javax.persistence.Id;
 public class DiscountByGrade {
 
     @Id
-    @Column(name = "grade_code")
-    private String code;
+    private String gradeCode;
 
-    @Column(name = "grade_name")
-    private String name;
+    private String gradeName;
 
     private long discountRate;
 }

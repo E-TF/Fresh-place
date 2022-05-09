@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class PrincipalDetailsService implements UserDetailsService {
@@ -16,10 +18,8 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
-        System.out.println("PrincipleDetailsService 의 loadUserByUsername() ");
-        Member memberEntity = memberRepository.findByMemberId(memberId);
-
-        System.out.println("memberEntity:" + memberEntity.getPassword());
-        return new PrincipalDetails(memberEntity);
+        Optional<Member> memberEntity = memberRepository.findByMemberId(memberId);
+        Member member = memberEntity.orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return new PrincipalDetails(member.getMemberId(), member.getPassword());
     }
 }

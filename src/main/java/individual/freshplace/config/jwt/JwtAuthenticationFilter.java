@@ -7,6 +7,8 @@ import individual.freshplace.config.JwtProperties;
 import individual.freshplace.config.auth.PrincipalDetails;
 import individual.freshplace.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,11 +21,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final JwtProperties jwtProperties;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -39,7 +44,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDto.getMemberId(),loginDto.getPassword());
         Authentication authentication = authenticationManager.authenticate(token);
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-        System.out.println(principal.getMember().getMemberName());
+        System.out.println(principal.getUsername());
 
         return authentication;
     }
@@ -47,16 +52,32 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
-        System.out.println("인증완료");
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 
-        String jwtToken = JWT.create()
+        String jwtToken = createToken(principalDetails);
+        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+        Map<String, Object> json = new LinkedHashMap<>();
+
+        json.put("code", HttpStatus.UNAUTHORIZED.value());
+        json.put("error", failed.getMessage());
+
+        new ObjectMapper().writeValue(response.getOutputStream(), json);
+    }
+
+    private String createToken(PrincipalDetails principalDetails) {
+
+        return  JWT.create()
                 .withSubject(principalDetails.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
-                .withClaim("id", principalDetails.getMember().getMemberId())
-                .withClaim("username", principalDetails.getMember().getMemberName())
-                .sign(Algorithm.HMAC512(JwtProperties.SECRET_KEY));
-
-        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
+                .withClaim("id", principalDetails.getUsername())
+                .sign(Algorithm.HMAC512(jwtProperties.getSecretKey()));
     }
 }

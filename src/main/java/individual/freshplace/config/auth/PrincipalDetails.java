@@ -1,34 +1,34 @@
 package individual.freshplace.config.auth;
 
-import individual.freshplace.entity.Member;
-import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 
-@Data
 public class PrincipalDetails implements UserDetails {
 
-    private Member member;
+    private String memberId;
+    private String password;
 
-    public PrincipalDetails(Member member) {
-        this.member = member;
+    public PrincipalDetails(String memberId, String password) {
+        this.memberId = memberId;
+        this.password = password;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.EMPTY_LIST;
     }
 
     @Override
     public String getPassword() {
-        return member.getPassword();
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return member.getMemberId();
+        return this.memberId;
     }
 
     @Override

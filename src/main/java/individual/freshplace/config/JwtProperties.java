@@ -1,10 +1,22 @@
 package individual.freshplace.config;
 
-public interface JwtProperties {
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-    String SECRET_KEY = "c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmlu" +
-            "ZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK";
-    int EXPIRATION_TIME = 1000 * 60 * 60;
-    String TOKEN_PREFIX = "Bearer ";
-    String HEADER_STRING = "Authorization";
+@Component
+public class JwtProperties {
+
+    private String secret;
+
+    public JwtProperties(@Value("${jwt.secret}") String secret) {
+        this.secret = secret;
+    }
+
+    public String getSecretKey() {
+        return this.secret;
+    }
+
+    public static final int EXPIRATION_TIME = 1000 * 60 * 60;
+    public static final String TOKEN_PREFIX = "Bearer ";
+    public static final String HEADER_STRING = "Authorization";
 }

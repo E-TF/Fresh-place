@@ -1,7 +1,10 @@
 package individual.freshplace.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+
+import java.time.Duration;
 
 @Component
 public class JwtProperties {
@@ -16,7 +19,7 @@ public class JwtProperties {
         return this.secret;
     }
 
-    public static final int EXPIRATION_TIME = 1000 * 60 * 60;
+    public static final long EXPIRATION_TIME_TO_MillSECOND = Duration.ofHours(1).toMillis();
     public static final String TOKEN_PREFIX = "Bearer ";
-    public static final String HEADER_STRING = "Authorization";
+    public static final String HEADER_STRING = HttpHeaders.AUTHORIZATION;
 }

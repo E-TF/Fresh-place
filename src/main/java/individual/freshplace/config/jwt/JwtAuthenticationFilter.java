@@ -7,6 +7,7 @@ import individual.freshplace.config.JwtProperties;
 import individual.freshplace.config.auth.PrincipalDetails;
 import individual.freshplace.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -41,12 +43,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             e.printStackTrace();
         }
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDto.getMemberId(),loginDto.getPassword());
-        Authentication authentication = authenticationManager.authenticate(token);
-        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-        System.out.println(principal.getUsername());
-
-        return authentication;
+        return getLoginAuthentication(request, loginDto);
     }
 
     @Override
@@ -64,19 +61,30 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        Map<String, Object> json = new LinkedHashMap<>();
+        Map<String, Object> failInfo = new LinkedHashMap<>();
 
-        json.put("code", HttpStatus.UNAUTHORIZED.value());
-        json.put("error", failed.getMessage());
+        failInfo.put("code", HttpStatus.UNAUTHORIZED.value());
+        failInfo.put("error", failed.getMessage());
 
-        new ObjectMapper().writeValue(response.getOutputStream(), json);
+        new ObjectMapper().writeValue(response.getOutputStream(), failInfo);
+    }
+
+    private Authentication getLoginAuthentication(HttpServletRequest request, LoginDto loginDto) {
+
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDto.getMemberId(),loginDto.getPassword());
+        Authentication authentication = authenticationManager.authenticate(token);
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        log.info("로그인 한 사용자는 " + principal.getUsername() + "입니다.");
+
+        return authentication;
+
     }
 
     private String createToken(PrincipalDetails principalDetails) {
 
         return  JWT.create()
                 .withSubject(principalDetails.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
+                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME_TO_MillSECOND))
                 .withClaim("id", principalDetails.getUsername())
                 .sign(Algorithm.HMAC512(jwtProperties.getSecretKey()));
     }

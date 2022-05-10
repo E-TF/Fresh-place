@@ -6,7 +6,6 @@ import individual.freshplace.repository.DiscountByGradeRepository;
 import individual.freshplace.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,10 +27,5 @@ public class JwtAuthenticationController {
         member.setGradeCode(gradeCode);
         memberRepository.save(member);
         return "회원가입완료";
-    }
-
-    @GetMapping("/member")
-    public String list() {
-        return "리스트";
     }
 }

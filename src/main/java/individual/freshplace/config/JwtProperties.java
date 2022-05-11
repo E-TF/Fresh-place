@@ -19,7 +19,7 @@ public class JwtProperties {
         return this.secret;
     }
 
-    public static final long EXPIRATION_TIME_TO_MillSECOND = Duration.ofHours(1).toMillis();
+    public static final Duration EXPIRATION_TIME_TO_HOURS = Duration.ofHours(1);
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = HttpHeaders.AUTHORIZATION;
 }

@@ -19,9 +19,10 @@ public class MemberService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
-    public void signup(SignUpDto signUpDto) {
+    public void signup(SignUpDto signUpDto) throws RuntimeException {
+
         if (memberRepository.findByMemberId(signUpDto.getMemberId()).orElse(null) != null) {
-            throw new NullPointerException("이미 가입된 회원입니다.");
+            throw new RuntimeException("이미 가입된 회원입니다.");
         }
 
         DiscountByGrade grade = discountByGradeRepository.getById("01");
@@ -39,5 +40,4 @@ public class MemberService {
         memberRepository.save(member);
 
     }
-
 }

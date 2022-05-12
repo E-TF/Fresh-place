@@ -22,4 +22,5 @@ public class JwtProperties {
     public static final Duration EXPIRATION_TIME_TO_HOURS = Duration.ofHours(1);
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = HttpHeaders.AUTHORIZATION;
+    public static final String EXCEPTION = "exception";
 }

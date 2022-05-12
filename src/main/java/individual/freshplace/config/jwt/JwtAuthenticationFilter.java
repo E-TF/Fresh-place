@@ -22,8 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -43,7 +41,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             e.printStackTrace();
         }
 
-        return getLoginAuthentication(request, loginDto);
+        return getLoginAuthentication(loginDto);
     }
 
     @Override
@@ -59,17 +57,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-        Map<String, Object> failInfo = new LinkedHashMap<>();
-
-        failInfo.put("code", HttpStatus.UNAUTHORIZED.value());
-        failInfo.put("error", failed.getMessage());
-
-        new ObjectMapper().writeValue(response.getOutputStream(), failInfo);
+        response.getWriter().println("로그인 실패");
     }
 
-    private Authentication getLoginAuthentication(HttpServletRequest request, LoginDto loginDto) {
+    private Authentication getLoginAuthentication(LoginDto loginDto) {
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDto.getMemberId(),loginDto.getPassword());
         Authentication authentication = authenticationManager.authenticate(token);

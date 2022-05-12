@@ -1,7 +1,9 @@
 package individual.freshplace.entity;
 
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -9,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,4 +39,15 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member")
     private List<Order> orderList = new ArrayList<>();
+
+    @Builder
+    public Member(String memberId, String password, String memberName, String phNum, String email, LocalDate memberBirth, DiscountByGrade gradeCode) {
+        this.memberId = memberId;
+        this.password = password;
+        this.memberName = memberName;
+        this.phNum = phNum;
+        this.email = email;
+        this.memberBirth = memberBirth;
+        this.gradeCode = gradeCode;
+    }
 }

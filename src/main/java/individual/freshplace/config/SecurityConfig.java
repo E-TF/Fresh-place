@@ -41,7 +41,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:8083");
-        config.addAllowedHeader("*");
         config.addAllowedMethod(String.valueOf(Arrays.asList(HttpMethod.GET, HttpMethod.POST)));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -74,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .mvcMatchers(HttpMethod.POST, "/public/join").permitAll()
+                .mvcMatchers(HttpMethod.POST, "/public/signup").permitAll()
                 .anyRequest().authenticated();
 
     }

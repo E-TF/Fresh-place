@@ -8,6 +8,7 @@ import individual.freshplace.config.JwtProperties;
 import individual.freshplace.config.auth.PrincipalDetails;
 import individual.freshplace.entity.Member;
 import individual.freshplace.repository.MemberRepository;
+import individual.freshplace.util.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,50 +40,53 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         String changeToken = getTokenInfo(request);
-        String memberId = validateToken(request, changeToken);
+        String memberId = decryptToken(request, changeToken);
 
         try {
             Authentication authentication = getAuthentication(memberId);
-
-            if (authentication != null) {
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }catch (NoSuchElementException e) {
-            log.info("토큰 검증에 실패하였습니다.");
+            log.error("권한이 거부되었습니다.");
         }finally {
             chain.doFilter(request, response);
         }
+
     }
 
     private String getTokenInfo(HttpServletRequest httpServletRequest) {
 
         String tokenValue = httpServletRequest.getHeader(JwtProperties.HEADER_STRING);
         if (StringUtils.hasLength(tokenValue) && tokenValue.startsWith(JwtProperties.TOKEN_PREFIX)) {
-            return tokenValue.replace(JwtProperties.TOKEN_PREFIX, "");
+            tokenValue = tokenValue.replace(JwtProperties.TOKEN_PREFIX, "");
         }
 
-        return null;
+        return tokenValue;
     }
 
-    private Authentication getAuthentication(String memberId) throws NoSuchElementException{
-
-        Member member = memberRepository.findByMemberId(memberId).get();
-
-        PrincipalDetails principalDetails = new PrincipalDetails(member.getMemberId(), member.getPassword());
-        return new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
-    }
-
-    private String validateToken(HttpServletRequest request, String changeToken) {
+    private String decryptToken(HttpServletRequest request, String changeToken) {
 
         String memberId = null;
 
         try {
             memberId = JWT.require(Algorithm.HMAC512(jwtProperties.getSecretKey()))
                     .build().verify(changeToken).getClaim("id").asString();
-        }catch (SignatureVerificationException | TokenExpiredException | NullPointerException e) {
-            request.setAttribute(JwtProperties.EXCEPTION, e.getClass().getSimpleName());
+        } catch (TokenExpiredException e) {
+            request.setAttribute(JwtProperties.EXCEPTION, ErrorCode.EXPIRED_TOKEN.name());
+        } catch (SignatureVerificationException e) {
+            request.setAttribute(JwtProperties.EXCEPTION, ErrorCode.INVALID_TOKEN.name());
+        } catch (NullPointerException e) {
+            request.setAttribute(JwtProperties.EXCEPTION, ErrorCode.NON_HEADER_AUTHORIZATION.name());
         }
 
         return memberId;
     }
+
+    private Authentication getAuthentication(String memberId) throws NoSuchElementException {
+
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow();
+
+        PrincipalDetails principalDetails = new PrincipalDetails(member.getMemberId(), member.getPassword());
+        return new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
+    }
+
 }

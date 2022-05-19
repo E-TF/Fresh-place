@@ -9,7 +9,7 @@ import java.time.Duration;
 @Component
 public class JwtProperties {
 
-    private String secret;
+    private final String secret;
 
     public JwtProperties(@Value("${jwt.secret}") String secret) {
         this.secret = secret;
@@ -19,7 +19,7 @@ public class JwtProperties {
         return this.secret;
     }
 
-    public static final Duration EXPIRATION_TIME_TO_HOURS = Duration.ofHours(1);
+    public static final Duration EXPIRATION_TIME = Duration.ofHours(1);
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = HttpHeaders.AUTHORIZATION;
     public static final String EXCEPTION = "exception";

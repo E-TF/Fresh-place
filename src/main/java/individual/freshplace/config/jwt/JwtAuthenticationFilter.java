@@ -5,10 +5,12 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import individual.freshplace.config.JwtProperties;
 import individual.freshplace.config.auth.PrincipalDetails;
-import individual.freshplace.dto.LoginDto;
+import individual.freshplace.dto.LoginRequest;
+import individual.freshplace.util.ErrorCode;
+import individual.freshplace.util.ReadableRequestBodyWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.json.simple.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Slf4j
@@ -29,53 +32,64 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final AuthenticationManager authenticationManager;
     private final JwtProperties jwtProperties;
+    private final ObjectMapper objectMapper;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-        ObjectMapper om = new ObjectMapper();
-        LoginDto loginDto = null;
+        LoginRequest loginDto = null;
         try {
-            loginDto = om.readValue(request.getInputStream(), LoginDto.class);
+            ReadableRequestBodyWrapper readableRequestBodyWrapper = new ReadableRequestBodyWrapper(request);
+            loginDto = objectMapper.readValue(readableRequestBodyWrapper.getInputStream(), LoginRequest.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("로그인 요청 값 분석 실패");
         }
 
         return getLoginAuthentication(loginDto);
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws ServletException, IOException {
 
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
+
+        log.info("로그인 한 사용자는 " + principalDetails.getUsername() + "입니다.");
 
         String jwtToken = createToken(principalDetails);
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
 
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.getWriter().println("로그인 실패");
+        ErrorCode failedLogin = ErrorCode.FAILED_LOGIN;
+
+        response.setStatus(failedLogin.getHttpStatus().value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("date", LocalDateTime.now());
+        jsonObject.put("status", failedLogin.getHttpStatus().value());
+        jsonObject.put("error", failedLogin.getHttpStatus().name());
+        jsonObject.put("code", failedLogin.name());
+        jsonObject.put("message", failedLogin.getMessage());
+
+        response.getWriter().println(jsonObject);
     }
 
-    private Authentication getLoginAuthentication(LoginDto loginDto) {
+    private Authentication getLoginAuthentication(LoginRequest loginRequest) {
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDto.getMemberId(),loginDto.getPassword());
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getMemberId(),loginRequest.getPassword());
         Authentication authentication = authenticationManager.authenticate(token);
-        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-        log.info("로그인 한 사용자는 " + principal.getUsername() + "입니다.");
 
         return authentication;
-
     }
 
     private String createToken(PrincipalDetails principalDetails) {
 
         return  JWT.create()
                 .withSubject(principalDetails.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME_TO_HOURS.toMillis()))
+                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME.toMillis()))
                 .withClaim("id", principalDetails.getUsername())
                 .sign(Algorithm.HMAC512(jwtProperties.getSecretKey()));
     }

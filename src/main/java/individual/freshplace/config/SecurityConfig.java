@@ -1,5 +1,6 @@
 package individual.freshplace.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import individual.freshplace.config.jwt.JwtAuthenticationEntryPoint;
 import individual.freshplace.config.jwt.JwtAuthenticationFilter;
 import individual.freshplace.config.jwt.JwtAuthorizationFilter;
@@ -28,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtProperties jwtProperties;
     private final MemberRepository memberRepository;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -41,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:8083");
-        config.addAllowedMethod(String.valueOf(Arrays.asList(HttpMethod.GET, HttpMethod.POST)));
+        config.addAllowedMethod(String.valueOf(Arrays.asList(HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.PATCH, HttpMethod.OPTIONS)));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
@@ -65,16 +67,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .cors().configurationSource(corsConfigurationSource())
 
-                .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtProperties))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), memberRepository, jwtProperties))
-                .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
 
                 .and()
                 .authorizeRequests()
                 .mvcMatchers(HttpMethod.POST, "/public/signup").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
 
+                .and()
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtProperties, objectMapper))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), memberRepository, jwtProperties))
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint);
     }
 }

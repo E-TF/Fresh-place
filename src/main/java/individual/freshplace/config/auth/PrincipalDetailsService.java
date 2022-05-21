@@ -13,10 +13,11 @@ import org.springframework.stereotype.Service;
 public class PrincipalDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private static UsernameNotFoundException exception = new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
 
     @Override
     public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
-        Member memberEntity = memberRepository.findByMemberId(memberId).orElseThrow(() -> new UsernameNotFoundException(""));
+        Member memberEntity = memberRepository.findByMemberId(memberId).orElseThrow(() -> exception);
         return new PrincipalDetails(memberEntity.getMemberId(), memberEntity.getPassword());
     }
 }

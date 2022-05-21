@@ -8,6 +8,7 @@ import individual.freshplace.repository.MemberRepository;
 import individual.freshplace.util.ErrorCode;
 import individual.freshplace.util.constant.GradeCode;
 import individual.freshplace.util.exception.DuplicationException;
+import individual.freshplace.util.exception.WrongValueException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,17 +27,18 @@ public class MemberService {
     @Transactional
     public void signup(SignupRequest signupRequest) {
 
-        if (memberRepository.findByMemberId(signupRequest.getMemberId()).orElse(null) != null) {
-            throw new DuplicationException(ErrorCode.DUPLICATE_PREVENTION);
+        if (memberRepository.existsByMemberId(signupRequest.getMemberId())) {
+            throw new DuplicationException(ErrorCode.ID_DUPLICATE_PREVENTION, signupRequest.getMemberId());
         }
 
-        DiscountByGrade grade = discountByGradeRepository.getById(GradeCode.CODE_GRADE_GENERAL);
+        DiscountByGrade grade = discountByGradeRepository.findById(GradeCode.CODE_GRADE_GENERAL)
+                .orElseThrow(() -> new WrongValueException(ErrorCode.BAD_CODE, GradeCode.CODE_GRADE_GENERAL));
 
         Member member = Member.builder()
                 .memberId(signupRequest.getMemberId())
                 .password(bCryptPasswordEncoder.encode(signupRequest.getPassword()))
                 .memberName(signupRequest.getMemberName())
-                .phNum(signupRequest.getPhNum())
+                .phoneNumber(signupRequest.getPhoneNumber())
                 .email(signupRequest.getEmail())
                 .memberBirth(signupRequest.getMemberBirth())
                 .gradeCode(grade)

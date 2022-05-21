@@ -8,4 +8,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class DuplicationException extends RuntimeException {
     private final ErrorCode errorCode;
+    private final String value;
 }

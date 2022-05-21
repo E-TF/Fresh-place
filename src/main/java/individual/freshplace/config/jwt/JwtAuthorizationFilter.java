@@ -45,9 +45,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         try {
             Authentication authentication = getAuthentication(memberId);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        }catch (NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
             log.error("권한이 거부되었습니다.");
-        }finally {
+        } finally {
             chain.doFilter(request, response);
         }
 
@@ -88,5 +88,4 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         PrincipalDetails principalDetails = new PrincipalDetails(member.getMemberId(), member.getPassword());
         return new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
     }
-
 }

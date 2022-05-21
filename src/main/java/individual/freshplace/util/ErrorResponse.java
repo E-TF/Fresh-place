@@ -15,14 +15,14 @@ public class ErrorResponse {
     private String code;
     private String message;
 
-    public static ResponseEntity<ErrorResponse> errorResponse(ErrorCode errorCode) {
+    public static ResponseEntity<ErrorResponse> errorResponse(ErrorCode errorCode, String value) {
         return ResponseEntity.status(errorCode.getHttpStatus())
                 .body(ErrorResponse.builder()
                         .date(LocalDateTime.now())
                         .status(errorCode.getHttpStatus().value())
                         .error(errorCode.getHttpStatus().name())
                         .code(errorCode.name())
-                        .message(errorCode.getMessage())
+                        .message(value + "는(은) " + errorCode.getMessage())
                         .build()
                 );
     }

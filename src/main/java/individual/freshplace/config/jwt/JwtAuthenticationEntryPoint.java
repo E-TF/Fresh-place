@@ -24,9 +24,9 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         if (error.equals(ErrorCode.EXPIRED_TOKEN.name())) {
             responseError(response, ErrorCode.EXPIRED_TOKEN);
-        }else if (error.equals(ErrorCode.INVALID_TOKEN.name())) {
+        } else if (error.equals(ErrorCode.INVALID_TOKEN.name())) {
             responseError(response, ErrorCode.INVALID_TOKEN);
-        }else if (error.equals(ErrorCode.NON_HEADER_AUTHORIZATION.name())) {
+        } else if (error.equals(ErrorCode.NON_HEADER_AUTHORIZATION.name())) {
             responseError(response, ErrorCode.NON_HEADER_AUTHORIZATION);
         }
     }

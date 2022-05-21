@@ -24,7 +24,7 @@ public class Member extends BaseEntity {
 
     private String memberName;
 
-    private String phNum;
+    private String phoneNumber;
 
     private String email;
 
@@ -41,11 +41,11 @@ public class Member extends BaseEntity {
     private List<Order> orderList = new ArrayList<>();
 
     @Builder
-    public Member(String memberId, String password, String memberName, String phNum, String email, LocalDate memberBirth, DiscountByGrade gradeCode) {
+    public Member(String memberId, String password, String memberName, String phoneNumber, String email, LocalDate memberBirth, DiscountByGrade gradeCode) {
         this.memberId = memberId;
         this.password = password;
         this.memberName = memberName;
-        this.phNum = phNum;
+        this.phoneNumber = phoneNumber;
         this.email = email;
         this.memberBirth = memberBirth;
         this.gradeCode = gradeCode;

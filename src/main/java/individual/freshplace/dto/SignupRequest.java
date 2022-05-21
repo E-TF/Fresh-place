@@ -22,7 +22,7 @@ public class SignupRequest {
     private String memberName;
 
     @NotBlank
-    private String phNum;
+    private String phoneNumber;
 
     @Email
     private String email;

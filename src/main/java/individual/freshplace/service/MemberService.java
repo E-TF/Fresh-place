@@ -23,6 +23,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final DiscountByGradeRepository discountByGradeRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private static WrongValueException wrongValueException = new WrongValueException(ErrorCode.BAD_CODE, GradeCode.CODE_GRADE_GENERAL);
 
     @Transactional
     public void signup(SignupRequest signupRequest) {
@@ -32,7 +33,7 @@ public class MemberService {
         }
 
         DiscountByGrade grade = discountByGradeRepository.findById(GradeCode.CODE_GRADE_GENERAL)
-                .orElseThrow(() -> new WrongValueException(ErrorCode.BAD_CODE, GradeCode.CODE_GRADE_GENERAL));
+                .orElseThrow(() -> wrongValueException);
 
         Member member = Member.builder()
                 .memberId(signupRequest.getMemberId())

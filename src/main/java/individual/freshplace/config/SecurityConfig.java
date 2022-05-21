@@ -17,7 +17,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -33,7 +32,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final MemberRepository memberRepository;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final ObjectMapper objectMapper;
-    private final Origin origin;
+
+    @Value("${cors.alloworigin}")
+    private String localOrigin;
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer Properties() {
@@ -53,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        config.addAllowedOrigin(origin.localOrigin);
+        config.addAllowedOrigin(localOrigin);
         config.addAllowedMethod(String.valueOf(Arrays.asList(HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.PATCH, HttpMethod.OPTIONS)));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -89,15 +90,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), memberRepository, jwtProperties))
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint);
-    }
-
-    @Component
-    public static class Origin {
-
-        private final String localOrigin;
-
-        public Origin(@Value("${cors.alloworigin}") String localOrigin) {
-            this.localOrigin = localOrigin;
-        }
     }
 }

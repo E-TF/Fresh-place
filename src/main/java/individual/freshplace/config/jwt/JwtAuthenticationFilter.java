@@ -90,7 +90,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         return  JWT.create()
                 .withSubject(principalDetails.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME.toMillis()))
-                .withClaim("id", principalDetails.getUsername())
-                .sign(Algorithm.HMAC512(jwtProperties.getSecretKey()));
+                .withClaim(jwtProperties.getClaim(), principalDetails.getUsername())
+                .sign(Algorithm.HMAC512(jwtProperties.getSecret()));
     }
 }

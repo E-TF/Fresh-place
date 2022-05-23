@@ -9,6 +9,7 @@ import individual.freshplace.config.auth.PrincipalDetails;
 import individual.freshplace.entity.Member;
 import individual.freshplace.repository.MemberRepository;
 import individual.freshplace.util.ErrorCode;
+import individual.freshplace.util.exception.AuthenticationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +23,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.NoSuchElementException;
 
 @Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
@@ -40,13 +40,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         String changeToken = getTokenInfo(request);
-        String memberId = decryptToken(request, changeToken);
 
         try {
+            String memberId = decryptToken(request, changeToken);
             Authentication authentication = getAuthentication(memberId);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (NoSuchElementException e) {
-            log.error("권한이 거부되었습니다.");
+        } catch (AuthenticationException e) {
+            log.error("권한이 거부되었습니다");
         } finally {
             chain.doFilter(request, response);
         }
@@ -65,23 +65,22 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private String decryptToken(HttpServletRequest request, String changeToken) {
 
-        String memberId = null;
-
         try {
-            memberId = JWT.require(Algorithm.HMAC512(jwtProperties.getSecretKey()))
-                    .build().verify(changeToken).getClaim("id").asString();
+            return JWT.require(Algorithm.HMAC512(jwtProperties.getSecret()))
+                    .build().verify(changeToken).getClaim(jwtProperties.getClaim()).asString();
         } catch (TokenExpiredException e) {
             request.setAttribute(JwtProperties.EXCEPTION, ErrorCode.EXPIRED_TOKEN.name());
+            throw new AuthenticationException();
         } catch (SignatureVerificationException e) {
             request.setAttribute(JwtProperties.EXCEPTION, ErrorCode.INVALID_TOKEN.name());
+            throw new AuthenticationException();
         } catch (NullPointerException e) {
             request.setAttribute(JwtProperties.EXCEPTION, ErrorCode.NON_HEADER_AUTHORIZATION.name());
+            throw new AuthenticationException();
         }
-
-        return memberId;
     }
 
-    private Authentication getAuthentication(String memberId) throws NoSuchElementException {
+    private Authentication getAuthentication(String memberId) {
 
         Member member = memberRepository.findByMemberId(memberId).orElseThrow();
 

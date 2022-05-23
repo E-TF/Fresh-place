@@ -1,5 +1,6 @@
 package individual.freshplace.config;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -7,16 +8,16 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 
 @Component
+@Getter
 public class JwtProperties {
 
     private final String secret;
 
-    public JwtProperties(@Value("${jwt.secret}") String secret) {
-        this.secret = secret;
-    }
+    private final String claim;
 
-    public String getSecretKey() {
-        return this.secret;
+    public JwtProperties(@Value("${jwt.secret}") String secret, @Value("${jwt.claim}") String claim) {
+        this.secret = secret;
+        this.claim = claim;
     }
 
     public static final Duration EXPIRATION_TIME = Duration.ofHours(1);

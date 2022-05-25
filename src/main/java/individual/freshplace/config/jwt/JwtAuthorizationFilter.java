@@ -9,7 +9,6 @@ import individual.freshplace.config.auth.PrincipalDetails;
 import individual.freshplace.entity.Member;
 import individual.freshplace.repository.MemberRepository;
 import individual.freshplace.util.ErrorCode;
-import individual.freshplace.util.exception.AuthenticationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,16 +40,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         String changeToken = getTokenInfo(request);
 
-        try {
-            String memberId = decryptToken(request, changeToken);
+        if (validToken(request, changeToken)) {
+            String memberId = JWT.require(Algorithm.HMAC512(jwtProperties.getSecret())).build().verify(changeToken)
+                    .getClaim(jwtProperties.getClaim()).asString();
             Authentication authentication = getAuthentication(memberId);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (AuthenticationException e) {
-            log.error("권한이 거부되었습니다");
-        } finally {
-            chain.doFilter(request, response);
         }
 
+        chain.doFilter(request, response);
     }
 
     private String getTokenInfo(HttpServletRequest httpServletRequest) {
@@ -63,21 +60,20 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         return tokenValue;
     }
 
-    private String decryptToken(HttpServletRequest request, String changeToken) {
+    private boolean validToken(HttpServletRequest request, String changeToken) {
 
         try {
-            return JWT.require(Algorithm.HMAC512(jwtProperties.getSecret()))
-                    .build().verify(changeToken).getClaim(jwtProperties.getClaim()).asString();
+            JWT.require(Algorithm.HMAC512(jwtProperties.getSecret())).build().verify(changeToken);
+            return true;
         } catch (TokenExpiredException e) {
             request.setAttribute(JwtProperties.EXCEPTION, ErrorCode.EXPIRED_TOKEN.name());
-            throw new AuthenticationException();
         } catch (SignatureVerificationException e) {
             request.setAttribute(JwtProperties.EXCEPTION, ErrorCode.INVALID_TOKEN.name());
-            throw new AuthenticationException();
         } catch (NullPointerException e) {
             request.setAttribute(JwtProperties.EXCEPTION, ErrorCode.NON_HEADER_AUTHORIZATION.name());
-            throw new AuthenticationException();
         }
+
+        return false;
     }
 
     private Authentication getAuthentication(String memberId) {

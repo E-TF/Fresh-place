@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-@Getter
 @AllArgsConstructor
+@Getter
 public enum ErrorCode {
 
     USERNAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 아이디의 회원이 존재하지 않습니다."),

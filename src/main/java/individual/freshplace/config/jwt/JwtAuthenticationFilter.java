@@ -26,8 +26,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;

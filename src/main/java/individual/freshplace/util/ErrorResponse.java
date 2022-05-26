@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 
-@Getter
 @Builder
+@Getter
 public class ErrorResponse {
     private LocalDateTime date;
     private int status;

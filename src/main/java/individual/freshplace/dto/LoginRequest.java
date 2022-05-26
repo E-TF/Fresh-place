@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class LoginRequest {
 
     @NotBlank

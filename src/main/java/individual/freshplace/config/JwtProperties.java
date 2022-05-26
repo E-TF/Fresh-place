@@ -11,6 +11,11 @@ import java.time.Duration;
 @Getter
 public class JwtProperties {
 
+    public static final Duration EXPIRATION_TIME = Duration.ofHours(1);
+    public static final String TOKEN_PREFIX = "Bearer ";
+    public static final String HEADER_STRING = HttpHeaders.AUTHORIZATION;
+    public static final String EXCEPTION = "exception";
+
     private final String secret;
 
     private final String claim;
@@ -19,9 +24,4 @@ public class JwtProperties {
         this.secret = secret;
         this.claim = claim;
     }
-
-    public static final Duration EXPIRATION_TIME = Duration.ofHours(1);
-    public static final String TOKEN_PREFIX = "Bearer ";
-    public static final String HEADER_STRING = HttpHeaders.AUTHORIZATION;
-    public static final String EXCEPTION = "exception";
 }

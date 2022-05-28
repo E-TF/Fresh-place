@@ -1,6 +1,7 @@
 package individual.freshplace.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import individual.freshplace.config.auth.PrincipalDetailsService;
 import individual.freshplace.config.jwt.JwtAuthenticationEntryPoint;
 import individual.freshplace.config.jwt.JwtAuthenticationFilter;
 import individual.freshplace.config.jwt.JwtAuthorizationFilter;
@@ -29,7 +30,7 @@ import java.util.Arrays;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtProperties jwtProperties;
-    private final MemberRepository memberRepository;
+    private final PrincipalDetailsService principalDetailsService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final ObjectMapper objectMapper;
 
@@ -63,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web
                 .ignoring()
                 .antMatchers("/resources/**");
@@ -87,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtProperties, objectMapper))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), memberRepository, jwtProperties))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtProperties, principalDetailsService))
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint);
     }

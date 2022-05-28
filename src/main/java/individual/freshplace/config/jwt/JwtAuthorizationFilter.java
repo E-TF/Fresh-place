@@ -6,6 +6,7 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import individual.freshplace.config.JwtProperties;
 import individual.freshplace.config.auth.PrincipalDetails;
+import individual.freshplace.config.auth.PrincipalDetailsService;
 import individual.freshplace.entity.Member;
 import individual.freshplace.repository.MemberRepository;
 import individual.freshplace.util.ErrorCode;
@@ -14,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.util.StringUtils;
 
@@ -26,13 +28,13 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-    private final MemberRepository memberRepository;
     private final JwtProperties jwtProperties;
+    private final PrincipalDetailsService principalDetailsService;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, MemberRepository memberRepository, JwtProperties jwtProperties) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtProperties jwtProperties, PrincipalDetailsService principalDetailsService) {
         super(authenticationManager);
-        this.memberRepository = memberRepository;
         this.jwtProperties = jwtProperties;
+        this.principalDetailsService = principalDetailsService;
     }
 
     @Override
@@ -78,9 +80,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private Authentication getAuthentication(String memberId) {
 
-        Member member = memberRepository.findByMemberId(memberId).orElseThrow();
-
-        PrincipalDetails principalDetails = new PrincipalDetails(member.getMemberId(), member.getPassword());
-        return new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
+        UserDetails userDetails = principalDetailsService.loadUserByUsername(memberId);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }

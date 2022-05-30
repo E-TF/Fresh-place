@@ -1,4 +1,4 @@
-plugins {
+ plugins {
 	id 'org.springframework.boot' version '2.6.5'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
@@ -21,7 +21,6 @@ repositories {
 dependencies {
 	implementation 'mysql:mysql-connector-java'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'junit:junit:4.13.1'
@@ -29,9 +28,10 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
-	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
-	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'com.auth0:java-jwt:3.19.1'
+
+	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 }
 
 tasks.named('test') {

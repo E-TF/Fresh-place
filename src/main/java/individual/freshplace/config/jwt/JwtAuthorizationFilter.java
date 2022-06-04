@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.util.StringUtils;
 
@@ -45,7 +46,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         if (validToken(request, changeToken)) {
             String memberId = JWT.require(Algorithm.HMAC512(jwtProperties.getSecret())).build().verify(changeToken)
                     .getClaim(jwtProperties.getClaim()).asString();
-            Authentication authentication = getAuthentication(memberId);
+
+            Authentication authentication = getAuthentication(memberId, request);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
@@ -78,9 +80,15 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         return false;
     }
 
-    private Authentication getAuthentication(String memberId) {
+    private Authentication getAuthentication(String memberId, HttpServletRequest request) {
 
-        UserDetails userDetails = principalDetailsService.loadUserByUsername(memberId);
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        try {
+            UserDetails userDetails = principalDetailsService.loadUserByUsername(memberId);
+            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        } catch (UsernameNotFoundException e) {
+            request.setAttribute(JwtProperties.EXCEPTION, ErrorCode.RE_REQUEST_LOGIN.name());
+        }
+
+        return null;
     }
 }

@@ -4,8 +4,8 @@ import individual.freshplace.util.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
 public class DuplicationException extends RuntimeException {
     private final ErrorCode errorCode;
     private final String value;

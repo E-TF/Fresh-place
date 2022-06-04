@@ -5,7 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import individual.freshplace.config.JwtProperties;
 import individual.freshplace.config.auth.PrincipalDetails;
-import individual.freshplace.dto.LoginRequest;
+import individual.freshplace.dto.login.LoginRequest;
 import individual.freshplace.util.ErrorCode;
 import individual.freshplace.util.ReadableRequestBodyWrapper;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +26,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;

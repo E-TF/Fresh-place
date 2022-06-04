@@ -1,6 +1,8 @@
 package individual.freshplace.service;
 
-import individual.freshplace.dto.SignupRequest;
+import individual.freshplace.dto.profile.ProfileUpdateRequest;
+import individual.freshplace.dto.profile.ProfileResponse;
+import individual.freshplace.dto.signup.SignupRequest;
 import individual.freshplace.entity.DiscountByGrade;
 import individual.freshplace.entity.Member;
 import individual.freshplace.repository.DiscountByGradeRepository;
@@ -14,36 +16,67 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final DiscountByGradeRepository discountByGradeRepository;
-    private final static WrongValueException wrongValueException = new WrongValueException(ErrorCode.BAD_CODE, GradeCode.CODE_GRADE_GENERAL);
 
     @Transactional
-    public void signup(SignupRequest signupRequest) {
+    public void saveMember(SignupRequest signupRequest) {
 
-        if (!duplicateChecking(signupRequest)) {
-            throw new DuplicationException(ErrorCode.ID_DUPLICATE_PREVENTION, signupRequest.getMemberId());
-        }
+        duplicateIdChecking(signupRequest.getMemberId());
 
         DiscountByGrade grade = discountByGradeRepository.findById(GradeCode.CODE_GRADE_GENERAL)
-                .orElseThrow(() -> wrongValueException);
+                .orElseThrow(() -> new WrongValueException(ErrorCode.BAD_CODE, GradeCode.CODE_GRADE_GENERAL));
 
-        Member member = signupRequest.toEntity(grade);
+        Member member = signupRequest.toMember(grade);
 
         memberRepository.save(member);
     }
 
-    private boolean duplicateChecking(SignupRequest signupRequest) {
+    @Transactional(readOnly = true)
+    public ProfileResponse findMember(String memberId) {
 
-        if (memberRepository.existsByMemberId(signupRequest.getMemberId())) {
-            return false;
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new WrongValueException(ErrorCode.USERNAME_NOT_FOUND, memberId));
+
+        return new ProfileResponse(member);
+    }
+
+    @Transactional
+    public ProfileResponse updateMember(String memberId, ProfileUpdateRequest profileUpdateRequest) {
+
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new WrongValueException(ErrorCode.USERNAME_NOT_FOUND, memberId));
+
+        duplicateIdChecking(profileUpdateRequest.getMemberId());
+
+        member.updateProfile(
+                profileUpdateRequest.getMemberId(),
+                profileUpdateRequest.getMemberName(),
+                profileUpdateRequest.getPhoneNumber(),
+                profileUpdateRequest.getEmail(),
+                profileUpdateRequest.getMemberBirth());
+
+        return new ProfileResponse(member);
+    }
+
+    @Transactional
+    public void deleteMember(String memberId) {
+
+        if (!memberRepository.existsByMemberId(memberId)) {
+            throw new WrongValueException(ErrorCode.USERNAME_NOT_FOUND, memberId);
         }
 
-        return true;
+        memberRepository.deleteByMemberId(memberId);
+    }
+
+    private void duplicateIdChecking(String memberId) {
+
+        if (memberRepository.existsByMemberId(memberId)) {
+            throw new DuplicationException(ErrorCode.ID_DUPLICATE_PREVENTION, memberId);
+        }
     }
 }

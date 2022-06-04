@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
 
         String error = (String) request.getAttribute(JwtProperties.EXCEPTION);
 
@@ -35,6 +35,10 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         if (ErrorCode.NON_HEADER_AUTHORIZATION.name().equals(error)) {
             responseError(response, ErrorCode.NON_HEADER_AUTHORIZATION);
             return;
+        }
+
+        if (ErrorCode.RE_REQUEST_LOGIN.name().equals(error)) {
+            responseError(response, ErrorCode.RE_REQUEST_LOGIN);
         }
     }
 

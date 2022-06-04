@@ -10,8 +10,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Getter
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
@@ -49,5 +49,13 @@ public class Member extends BaseEntity {
         this.email = email;
         this.memberBirth = memberBirth;
         this.gradeCode = gradeCode;
+    }
+
+    public void updateProfile(String memberId, String memberName, String phoneNumber, String email, LocalDate memberBirth) {
+        this.memberId = memberId;
+        this.memberName = memberName;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.memberBirth = memberBirth;
     }
 }

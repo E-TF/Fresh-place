@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 
-@Embeddable
 @Getter
-@AllArgsConstructor
+@Embeddable
 @NoArgsConstructor
+@AllArgsConstructor
 public class Address {
 
     private String zipCode;

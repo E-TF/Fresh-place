@@ -1,13 +1,14 @@
 package individual.freshplace.dto.profile;
 
 import individual.freshplace.entity.Member;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProfileResponse {
 
     private String memberId;

@@ -33,6 +33,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class LoginTest {
 
+    private static final String TEST_ID = "testId1";
+    private static final String TEST_PW = "testPw";
+    private static final String TEST_NAME = "testName";
+    private static final String TEST_PHONE_NUMBER = "01012345678";
+    private static final String TEST_EMAIL = "test@test.com";
+    private static final LocalDate TEST_BIRTH = LocalDate.of(2000, 1, 29);
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -51,17 +58,17 @@ public class LoginTest {
     private static DiscountByGrade grade;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
 
         grade = discountByGradeRepository.findById(GradeCode.CODE_GRADE_GENERAL).orElseThrow();
 
         Member member = Member.builder().
-                memberId("testId1")
-                .password(passwordEncoder.encode("testPw"))
-                .memberName("testName")
-                .phoneNumber("01012345678")
-                .email("test@test.com")
-                .memberBirth(LocalDate.of(2000, 1, 29))
+                memberId(TEST_ID)
+                .password(passwordEncoder.encode(TEST_PW))
+                .memberName(TEST_NAME)
+                .phoneNumber(TEST_PHONE_NUMBER)
+                .email(TEST_EMAIL)
+                .memberBirth(TEST_BIRTH)
                 .gradeCode(grade)
                 .build();
 
@@ -70,9 +77,9 @@ public class LoginTest {
 
     @Test
     @DisplayName("유효하지 않은 아이디 인증")
-    public void 로그인_실패_아이디() throws Exception {
+    void 로그인_실패_아이디() throws Exception {
 
-        String loginObject = objectMapper.writeValueAsString(new LoginRequest("testIdFail", "testPw"));
+        String loginObject = objectMapper.writeValueAsString(new LoginRequest("testIdFail", TEST_PW));
 
         ResultActions actions = mockMvc.perform(post("/login")
                 .content(loginObject)
@@ -86,9 +93,9 @@ public class LoginTest {
 
     @Test
     @DisplayName("유효하지 않은 비밀번호 인증")
-    public void 로그인_실패_비밀번호() throws Exception {
+    void 로그인_실패_비밀번호() throws Exception {
 
-        String loginObject = objectMapper.writeValueAsString(new LoginRequest("testId1", "testPwFail"));
+        String loginObject = objectMapper.writeValueAsString(new LoginRequest(TEST_ID, "testPwFail"));
 
         ResultActions actions = mockMvc.perform(post("/login")
                 .content(loginObject)
@@ -102,9 +109,9 @@ public class LoginTest {
 
     @Test
     @DisplayName("아이디, 비밀번호 인증 성공")
-    public void 로그인_성공() throws Exception {
+    void 로그인_성공() throws Exception {
 
-        String loginObject = objectMapper.writeValueAsString(new LoginRequest("testId1", "testPw"));
+        String loginObject = objectMapper.writeValueAsString(new LoginRequest(TEST_ID, TEST_PW));
 
         mockMvc.perform(post("/login").content(loginObject))
                 .andExpect(status().isOk())

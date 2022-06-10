@@ -5,15 +5,10 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import individual.freshplace.config.JwtProperties;
-import individual.freshplace.config.auth.PrincipalDetails;
 import individual.freshplace.config.auth.PrincipalDetailsService;
-import individual.freshplace.entity.Member;
-import individual.freshplace.repository.MemberRepository;
 import individual.freshplace.util.ErrorCode;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,8 +20,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
-@Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final JwtProperties jwtProperties;
@@ -47,8 +42,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             String memberId = JWT.require(Algorithm.HMAC512(jwtProperties.getSecret())).build().verify(changeToken)
                     .getClaim(jwtProperties.getClaim()).asString();
 
-            Authentication authentication = getAuthentication(memberId, request);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            try {
+                UserDetails userDetails = principalDetailsService.loadUserByUsername(memberId);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, Optional.empty(), userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (UsernameNotFoundException e) {
+                request.setAttribute(JwtProperties.EXCEPTION, ErrorCode.RE_REQUEST_LOGIN.name());
+            }
         }
 
         chain.doFilter(request, response);
@@ -57,11 +57,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private String getTokenInfo(HttpServletRequest httpServletRequest) {
 
         String tokenValue = httpServletRequest.getHeader(JwtProperties.HEADER_STRING);
-        if (StringUtils.hasLength(tokenValue) && tokenValue.startsWith(JwtProperties.TOKEN_PREFIX)) {
-            tokenValue = tokenValue.replace(JwtProperties.TOKEN_PREFIX, "");
-        }
-
-        return tokenValue;
+        return StringUtils.hasLength(tokenValue) && tokenValue.startsWith(JwtProperties.TOKEN_PREFIX) ? tokenValue.replace(JwtProperties.TOKEN_PREFIX, "") : tokenValue;
     }
 
     private boolean validToken(HttpServletRequest request, String changeToken) {
@@ -78,17 +74,5 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         return false;
-    }
-
-    private Authentication getAuthentication(String memberId, HttpServletRequest request) {
-
-        try {
-            UserDetails userDetails = principalDetailsService.loadUserByUsername(memberId);
-            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        } catch (UsernameNotFoundException e) {
-            request.setAttribute(JwtProperties.EXCEPTION, ErrorCode.RE_REQUEST_LOGIN.name());
-        }
-
-        return null;
     }
 }

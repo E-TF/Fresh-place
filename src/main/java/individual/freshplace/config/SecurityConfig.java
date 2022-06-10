@@ -80,7 +80,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .cors().configurationSource(corsConfigurationSource())
 
-
                 .and()
                 .authorizeRequests()
                 .mvcMatchers(HttpMethod.POST, "/public/signup").permitAll()

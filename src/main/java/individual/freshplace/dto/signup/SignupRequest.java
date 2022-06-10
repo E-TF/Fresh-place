@@ -37,11 +37,7 @@ public class SignupRequest {
     @NotNull
     private LocalDate memberBirth;
 
-    public SignupRequest toServiceDto(String password) {
-        return new SignupRequest(this.memberId, password, this.memberName, this.phoneNumber, this.email, this.memberBirth);
-    }
-
-    public Member toMember(DiscountByGrade grade) {
+    public Member toMember(final DiscountByGrade grade, final String password) {
         return Member.builder()
                 .memberId(memberId)
                 .password(password)

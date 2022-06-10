@@ -12,44 +12,44 @@ import individual.freshplace.util.constant.GradeCode;
 import individual.freshplace.util.exception.DuplicationException;
 import individual.freshplace.util.exception.WrongValueException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
+    private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final DiscountByGradeRepository discountByGradeRepository;
 
     @Transactional
-    public void saveMember(SignupRequest signupRequest) {
+    public void signup(SignupRequest signupRequest) {
 
         duplicateIdChecking(signupRequest.getMemberId());
 
         DiscountByGrade grade = discountByGradeRepository.findById(GradeCode.CODE_GRADE_GENERAL)
                 .orElseThrow(() -> new WrongValueException(ErrorCode.BAD_CODE, GradeCode.CODE_GRADE_GENERAL));
 
-        Member member = signupRequest.toMember(grade);
+        Member member = signupRequest.toMember(grade, passwordEncoder.encode(signupRequest.getPassword()));
 
         memberRepository.save(member);
     }
 
-    @Transactional(readOnly = true)
-    public ProfileResponse findMember(String memberId) {
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    public Member findMember(String memberId) {
 
-        Member member = memberRepository.findByMemberId(memberId)
+        return memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new WrongValueException(ErrorCode.USERNAME_NOT_FOUND, memberId));
-
-        return new ProfileResponse(member);
     }
 
     @Transactional
     public ProfileResponse updateMember(String memberId, ProfileUpdateRequest profileUpdateRequest) {
 
-        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new WrongValueException(ErrorCode.USERNAME_NOT_FOUND, memberId));
+        Member member = findMember(memberId);
 
         duplicateIdChecking(profileUpdateRequest.getMemberId());
 
@@ -60,17 +60,7 @@ public class MemberService {
                 profileUpdateRequest.getEmail(),
                 profileUpdateRequest.getMemberBirth());
 
-        return new ProfileResponse(member);
-    }
-
-    @Transactional
-    public void deleteMember(String memberId) {
-
-        if (!memberRepository.existsByMemberId(memberId)) {
-            throw new WrongValueException(ErrorCode.USERNAME_NOT_FOUND, memberId);
-        }
-
-        memberRepository.deleteByMemberId(memberId);
+        return ProfileResponse.from(member);
     }
 
     private void duplicateIdChecking(String memberId) {
@@ -79,4 +69,15 @@ public class MemberService {
             throw new DuplicationException(ErrorCode.ID_DUPLICATE_PREVENTION, memberId);
         }
     }
+
+    @Transactional
+    public void withdrawal(String memberId) {
+
+        if (!memberRepository.existsByMemberId(memberId)) {
+            throw new WrongValueException(ErrorCode.USERNAME_NOT_FOUND, memberId);
+        }
+
+        memberRepository.deleteByMemberId(memberId);
+    }
+
 }

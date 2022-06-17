@@ -4,7 +4,6 @@ import individual.freshplace.config.auth.PrincipalDetails;
 import individual.freshplace.dto.profile.ProfileUpdateRequest;
 import individual.freshplace.dto.profile.ProfileResponse;
 import individual.freshplace.dto.signup.SignupRequest;
-import individual.freshplace.entity.Member;
 import individual.freshplace.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,8 +27,7 @@ public class MemberController {
 
     @GetMapping("/members/profile")
     public ResponseEntity<ProfileResponse> getProfile(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        Member member = memberService.findMember(principalDetails.getUsername());
-        return ResponseEntity.ok().body(ProfileResponse.from(member));
+        return ResponseEntity.ok().body(memberService.getProfile(principalDetails.getUsername()));
     }
 
     @DeleteMapping("/members/withdrawal")

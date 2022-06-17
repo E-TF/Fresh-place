@@ -8,13 +8,13 @@ import individual.freshplace.entity.Member;
 import individual.freshplace.repository.DiscountByGradeRepository;
 import individual.freshplace.repository.MemberRepository;
 import individual.freshplace.util.ErrorCode;
+import individual.freshplace.util.UserLevelLock;
 import individual.freshplace.util.constant.GradeCode;
 import individual.freshplace.util.exception.DuplicationException;
 import individual.freshplace.util.exception.WrongValueException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
 
+    private final UserLevelLock userLevelLock;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final DiscountByGradeRepository discountByGradeRepository;
@@ -31,19 +32,23 @@ public class MemberService {
 
         duplicateIdChecking(signupRequest.getMemberId());
 
-        DiscountByGrade grade = discountByGradeRepository.findById(GradeCode.CODE_GRADE_GENERAL)
-                .orElseThrow(() -> new WrongValueException(ErrorCode.BAD_CODE, GradeCode.CODE_GRADE_GENERAL));
+        userLevelLock.LockProcess(signupRequest.getMemberId(), () -> {
 
-        Member member = signupRequest.toMember(grade, passwordEncoder.encode(signupRequest.getPassword()));
+            DiscountByGrade grade = discountByGradeRepository.findById(GradeCode.CODE_GRADE_GENERAL)
+                    .orElseThrow(() -> new WrongValueException(ErrorCode.BAD_CODE, GradeCode.CODE_GRADE_GENERAL));
 
-        memberRepository.save(member);
+            Member member = signupRequest.toMember(grade, passwordEncoder.encode(signupRequest.getPassword()));
+
+            memberRepository.save(member);
+
+        });
     }
 
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
-    public Member findMember(String memberId) {
+    public ProfileResponse getProfile(String memberId) {
 
-        return memberRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new WrongValueException(ErrorCode.USERNAME_NOT_FOUND, memberId));
+        Member member = findMember(memberId);
+
+        return ProfileResponse.from(member);
     }
 
     @Transactional
@@ -53,22 +58,22 @@ public class MemberService {
 
         duplicateIdChecking(profileUpdateRequest.getMemberId());
 
-        member.updateProfile(
-                profileUpdateRequest.getMemberId(),
-                profileUpdateRequest.getMemberName(),
-                profileUpdateRequest.getPhoneNumber(),
-                profileUpdateRequest.getEmail(),
-                profileUpdateRequest.getMemberBirth());
+        userLevelLock.LockProcess(profileUpdateRequest.getMemberId(), () -> {
+
+            member.updateProfile(
+                    profileUpdateRequest.getMemberId(),
+                    profileUpdateRequest.getMemberName(),
+                    profileUpdateRequest.getPhoneNumber(),
+                    profileUpdateRequest.getEmail(),
+                    profileUpdateRequest.getMemberBirth());
+
+            memberRepository.flush();
+
+        });
 
         return ProfileResponse.from(member);
     }
 
-    private void duplicateIdChecking(String memberId) {
-
-        if (memberRepository.existsByMemberId(memberId)) {
-            throw new DuplicationException(ErrorCode.ID_DUPLICATE_PREVENTION, memberId);
-        }
-    }
 
     @Transactional
     public void withdrawal(String memberId) {
@@ -78,6 +83,18 @@ public class MemberService {
         }
 
         memberRepository.deleteByMemberId(memberId);
+    }
+
+    private void duplicateIdChecking(String memberId) {
+
+        if (memberRepository.existsByMemberId(memberId)) {
+            throw new DuplicationException(ErrorCode.ID_DUPLICATE_PREVENTION, memberId);
+        }
+    }
+
+    private Member findMember(String memberId) {
+        return memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new WrongValueException(ErrorCode.USERNAME_NOT_FOUND, memberId));
     }
 
 }

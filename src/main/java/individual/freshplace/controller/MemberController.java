@@ -5,6 +5,7 @@ import individual.freshplace.dto.profile.ProfileUpdateRequest;
 import individual.freshplace.dto.profile.ProfileResponse;
 import individual.freshplace.dto.signup.SignupRequest;
 import individual.freshplace.service.MemberService;
+import individual.freshplace.util.UserLevelLockTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +19,12 @@ import javax.validation.Valid;
 public class MemberController {
 
     private final MemberService memberService;
+    private final UserLevelLockTemplate userLevelLockTemplate;
 
     @PostMapping("/public/signup")
-    public ResponseEntity signup(@Valid @RequestBody SignupRequest signupRequest) {
-        memberService.signup(signupRequest);
-        return new ResponseEntity(HttpStatus.OK);
+    public int signup(@Valid @RequestBody SignupRequest signupRequest) {
+        return userLevelLockTemplate.LockProcess(signupRequest.getMemberId(), () ->
+                memberService.signup(signupRequest));
     }
 
     @GetMapping("/members/profile")
@@ -38,6 +40,7 @@ public class MemberController {
 
     @PutMapping("/members/profile")
     public ResponseEntity<ProfileResponse> updateProfile(@AuthenticationPrincipal PrincipalDetails principalDetails,  @Valid @RequestBody ProfileUpdateRequest profileUpdateRequest) {
-        return ResponseEntity.ok().body(memberService.updateMember(principalDetails.getUsername(), profileUpdateRequest));
+        return ResponseEntity.ok().body(userLevelLockTemplate.LockProcess(profileUpdateRequest.getMemberId(), () ->
+                memberService.updateMember(principalDetails.getUsername(), profileUpdateRequest)));
     }
 }

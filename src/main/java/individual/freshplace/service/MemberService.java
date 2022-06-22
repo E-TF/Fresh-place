@@ -8,7 +8,6 @@ import individual.freshplace.entity.Member;
 import individual.freshplace.repository.DiscountByGradeRepository;
 import individual.freshplace.repository.MemberRepository;
 import individual.freshplace.util.ErrorCode;
-import individual.freshplace.util.UserLevelLock;
 import individual.freshplace.util.constant.GradeCode;
 import individual.freshplace.util.exception.DuplicationException;
 import individual.freshplace.util.exception.WrongValueException;
@@ -22,26 +21,22 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final UserLevelLock userLevelLock;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final DiscountByGradeRepository discountByGradeRepository;
 
     @Transactional
-    public void signup(SignupRequest signupRequest) {
+    public int signup(SignupRequest signupRequest) {
 
         duplicateIdChecking(signupRequest.getMemberId());
 
-        userLevelLock.LockProcess(signupRequest.getMemberId(), () -> {
+        DiscountByGrade grade = discountByGradeRepository.findById(GradeCode.CODE_GRADE_GENERAL)
+                .orElseThrow(() -> new WrongValueException(ErrorCode.BAD_CODE, GradeCode.CODE_GRADE_GENERAL));
 
-            DiscountByGrade grade = discountByGradeRepository.findById(GradeCode.CODE_GRADE_GENERAL)
-                    .orElseThrow(() -> new WrongValueException(ErrorCode.BAD_CODE, GradeCode.CODE_GRADE_GENERAL));
+        Member member = signupRequest.toMember(grade, passwordEncoder.encode(signupRequest.getPassword()));
 
-            Member member = signupRequest.toMember(grade, passwordEncoder.encode(signupRequest.getPassword()));
-
-            memberRepository.save(member);
-
-        });
+        memberRepository.save(member);
+        return 1;
     }
 
     public ProfileResponse getProfile(String memberId) {
@@ -58,18 +53,12 @@ public class MemberService {
 
         duplicateIdChecking(profileUpdateRequest.getMemberId());
 
-        userLevelLock.LockProcess(profileUpdateRequest.getMemberId(), () -> {
-
-            member.updateProfile(
-                    profileUpdateRequest.getMemberId(),
-                    profileUpdateRequest.getMemberName(),
-                    profileUpdateRequest.getPhoneNumber(),
-                    profileUpdateRequest.getEmail(),
-                    profileUpdateRequest.getMemberBirth());
-
-            memberRepository.flush();
-
-        });
+        member.updateProfile(
+                profileUpdateRequest.getMemberId(),
+                profileUpdateRequest.getMemberName(),
+                profileUpdateRequest.getPhoneNumber(),
+                profileUpdateRequest.getEmail(),
+                profileUpdateRequest.getMemberBirth());
 
         return ProfileResponse.from(member);
     }

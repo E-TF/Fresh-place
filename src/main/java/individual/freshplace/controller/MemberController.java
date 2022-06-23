@@ -5,7 +5,9 @@ import individual.freshplace.dto.profile.ProfileUpdateRequest;
 import individual.freshplace.dto.profile.ProfileResponse;
 import individual.freshplace.dto.signup.SignupRequest;
 import individual.freshplace.service.MemberService;
-import individual.freshplace.util.UserLevelLockTemplate;
+import individual.freshplace.util.ErrorResponse;
+import individual.freshplace.util.lock.UserLevelLock;
+import individual.freshplace.util.exception.StringLockException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +20,12 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class MemberController {
 
+    private final UserLevelLock userLevelLock;
     private final MemberService memberService;
-    private final UserLevelLockTemplate userLevelLockTemplate;
 
     @PostMapping("/public/signup")
     public int signup(@Valid @RequestBody SignupRequest signupRequest) {
-        return userLevelLockTemplate.LockProcess(signupRequest.getMemberId(), () ->
+        return userLevelLock.LockProcess(signupRequest.getMemberId(), () ->
                 memberService.signup(signupRequest));
     }
 
@@ -40,7 +42,12 @@ public class MemberController {
 
     @PutMapping("/members/profile")
     public ResponseEntity<ProfileResponse> updateProfile(@AuthenticationPrincipal PrincipalDetails principalDetails,  @Valid @RequestBody ProfileUpdateRequest profileUpdateRequest) {
-        return ResponseEntity.ok().body(userLevelLockTemplate.LockProcess(profileUpdateRequest.getMemberId(), () ->
+        return ResponseEntity.ok().body(userLevelLock.LockProcess(profileUpdateRequest.getMemberId(), () ->
                 memberService.updateMember(principalDetails.getUsername(), profileUpdateRequest)));
+    }
+
+    @ExceptionHandler(StringLockException.class)
+    public ResponseEntity<ErrorResponse> StringLockExceptionHandler(final StringLockException e) {
+        return ErrorResponse.errorResponse(e.getErrorCode(), e.getValue());
     }
 }

@@ -1,7 +1,8 @@
-package individual.freshplace.util;
+package individual.freshplace.util.lock;
 
 import com.zaxxer.hikari.HikariDataSource;
-import individual.freshplace.util.exception.DuplicationException;
+import individual.freshplace.util.ErrorCode;
+import individual.freshplace.util.exception.StringLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.function.Supplier;
 
 @Slf4j
 @Component
@@ -20,20 +22,22 @@ public class UserLevelLock {
     private static final String RELEASE_LOCK = "SELECT RELEASE_LOCK(?)";
     private static final String IS_USED_LOCK = "SELECT IS_USED_LOCK(?)";
     private static final long ACQUIRER_IN_SECONDS = 1;
+    private static final int SUCCESS_QUERY_VALUE = 1;
 
     private final HikariDataSource hikariDataSource;
 
-    public void LockProcess(String lockName, Runnable runnable) {
+    public <T> T LockProcess(String lockName, Supplier<T> supplier) {
 
         try (Connection connection = hikariDataSource.getConnection()) {
             try {
                 getLock(connection, lockName);
-                runnable.run();
+                return supplier.get();
             } finally {
                 releaseLock(connection, lockName);
             }
         } catch (SQLException e) {
-            throw new RuntimeException();
+            log.error("쿼리 실행 오류");
+            throw new RuntimeException(e);
         }
     }
 
@@ -44,23 +48,7 @@ public class UserLevelLock {
             preparedStatement.setString(1, lockName);
             preparedStatement.setLong(2, ACQUIRER_IN_SECONDS);
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()){
-
-                if (!resultSet.next()) {
-                    log.error("쿼리 수행 실패");
-                    throw new RuntimeException();
-                }
-
-                int resultSetInt = resultSet.getInt(1);
-
-                if (resultSetInt != 1) {
-                    log.error(lockName + " 획득 실패");
-                    throw new DuplicationException(ErrorCode.UN_AVAILABLE_ID, lockName);
-                } else {
-                    log.info(lockName + " 획득 성공");
-                }
-
-            }
+            resultQuery(lockName, preparedStatement, "getLock");
         }
     }
 
@@ -70,22 +58,29 @@ public class UserLevelLock {
 
             preparedStatement.setString(1, lockName);
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()){
-
-                if (!resultSet.next()) {
-                    log.error("쿼리 수행 실패");
-                    throw new RuntimeException();
-                }
-
-                int resultSetInt = resultSet.getInt(1);
-
-                if (resultSetInt != 1) {
-                    log.error(lockName + " 반환 실패");
-                    throw new DuplicationException(ErrorCode.UN_AVAILABLE_ID, lockName);
-                } else {
-                    log.info(lockName + " 반환 성공");
-                }
-            }
+            resultQuery(lockName, preparedStatement, "releaseLock");
         }
     }
+
+    private void resultQuery(String lockName, PreparedStatement preparedStatement, String methodType) throws SQLException {
+
+        try (ResultSet resultSet = preparedStatement.executeQuery()){
+
+            if (!resultSet.next()) {
+                log.error(methodType + " 쿼리 수행 실패");
+            }
+
+            int resultSetInt = resultSet.getInt(1);
+
+            if (resultSetInt != SUCCESS_QUERY_VALUE) {
+                log.error(lockName + " " + methodType + " 실패");
+                throw new StringLockException(ErrorCode.UN_AVAILABLE_ID, lockName);
+            } else {
+                log.info(lockName + " " + methodType + " 성공");
+            }
+
+        }
+
+    }
+
 }

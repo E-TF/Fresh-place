@@ -26,7 +26,7 @@ public class MemberService {
     private final DiscountByGradeRepository discountByGradeRepository;
 
     @Transactional
-    public int signup(SignupRequest signupRequest) {
+    public void signup(SignupRequest signupRequest) {
 
         duplicateIdChecking(signupRequest.getMemberId());
 
@@ -36,7 +36,6 @@ public class MemberService {
         Member member = signupRequest.toMember(grade, passwordEncoder.encode(signupRequest.getPassword()));
 
         memberRepository.save(member);
-        return 1;
     }
 
     public ProfileResponse getProfile(String memberId) {

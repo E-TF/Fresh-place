@@ -23,6 +23,7 @@ public class UserLevelLock {
     private static final String IS_USED_LOCK = "SELECT IS_USED_LOCK(?)";
     private static final long ACQUIRER_IN_SECONDS = 1;
     private static final int SUCCESS_QUERY_VALUE = 1;
+    private static final String SQLEXCEPTION_MESSAGE = "쿼리 실행 오류";
 
     private final HikariDataSource hikariDataSource;
 
@@ -36,9 +37,16 @@ public class UserLevelLock {
                 releaseLock(connection, lockName);
             }
         } catch (SQLException e) {
-            log.error("쿼리 실행 오류");
-            throw new RuntimeException(e);
+            log.error(SQLEXCEPTION_MESSAGE);
+            throw new RuntimeException(SQLEXCEPTION_MESSAGE);
         }
+    }
+
+    public void LockProcess(String lockName, Runnable runnable) {
+        LockProcess(lockName, () -> {
+            runnable.run();
+            return null;
+        });
     }
 
     private void getLock(Connection connection, String lockName) throws SQLException {
@@ -48,7 +56,7 @@ public class UserLevelLock {
             preparedStatement.setString(1, lockName);
             preparedStatement.setLong(2, ACQUIRER_IN_SECONDS);
 
-            resultQuery(lockName, preparedStatement, "getLock");
+            resultQuery(lockName, preparedStatement, "getLock()");
         }
     }
 
@@ -58,7 +66,7 @@ public class UserLevelLock {
 
             preparedStatement.setString(1, lockName);
 
-            resultQuery(lockName, preparedStatement, "releaseLock");
+            resultQuery(lockName, preparedStatement, "releaseLock()");
         }
     }
 
@@ -67,16 +75,19 @@ public class UserLevelLock {
         try (ResultSet resultSet = preparedStatement.executeQuery()){
 
             if (!resultSet.next()) {
-                log.error(methodType + " 쿼리 수행 실패");
+                log.error(methodType + SQLEXCEPTION_MESSAGE);
+                throw new RuntimeException(SQLEXCEPTION_MESSAGE);
             }
 
             int resultSetInt = resultSet.getInt(1);
 
             if (resultSetInt != SUCCESS_QUERY_VALUE) {
-                log.error(lockName + " " + methodType + " 실패");
+                log.error("lockName={} 에 대한 methodType={} 실패", lockName, methodType);
                 throw new StringLockException(ErrorCode.UN_AVAILABLE_ID, lockName);
-            } else {
-                log.info(lockName + " " + methodType + " 성공");
+            }
+
+            if (resultSetInt == SUCCESS_QUERY_VALUE) {
+                log.info("lockName={} 에 대한 methodType={} 성공", lockName, methodType);
             }
 
         }

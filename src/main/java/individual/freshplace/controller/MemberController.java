@@ -24,9 +24,11 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/public/signup")
-    public int signup(@Valid @RequestBody SignupRequest signupRequest) {
-        return userLevelLock.LockProcess(signupRequest.getMemberId(), () ->
+    public ResponseEntity signup(@Valid @RequestBody SignupRequest signupRequest) {
+        userLevelLock.LockProcess(signupRequest.getMemberId(), () ->
                 memberService.signup(signupRequest));
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/members/profile")

@@ -21,7 +21,7 @@ public class UserLevelLock {
     private static final String GET_LOCK = "SELECT GET_LOCK(?, ?)";
     private static final String RELEASE_LOCK = "SELECT RELEASE_LOCK(?)";
     private static final String IS_USED_LOCK = "SELECT IS_USED_LOCK(?)";
-    private static final long ACQUIRER_IN_SECONDS = 1;
+    private static final long ACQUIRER_IN_SECONDS = 1L;
     private static final int SUCCESS_QUERY_VALUE = 1;
     private static final String SQLEXCEPTION_MESSAGE = "쿼리 실행 오류";
 

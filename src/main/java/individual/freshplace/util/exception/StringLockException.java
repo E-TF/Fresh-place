@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class DuplicationException extends RuntimeException {
+public class StringLockException extends RuntimeException {
     private final ErrorCode errorCode;
     private final String value;
 }

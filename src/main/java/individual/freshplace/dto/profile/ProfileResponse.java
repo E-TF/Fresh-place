@@ -34,4 +34,5 @@ public class ProfileResponse {
                 member.getMemberBirth(),
                 member.getGradeCode().getGradeName());
     }
+
 }

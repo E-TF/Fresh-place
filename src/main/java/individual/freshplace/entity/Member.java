@@ -1,5 +1,6 @@
 package individual.freshplace.entity;
 
+import individual.freshplace.dto.profile.ProfileUpdateRequest;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,7 +31,7 @@ public class Member extends BaseEntity {
 
     private LocalDate memberBirth;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "grade_code")
     private DiscountByGrade gradeCode;
 
@@ -51,11 +52,11 @@ public class Member extends BaseEntity {
         this.gradeCode = gradeCode;
     }
 
-    public void updateProfile(String memberId, String memberName, String phoneNumber, String email, LocalDate memberBirth) {
-        this.memberId = memberId;
-        this.memberName = memberName;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.memberBirth = memberBirth;
+    public void updateProfile(ProfileUpdateRequest profileUpdateRequest) {
+        this.memberId = profileUpdateRequest.getMemberId();
+        this.memberName = profileUpdateRequest.getMemberName();
+        this.phoneNumber = profileUpdateRequest.getPhoneNumber();
+        this.email = profileUpdateRequest.getEmail();
+        this.memberBirth = profileUpdateRequest.getMemberBirth();
     }
 }

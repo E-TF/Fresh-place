@@ -5,9 +5,6 @@ import individual.freshplace.dto.profile.ProfileUpdateRequest;
 import individual.freshplace.dto.profile.ProfileResponse;
 import individual.freshplace.dto.signup.SignupRequest;
 import individual.freshplace.service.MemberService;
-import individual.freshplace.util.ErrorResponse;
-import individual.freshplace.util.exception.StringLockException;
-import individual.freshplace.util.lock.UserLevelLockTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,13 +17,10 @@ import javax.validation.Valid;
 public class MemberController {
 
     private final MemberService memberService;
-    private final UserLevelLockTemplate userLevelLockTemplate;
 
     @PostMapping("/public/signup")
     public ResponseEntity signup(@Valid @RequestBody SignupRequest signupRequest) {
-        userLevelLockTemplate.LockProcess(signupRequest.getMemberId(), () ->
-                memberService.signup(signupRequest));
-
+        memberService.signup(signupRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -42,13 +36,8 @@ public class MemberController {
     }
 
     @PutMapping("/members/profile")
-    public ResponseEntity<ProfileResponse> updateProfile(@AuthenticationPrincipal PrincipalDetails principalDetails,  @Valid @RequestBody ProfileUpdateRequest profileUpdateRequest) {
-        return ResponseEntity.ok().body(userLevelLockTemplate.LockProcess(profileUpdateRequest.getMemberId(), () ->
-                memberService.updateMember(principalDetails.getUsername(), profileUpdateRequest)));
+    public ResponseEntity<ProfileResponse> updateProfile(@Valid @RequestBody ProfileUpdateRequest profileUpdateRequest, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return ResponseEntity.ok().body(memberService.updateMember(principalDetails.getUsername(), profileUpdateRequest));
     }
 
-    @ExceptionHandler(StringLockException.class)
-    public ResponseEntity<ErrorResponse> StringLockExceptionHandler(final StringLockException e) {
-        return ErrorResponse.errorResponse(e.getErrorCode(), e.getValue());
-    }
 }

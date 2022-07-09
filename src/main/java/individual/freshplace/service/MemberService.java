@@ -11,22 +11,32 @@ import individual.freshplace.util.ErrorCode;
 import individual.freshplace.util.constant.GradeCode;
 import individual.freshplace.util.exception.DuplicationException;
 import individual.freshplace.util.exception.WrongValueException;
+import individual.freshplace.util.lock.UserLevelLock;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
+    private final UserLevelLock userLevelLock;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final DiscountByGradeRepository discountByGradeRepository;
+    private final ObjectProvider<MemberService> memberServiceObjectProvider;
+
+    public void signup(SignupRequest signupRequest) {
+
+        userLevelLock.LockProcess(new Object(){}.getClass().getEnclosingMethod().getName()  + signupRequest.getMemberId(), () -> {
+            signupInner(signupRequest);
+        });
+    }
 
     @Transactional
-    public void signup(SignupRequest signupRequest) {
+    public void signupInner(SignupRequest signupRequest) {
 
         duplicateIdChecking(signupRequest.getMemberId());
 
@@ -38,6 +48,7 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+    @Transactional
     public ProfileResponse getProfile(String memberId) {
 
         Member member = findMember(memberId);
@@ -45,23 +56,23 @@ public class MemberService {
         return ProfileResponse.from(member);
     }
 
-    @Transactional
     public ProfileResponse updateMember(String memberId, ProfileUpdateRequest profileUpdateRequest) {
+
+        return userLevelLock.LockProcess(new Object(){}.getClass().getEnclosingMethod().getName() +
+                profileUpdateRequest.getMemberId(), () -> ProfileResponse.from(memberServiceObjectProvider.getObject().updateMemberInner(memberId, profileUpdateRequest)));
+    }
+
+    @Transactional
+    public Member updateMemberInner(String memberId, ProfileUpdateRequest profileUpdateRequest) {
 
         Member member = findMember(memberId);
 
         duplicateIdChecking(profileUpdateRequest.getMemberId());
 
-        member.updateProfile(
-                profileUpdateRequest.getMemberId(),
-                profileUpdateRequest.getMemberName(),
-                profileUpdateRequest.getPhoneNumber(),
-                profileUpdateRequest.getEmail(),
-                profileUpdateRequest.getMemberBirth());
+        member.updateProfile(profileUpdateRequest);
 
-        return ProfileResponse.from(member);
+        return member;
     }
-
 
     @Transactional
     public void withdrawal(String memberId) {
@@ -84,5 +95,4 @@ public class MemberService {
         return memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new WrongValueException(ErrorCode.USERNAME_NOT_FOUND, memberId));
     }
-
 }

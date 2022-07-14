@@ -30,7 +30,7 @@ public class MemberService {
 
     public void signup(SignupRequest signupRequest) {
 
-        userLevelLock.LockProcess(new Object(){}.getClass().getEnclosingMethod().getName()  + signupRequest.getMemberId(), () -> {
+        userLevelLock.lockProcess("signup" + signupRequest.getMemberId(), () -> {
             signupInner(signupRequest);
         });
     }
@@ -58,8 +58,8 @@ public class MemberService {
 
     public ProfileResponse updateMember(String memberId, ProfileUpdateRequest profileUpdateRequest) {
 
-        return userLevelLock.LockProcess(new Object(){}.getClass().getEnclosingMethod().getName() +
-                profileUpdateRequest.getMemberId(), () -> ProfileResponse.from(memberServiceObjectProvider.getObject().updateMemberInner(memberId, profileUpdateRequest)));
+        return userLevelLock.lockProcess("updateMember" + profileUpdateRequest.getMemberId(), () ->
+                ProfileResponse.from(memberServiceObjectProvider.getObject().updateMemberInner(memberId, profileUpdateRequest)));
     }
 
     @Transactional

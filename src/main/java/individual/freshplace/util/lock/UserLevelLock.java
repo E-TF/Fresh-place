@@ -27,7 +27,7 @@ public class UserLevelLock {
 
     private final HikariDataSource hikariDataSource;
 
-    public <T> T LockProcess(String lockName, Supplier<T> supplier) {
+    public <T> T lockProcess(String lockName, Supplier<T> supplier) {   //메서드 이름 바꾸기 소문자로 시작
 
         try (Connection connection = hikariDataSource.getConnection()) {
             try {
@@ -42,8 +42,8 @@ public class UserLevelLock {
         }
     }
 
-    public void LockProcess(String lockName, Runnable runnable) {
-        LockProcess(lockName, () -> {
+    public void lockProcess(String lockName, Runnable runnable) {
+        lockProcess(lockName, () -> {
             runnable.run();
             return null;
         });

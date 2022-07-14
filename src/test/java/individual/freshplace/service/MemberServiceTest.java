@@ -1,7 +1,6 @@
 package individual.freshplace.service;
 
 import individual.freshplace.dto.signup.SignupRequest;
-import individual.freshplace.repository.MemberRepository;
 import individual.freshplace.util.exception.DuplicationException;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @AutoConfigureMockMvc
 public class MemberServiceTest {
 
-    private static final String TEST_ID = "testId1";
+    private static final String TEST_ID = "testId";
     private static final String TEST_PW = "testPw";
     private static final String TEST_NAME = "testName";
     private static final String TEST_PHONE_NUMBER = "01012345678";
@@ -30,17 +29,9 @@ public class MemberServiceTest {
     @Autowired
     private MemberService memberService;
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @AfterEach
-    void removeTestObject() {
-        memberRepository.deleteAllInBatch(memberRepository.findAllByMemberId(TEST_ID));
-    }
-
     @Test
-    @DisplayName("일반 회원가입")
-    void non_lock_join() throws InterruptedException {
+    @DisplayName("동일한 아이디로 회원가입 동시 요청 5번 일때 5번 성공, 0번 실패")
+    void joinWithOutConcurrencyControl() throws InterruptedException {
 
         final int threadCount = 5;
         AtomicInteger throwCount = new AtomicInteger(0);
@@ -68,8 +59,8 @@ public class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("분산 락 적용한 회원가입")
-    void distribution_lock_join() throws InterruptedException {
+    @DisplayName("동일한 아이디로 회원가입 동시 요청 5번 일때 1번 성공, 4번 실패")
+    void joinWithConcurrencyControl() throws InterruptedException {
 
         final int threadCount = 5;
         AtomicInteger throwCount = new AtomicInteger(0);

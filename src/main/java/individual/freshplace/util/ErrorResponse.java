@@ -1,16 +1,13 @@
 package individual.freshplace.util;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class ErrorResponse {
     private LocalDateTime date;

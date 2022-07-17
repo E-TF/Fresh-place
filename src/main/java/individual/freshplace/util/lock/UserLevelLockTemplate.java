@@ -27,7 +27,7 @@ public class UserLevelLockTemplate {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Transactional
-    public <T> T LockProcess(String lockName, Supplier<T> supplier) {
+    public <T> T lockProcess(String lockName, Supplier<T> supplier) {
 
         try {
             getLock(lockName);
@@ -38,8 +38,8 @@ public class UserLevelLockTemplate {
         }
     }
 
-    public void LockProcess(String lockName, Runnable runnable) {
-        LockProcess(lockName, () -> {
+    public void lockProcess(String lockName, Runnable runnable) {
+        lockProcess(lockName, () -> {
             runnable.run();
             return null;
         });

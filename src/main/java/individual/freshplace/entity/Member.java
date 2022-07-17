@@ -52,7 +52,7 @@ public class Member extends BaseEntity {
         this.gradeCode = gradeCode;
     }
 
-    public void updateProfile(ProfileUpdateRequest profileUpdateRequest) {
+    public void updateProfile(final ProfileUpdateRequest profileUpdateRequest) {
         this.memberId = profileUpdateRequest.getMemberId();
         this.memberName = profileUpdateRequest.getMemberName();
         this.phoneNumber = profileUpdateRequest.getPhoneNumber();

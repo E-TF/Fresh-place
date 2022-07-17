@@ -9,6 +9,7 @@ import individual.freshplace.repository.DiscountByGradeRepository;
 import individual.freshplace.repository.MemberRepository;
 import individual.freshplace.util.ErrorCode;
 import individual.freshplace.util.constant.GradeCode;
+import individual.freshplace.util.constant.Prefix;
 import individual.freshplace.util.exception.DuplicationException;
 import individual.freshplace.util.exception.WrongValueException;
 import individual.freshplace.util.lock.UserLevelLock;
@@ -30,7 +31,7 @@ public class MemberService {
 
     public void signup(SignupRequest signupRequest) {
 
-        userLevelLock.lockProcess("signup" + signupRequest.getMemberId(), () -> {
+        userLevelLock.lockProcess(Prefix.LOCK_PREFIX_SIGNUP + signupRequest.getMemberId(), () -> {
             signupInner(signupRequest);
         });
     }
@@ -58,7 +59,7 @@ public class MemberService {
 
     public ProfileResponse updateMember(String memberId, ProfileUpdateRequest profileUpdateRequest) {
 
-        return userLevelLock.lockProcess("updateMember" + profileUpdateRequest.getMemberId(), () ->
+        return userLevelLock.lockProcess(Prefix.LOCK_PREFIX_UPDATE_MEMBER + profileUpdateRequest.getMemberId(), () ->
                 ProfileResponse.from(memberServiceObjectProvider.getObject().updateMemberInner(memberId, profileUpdateRequest)));
     }
 

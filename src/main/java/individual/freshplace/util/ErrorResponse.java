@@ -1,19 +1,28 @@
 package individual.freshplace.util;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 
-@Builder
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class ErrorResponse {
     private LocalDateTime date;
     private int status;
     private String error;
     private String code;
     private String message;
+
+    public ErrorResponse(ErrorCode errorCode, String message) {
+        this.date = LocalDateTime.now();
+        this.status = errorCode.getHttpStatus().value();
+        this.error = errorCode.getHttpStatus().name();
+        this.code = errorCode.name();
+        this.message = message;
+    }
 
     public static ResponseEntity<ErrorResponse> errorResponse(ErrorCode errorCode, String value) {
         return ResponseEntity.status(errorCode.getHttpStatus())
@@ -23,7 +32,6 @@ public class ErrorResponse {
                         .error(errorCode.getHttpStatus().name())
                         .code(errorCode.name())
                         .message(value + "는(은) " + errorCode.getMessage())
-                        .build()
-                );
+                        .build());
     }
 }

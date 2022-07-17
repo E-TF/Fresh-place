@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 
-@Component
 @Getter
+@Component
 public class JwtProperties {
 
     public static final Duration EXPIRATION_TIME = Duration.ofHours(1);

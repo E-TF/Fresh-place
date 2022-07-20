@@ -31,7 +31,7 @@ public class Member extends BaseEntity {
 
     private LocalDate memberBirth;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grade_code")
     private DiscountByGrade gradeCode;
 

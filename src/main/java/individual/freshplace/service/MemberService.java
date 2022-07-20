@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -92,7 +93,8 @@ public class MemberService {
         }
     }
 
-    private Member findMember(String memberId) {
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public Member findMember(String memberId) {
         return memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new WrongValueException(ErrorCode.USERNAME_NOT_FOUND, memberId));
     }

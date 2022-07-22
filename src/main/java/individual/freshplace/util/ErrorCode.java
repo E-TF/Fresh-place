@@ -19,6 +19,7 @@ public enum ErrorCode {
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "토큰 유효시간이 완료되었습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "토큰 값이 유효하지 않습니다."),
     NON_HEADER_AUTHORIZATION(HttpStatus.UNAUTHORIZED, "헤더값이 유효하지 않습니다."),
+    NON_PERMISSION(HttpStatus.UNAUTHORIZED, "권한이 없습니다"),
 
     UN_AVAILABLE_ID(HttpStatus.CONFLICT, "해당 아이디는 사용할 수 없습니다."),
 

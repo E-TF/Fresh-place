@@ -24,7 +24,7 @@ public class ErrorResponse {
         this.message = message;
     }
 
-    public static ResponseEntity<ErrorResponse> errorResponse(ErrorCode errorCode, Object value) {
+    public static ResponseEntity<ErrorResponse> errorResponseAndValue(ErrorCode errorCode, Object value) {
         return ResponseEntity.status(errorCode.getHttpStatus())
                 .body(ErrorResponse.builder()
                         .date(LocalDateTime.now())
@@ -32,6 +32,17 @@ public class ErrorResponse {
                         .error(errorCode.getHttpStatus().name())
                         .code(errorCode.name())
                         .message(value + "는(은) " + errorCode.getMessage())
+                        .build());
+    }
+
+    public static ResponseEntity<ErrorResponse> errorResponse(ErrorCode errorCode) {
+        return ResponseEntity.status(errorCode.getHttpStatus())
+                .body(ErrorResponse.builder()
+                        .date(LocalDateTime.now())
+                        .status(errorCode.getHttpStatus().value())
+                        .error(errorCode.getHttpStatus().name())
+                        .code(errorCode.name())
+                        .message(errorCode.getMessage())
                         .build());
     }
 }

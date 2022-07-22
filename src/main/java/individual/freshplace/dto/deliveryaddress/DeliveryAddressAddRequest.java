@@ -3,22 +3,17 @@ package individual.freshplace.dto.deliveryaddress;
 import individual.freshplace.entity.Address;
 import individual.freshplace.entity.DeliverAddress;
 import individual.freshplace.entity.Member;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class DeliveryAddressAddRequest {
 
-    @Column
     @NotBlank
     @Length(min = 5, max = 5)
     private String zipCode;

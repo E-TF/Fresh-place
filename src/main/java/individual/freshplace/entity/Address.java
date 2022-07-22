@@ -20,4 +20,12 @@ public class Address {
         this.zipCode = zipCode;
         this.address = address;
     }
+
+    public void updateZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public void updateAddress(String address) {
+        this.address = address;
+    }
 }

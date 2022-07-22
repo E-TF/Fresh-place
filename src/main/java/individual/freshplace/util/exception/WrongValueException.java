@@ -8,5 +8,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class WrongValueException extends RuntimeException {
     private final ErrorCode errorCode;
-    private final String value;
+    private final Object value;
 }

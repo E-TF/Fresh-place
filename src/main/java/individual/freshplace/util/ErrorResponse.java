@@ -24,7 +24,7 @@ public class ErrorResponse {
         this.message = message;
     }
 
-    public static ResponseEntity<ErrorResponse> errorResponse(ErrorCode errorCode, String value) {
+    public static ResponseEntity<ErrorResponse> errorResponse(ErrorCode errorCode, Object value) {
         return ResponseEntity.status(errorCode.getHttpStatus())
                 .body(ErrorResponse.builder()
                         .date(LocalDateTime.now())

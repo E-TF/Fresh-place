@@ -93,7 +93,7 @@ public class MemberService {
         }
     }
 
-    @Transactional(propagation = Propagation.SUPPORTS)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Member findMember(String memberId) {
         return memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new WrongValueException(ErrorCode.USERNAME_NOT_FOUND, memberId));

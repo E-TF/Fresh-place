@@ -30,4 +30,12 @@ public class DeliverAddress extends BaseEntity {
         this.recipient = recipient;
         this.contact = contact;
     }
+
+    public void updateRecipient(String recipient) {
+        this.recipient = recipient;
+    }
+
+    public void updateContact(String contact) {
+        this.contact = contact;
+    }
 }

@@ -9,6 +9,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class DeliveryAddressResponse {
 
+    private Long deliverSeq;
+
     private Address address;
 
     private String recipient;
@@ -16,6 +18,6 @@ public class DeliveryAddressResponse {
     private String contact;
 
     public static DeliveryAddressResponse from(final DeliverAddress deliverAddress) {
-        return new DeliveryAddressResponse(deliverAddress.getAddress(), deliverAddress.getRecipient(), deliverAddress.getContact());
+        return new DeliveryAddressResponse(deliverAddress.getDeliverSeq(), deliverAddress.getAddress(), deliverAddress.getRecipient(), deliverAddress.getContact());
     }
 }

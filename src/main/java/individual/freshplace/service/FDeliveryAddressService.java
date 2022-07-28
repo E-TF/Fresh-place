@@ -16,22 +16,21 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class DeliveryAddressFacade {
+public class FDeliveryAddressService {
 
     private final MemberService memberService;
     private final DeliveryAddressService deliveryAddressService;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<DeliveryAddressResponse> getDeliveryAddresses(final String memberId) {
 
         Member member = memberService.findByMemberId(memberId);
 
-        return deliveryAddressService.findAllByMember(member)
-                .stream().map(DeliveryAddressResponse::from).collect(Collectors.toList());
+        return member.getAddressList().stream().map(DeliveryAddressResponse::from).collect(Collectors.toList());
     }
 
     @Transactional
-    public DeliveryAddressResponse AddDeliveryAddress(final String memberId, final DeliveryAddressAddRequest deliverAddressAddRequest) {
+    public DeliveryAddressResponse addDeliveryAddress(final String memberId, final DeliveryAddressAddRequest deliverAddressAddRequest) {
 
         Member member = memberService.findByMemberId(memberId);
 
@@ -45,7 +44,7 @@ public class DeliveryAddressFacade {
     @Transactional
     public DeliveryAddressResponse updateDeliveryAddressZipCode(final String memberId, final DeliveryAddressUpdateRequest.ZipCode zipCode) {
 
-        DeliverAddress deliverAddress = isMemberCheck(memberId, zipCode.getDeliverSeq());
+        DeliverAddress deliverAddress = getDeliveryAddressAndMemberCheck(memberId, zipCode.getDeliverSeq());
 
         deliverAddress.getAddress().updateZipCode(zipCode.getZipCode());
 
@@ -55,7 +54,7 @@ public class DeliveryAddressFacade {
     @Transactional
     public DeliveryAddressResponse updateDeliveryAddressDetailAddress(final String memberId, final DeliveryAddressUpdateRequest.Address address) {
 
-        DeliverAddress deliverAddress = isMemberCheck(memberId, address.getDeliverSeq());
+        DeliverAddress deliverAddress = getDeliveryAddressAndMemberCheck(memberId, address.getDeliverSeq());
 
         deliverAddress.getAddress().updateAddress(address.getAddress());
 
@@ -65,7 +64,7 @@ public class DeliveryAddressFacade {
     @Transactional
     public DeliveryAddressResponse updateDeliveryAddressRecipient(final String memberId, final DeliveryAddressUpdateRequest.Recipient recipient) {
 
-        DeliverAddress deliverAddress = isMemberCheck(memberId, recipient.getDeliverSeq());
+        DeliverAddress deliverAddress = getDeliveryAddressAndMemberCheck(memberId, recipient.getDeliverSeq());
 
         deliverAddress.updateRecipient(recipient.getRecipient());
 
@@ -75,14 +74,14 @@ public class DeliveryAddressFacade {
     @Transactional
     public DeliveryAddressResponse updateDeliveryAddressContact(final String memberId, final DeliveryAddressUpdateRequest.Contact contact) {
 
-        DeliverAddress deliverAddress = isMemberCheck(memberId, contact.getDeliverSeq());
+        DeliverAddress deliverAddress = getDeliveryAddressAndMemberCheck(memberId, contact.getDeliverSeq());
 
         deliverAddress.updateContact(contact.getContact());
 
         return DeliveryAddressResponse.from(deliverAddress);
     }
 
-    private DeliverAddress isMemberCheck(final String memberId, final Long deliverId) {
+    private DeliverAddress getDeliveryAddressAndMemberCheck(final String memberId, final Long deliverId) {
 
         Member member = memberService.findByMemberId(memberId);
 

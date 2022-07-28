@@ -1,6 +1,16 @@
 package individual.freshplace.util.constant;
 
-public final class GradeCode {
+public enum GradeCode {
 
-    public final static String CODE_GRADE_GENERAL = "G001";
+    GENERAL("G001");
+
+    private String codeValue;
+
+    GradeCode(String codeValue) {
+        this.codeValue = codeValue;
+    }
+
+    public String getGradeCode() {
+        return this.codeValue;
+    }
 }

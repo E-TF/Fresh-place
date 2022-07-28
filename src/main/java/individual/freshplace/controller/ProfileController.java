@@ -3,7 +3,7 @@ package individual.freshplace.controller;
 import individual.freshplace.config.auth.PrincipalDetails;
 import individual.freshplace.dto.profile.ProfileUpdateRequest;
 import individual.freshplace.dto.profile.ProfileResponse;
-import individual.freshplace.service.ProfileFacade;
+import individual.freshplace.service.FProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,16 +15,15 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class ProfileController {
 
-    private final ProfileFacade profileFacade;
+    private final FProfileService fProfileService;
 
     @GetMapping("/members/profile")
     public ResponseEntity<ProfileResponse> getProfile(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return ResponseEntity.ok().body(profileFacade.getProfile(principalDetails.getUsername()));
+        return ResponseEntity.ok().body(fProfileService.getProfile(principalDetails.getUsername()));
     }
 
     @PutMapping("/members/profile")
-    public ResponseEntity<ProfileResponse> updateProfile(@Valid @RequestBody ProfileUpdateRequest profileUpdateRequest, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return ResponseEntity.ok().body(profileFacade.updateProfile(principalDetails.getUsername(), profileUpdateRequest));
+    public ResponseEntity<ProfileResponse> updateProfile(@AuthenticationPrincipal PrincipalDetails principalDetails, @Valid @RequestBody ProfileUpdateRequest profileUpdateRequest) {
+        return ResponseEntity.ok().body(fProfileService.updateProfile(principalDetails.getUsername(), profileUpdateRequest));
     }
-
 }

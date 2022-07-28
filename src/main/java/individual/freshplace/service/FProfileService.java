@@ -4,7 +4,7 @@ import individual.freshplace.dto.profile.ProfileUpdateRequest;
 import individual.freshplace.dto.profile.ProfileResponse;
 import individual.freshplace.entity.Member;
 import individual.freshplace.util.ErrorCode;
-import individual.freshplace.util.constant.Prefix;
+import individual.freshplace.util.constant.LockPrefix;
 import individual.freshplace.util.exception.DuplicationException;
 import individual.freshplace.util.lock.UserLevelLock;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class ProfileFacade {
+public class FProfileService {
 
     private final UserLevelLock userLevelLock;
     private final MemberService memberService;
-    private final ObjectProvider<ProfileFacade> memberServiceObjectProvider;
+    private final ObjectProvider<FProfileService> fProfileServiceObjectProvider;
 
     @Transactional
     public ProfileResponse getProfile(final String memberId) {
@@ -30,21 +30,21 @@ public class ProfileFacade {
 
     public ProfileResponse updateProfile(final String memberId, final ProfileUpdateRequest profileUpdateRequest) {
 
-        return userLevelLock.lockProcess(Prefix.LOCK_PREFIX_UPDATE_MEMBER + profileUpdateRequest.getMemberId(), () ->
-                ProfileResponse.from(memberServiceObjectProvider.getObject().updateProfileInner(memberId, profileUpdateRequest)));
+        return userLevelLock.lockProcess(LockPrefix.UPDATE_MEMBER.getLockPrefix() + profileUpdateRequest.getMemberId(), () ->
+                fProfileServiceObjectProvider.getObject().updateProfileInner(memberId, profileUpdateRequest));
     }
 
     @Transactional
-    public Member updateProfileInner(final String memberId, final ProfileUpdateRequest profileUpdateRequest) {
-
-        Member member = memberService.findByMemberId(memberId);
+    public ProfileResponse updateProfileInner(final String memberId, final ProfileUpdateRequest profileUpdateRequest) {
 
         if (memberService.existsByMemberId(profileUpdateRequest.getMemberId())) {
             throw new DuplicationException(ErrorCode.UN_AVAILABLE_ID, profileUpdateRequest.getMemberId());
         }
 
+        Member member = memberService.findByMemberId(memberId);
+
         member.updateProfile(profileUpdateRequest);
 
-        return member;
+        return ProfileResponse.from(member);
     }
 }

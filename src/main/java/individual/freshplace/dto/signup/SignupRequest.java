@@ -28,6 +28,7 @@ public class SignupRequest {
     private String memberName;
 
     @NotBlank
+    @Pattern(regexp = "^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$", message = "01*-****-**** 형식을 지켜주세요.")
     private String phoneNumber;
 
     @Email(message = "이메일 형식을 지켜주세요.")

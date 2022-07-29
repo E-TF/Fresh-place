@@ -20,7 +20,6 @@ public class DiscountByGradeService {
     @Transactional(readOnly = true)
     @Cacheable(value = "grade", key = "#id")
     public DiscountByGrade findById(final String id) {
-        log.info("grade 캐시가 없는 경우");
         return discountByGradeRepository.findById(id)
                 .orElseThrow(() -> new WrongValueException(ErrorCode.BAD_CODE, id));
     }

@@ -1,5 +1,6 @@
 package individual.freshplace.config;
 
+import individual.freshplace.util.constant.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
@@ -16,7 +17,7 @@ public class CacheConfig {
     @Bean
     public CacheManager cacheManager() {
         SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
-        simpleCacheManager.setCaches(List.of(new ConcurrentMapCache("grade")));
+        simpleCacheManager.setCaches(List.of(new ConcurrentMapCache(Cache.GRADE.getCache())));
         return simpleCacheManager;
     }
 }

@@ -27,7 +27,7 @@ public class MemberServiceTest {
     private static final SignupRequest SIGNUP_REQUEST = new SignupRequest(TEST_ID, TEST_PW, TEST_NAME, TEST_PHONE_NUMBER, TEST_EMAIL, TEST_BIRTH);
 
     @Autowired
-    private MemberService memberService;
+    private FSignupService fSignupService;
 
     @Test
     @DisplayName("동일한 아이디로 회원가입 동시 요청 5번 일때 5번 성공, 0번 실패")
@@ -44,7 +44,7 @@ public class MemberServiceTest {
             service.execute(() -> {
 
                 try {
-                    memberService.signupInner(SIGNUP_REQUEST);
+                    fSignupService.signupInner(SIGNUP_REQUEST);
                 } catch (DuplicationException e) {
                     throwCount.getAndIncrement();
                 }
@@ -73,7 +73,7 @@ public class MemberServiceTest {
             service.execute(() -> {
 
                 try {
-                    memberService.signup(SIGNUP_REQUEST);
+                    fSignupService.signup(SIGNUP_REQUEST);
                 } catch (DuplicationException e) {
                     throwCount.getAndIncrement();
                 }

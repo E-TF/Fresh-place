@@ -60,7 +60,7 @@ public class LoginTest {
     @BeforeEach
     void setup() {
 
-        grade = discountByGradeRepository.findById(GradeCode.CODE_GRADE_GENERAL).orElseThrow();
+        grade = discountByGradeRepository.findById(GradeCode.GENERAL.getGradeCode()).orElseThrow();
 
         Member member = Member.builder().
                 memberId(TEST_ID)

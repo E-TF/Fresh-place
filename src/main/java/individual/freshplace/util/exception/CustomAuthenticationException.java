@@ -1,9 +1,11 @@
 package individual.freshplace.util.exception;
 
-import org.springframework.security.core.AuthenticationException;
+import individual.freshplace.util.ErrorCode;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-public class CustomAuthenticationException extends AuthenticationException {
-    public CustomAuthenticationException(String msg) {
-        super(msg);
-    }
+@Getter
+@AllArgsConstructor
+public class CustomAuthenticationException extends RuntimeException {
+    private final ErrorCode errorCode;
 }

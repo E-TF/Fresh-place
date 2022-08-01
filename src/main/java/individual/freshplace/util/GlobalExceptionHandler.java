@@ -1,5 +1,6 @@
 package individual.freshplace.util;
 
+import individual.freshplace.util.exception.CustomAuthenticationException;
 import individual.freshplace.util.exception.DuplicationException;
 import individual.freshplace.util.exception.StringLockException;
 import individual.freshplace.util.exception.WrongValueException;
@@ -19,17 +20,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = DuplicationException.class)
     public ResponseEntity<ErrorResponse> duplicationExceptionHandler(final DuplicationException e) {
-        return ErrorResponse.errorResponse(e.getErrorCode(), e.getValue());
+        return ErrorResponse.errorResponseAndValue(e.getErrorCode(), e.getValue());
     }
 
     @ExceptionHandler(value = WrongValueException.class)
     public ResponseEntity<ErrorResponse> wrongValueExceptionHandler(final WrongValueException e) {
-        return ErrorResponse.errorResponse(e.getErrorCode(), e.getValue());
+        return ErrorResponse.errorResponseAndValue(e.getErrorCode(), e.getValue());
     }
 
     @ExceptionHandler(StringLockException.class)
     public ResponseEntity<ErrorResponse> StringLockExceptionHandler(final StringLockException e) {
-        return ErrorResponse.errorResponse(e.getErrorCode(), e.getValue());
+        return ErrorResponse.errorResponseAndValue(e.getErrorCode(), e.getValue());
+    }
+
+    @ExceptionHandler(CustomAuthenticationException.class)
+    public ResponseEntity<ErrorResponse> AuthenticationExceptionHandler(final CustomAuthenticationException e) {
+        return ErrorResponse.errorResponse(e.getErrorCode());
     }
 
     @Override

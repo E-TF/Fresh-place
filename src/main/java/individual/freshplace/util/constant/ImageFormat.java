@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum LockPrefix {
+public enum ImageFormat {
 
-    SIGNUP("signup"),
-    UPDATE_MEMBER("updateMember");
+    STANDARD(550, 700);
 
-    private String methodName;
+    private int weight;
+    private int height;
 }

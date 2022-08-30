@@ -49,4 +49,10 @@ public class DeliveryAddressController {
     public ResponseEntity<DeliveryAddressResponse> updateDeliveryAddressContact(@AuthenticationPrincipal PrincipalDetails principalDetails, @Valid @RequestBody DeliveryAddressUpdateRequest.Contact contact) {
         return ResponseEntity.ok().body(fDeliveryAddressService.updateDeliveryAddressContact(principalDetails.getUsername(), contact));
     }
+
+    @DeleteMapping("/{deliverSeq}")
+    public ResponseEntity deleteDeliveryAddress(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable Long deliverSeq) {
+        fDeliveryAddressService.deleteDeliveryAddress(principalDetails.getUsername(), deliverSeq);
+        return ResponseEntity.ok().build();
+    }
 }

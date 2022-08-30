@@ -1,4 +1,4 @@
-package individual.freshplace.util;
+package individual.freshplace.util.constant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +13,7 @@ public enum ErrorCode {
     BAD_CODE(HttpStatus.BAD_REQUEST, "존재하지 않는 코드값 입니다."),
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "유효성 에러입니다."),
     BAD_VALUE(HttpStatus.BAD_REQUEST, "존재하지 않는 값입니다."),
+    FILE_ERROR(HttpStatus.BAD_REQUEST, "파일을 확인해주세요,"),
 
     FAILED_LOGIN(HttpStatus.UNAUTHORIZED, "로그인에 실패하였습니다."),
     RE_REQUEST_LOGIN(HttpStatus.UNAUTHORIZED, "로그인을 다시 시도해주세요."),
@@ -23,7 +24,9 @@ public enum ErrorCode {
 
     UN_AVAILABLE_ID(HttpStatus.CONFLICT, "해당 아이디는 사용할 수 없습니다."),
 
-    FAILED_QUERY(HttpStatus.INTERNAL_SERVER_ERROR, "쿼리수행에 실패했습니다.");
+    FAILED_QUERY(HttpStatus.INTERNAL_SERVER_ERROR, "쿼리수행에 실패했습니다."),
+    FAILED_FILE_TO_STREAM(HttpStatus.INTERNAL_SERVER_ERROR, "파일 읽기를 실패했습니다."),
+    FAILED_PIXEL_GRABBER(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 비율 축소에 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

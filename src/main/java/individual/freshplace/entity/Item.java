@@ -1,12 +1,13 @@
 package individual.freshplace.entity;
 
+import individual.freshplace.util.constant.CategoryType;
 import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity
 @Getter
+@Entity
 public class Item {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,8 +17,7 @@ public class Item {
 
     private String description;
 
-    @Column(columnDefinition = "text")
-    private String image;
+    private long price;
 
     private long weight;
 
@@ -29,5 +29,6 @@ public class Item {
 
     private LocalDate expirationDate;
 
-    private String categoryCode;
+//    @Convert(converter = CategoryTypeConverter.class)
+    private CategoryType categoryCode;
 }

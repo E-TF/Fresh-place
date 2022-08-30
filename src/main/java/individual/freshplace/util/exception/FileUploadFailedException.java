@@ -6,7 +6,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class WrongValueException extends RuntimeException {
+public class FileUploadFailedException extends RuntimeException {
     private final ErrorCode errorCode;
-    private final String value;
 }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import individual.freshplace.config.JwtProperties;
 import individual.freshplace.config.auth.PrincipalDetails;
 import individual.freshplace.dto.login.LoginRequest;
-import individual.freshplace.util.ErrorCode;
+import individual.freshplace.util.constant.ErrorCode;
 import individual.freshplace.util.ReadableRequestBodyWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

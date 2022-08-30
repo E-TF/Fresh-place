@@ -1,6 +1,6 @@
 package individual.freshplace.util.lock;
 
-import individual.freshplace.util.ErrorCode;
+import individual.freshplace.util.constant.ErrorCode;
 import individual.freshplace.util.exception.StringLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

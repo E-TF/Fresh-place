@@ -4,8 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Entity
 @Getter
+@Entity
 public class Code {
 
     @Id

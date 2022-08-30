@@ -2,7 +2,7 @@ package individual.freshplace.service;
 
 import individual.freshplace.entity.Member;
 import individual.freshplace.repository.MemberRepository;
-import individual.freshplace.util.ErrorCode;
+import individual.freshplace.util.constant.ErrorCode;
 import individual.freshplace.util.exception.WrongValueException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void deleteByMemberId(final String memberId) {
-        memberRepository.deleteByMemberId(memberId);
+    public void delete(final Member member) {
+        memberRepository.delete(member);
     }
 }

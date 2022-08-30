@@ -1,5 +1,6 @@
 package individual.freshplace.util;
 
+import individual.freshplace.util.constant.ErrorCode;
 import lombok.*;
 import org.springframework.http.ResponseEntity;
 

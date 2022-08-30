@@ -1,9 +1,7 @@
 package individual.freshplace.util;
 
-import individual.freshplace.util.exception.CustomAuthenticationException;
-import individual.freshplace.util.exception.DuplicationException;
-import individual.freshplace.util.exception.StringLockException;
-import individual.freshplace.util.exception.WrongValueException;
+import individual.freshplace.util.constant.ErrorCode;
+import individual.freshplace.util.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,6 +34,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(CustomAuthenticationException.class)
     public ResponseEntity<ErrorResponse> AuthenticationExceptionHandler(final CustomAuthenticationException e) {
         return ErrorResponse.errorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(NonExistentException.class)
+    public ResponseEntity<ErrorResponse> NonExistentExceptionHandler(final NonExistentException e) {
+        return ErrorResponse.errorResponseAndValue(e.getErrorCode(), e.getValue());
+    }
+
+    @ExceptionHandler(EmptyFileException.class)
+    public ResponseEntity<ErrorResponse> EmptyFileExceptionHandler(final EmptyFileException e) {
+        return ErrorResponse.errorResponseAndValue(e.getErrorCode(), e.getValue());
     }
 
     @Override

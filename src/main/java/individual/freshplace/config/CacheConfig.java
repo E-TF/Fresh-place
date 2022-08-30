@@ -17,7 +17,12 @@ public class CacheConfig {
     @Bean
     public CacheManager cacheManager() {
         SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
-        simpleCacheManager.setCaches(List.of(new ConcurrentMapCache(Cache.GRADE.getCache())));
+        simpleCacheManager.setCaches(List.of(
+                new ConcurrentMapCache(Cache.GRADE.getCacheName()),
+                new ConcurrentMapCache(Cache.CATEGORY.getCacheName()),
+                new ConcurrentMapCache(Cache.SUB_CATEGORY.getCacheName())
+//                new ConcurrentMapCache(Cache.THUMBNAIL.getCacheName()))
+        ));
         return simpleCacheManager;
     }
 }

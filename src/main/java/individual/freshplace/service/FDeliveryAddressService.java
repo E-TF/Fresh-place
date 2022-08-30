@@ -5,7 +5,7 @@ import individual.freshplace.dto.deliveryaddress.DeliveryAddressResponse;
 import individual.freshplace.dto.deliveryaddress.DeliveryAddressUpdateRequest;
 import individual.freshplace.entity.DeliverAddress;
 import individual.freshplace.entity.Member;
-import individual.freshplace.util.ErrorCode;
+import individual.freshplace.util.constant.ErrorCode;
 import individual.freshplace.util.exception.CustomAuthenticationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -81,11 +81,19 @@ public class FDeliveryAddressService {
         return DeliveryAddressResponse.from(deliverAddress);
     }
 
-    private DeliverAddress getDeliveryAddressAndMemberCheck(final String memberId, final Long deliverId) {
+    @Transactional
+    public void deleteDeliveryAddress(final String memberId, final Long deliverSeq) {
+
+        DeliverAddress deliverAddress = getDeliveryAddressAndMemberCheck(memberId, deliverSeq);
+
+        deliveryAddressService.delete(deliverAddress);
+    }
+
+    private DeliverAddress getDeliveryAddressAndMemberCheck(final String memberId, final Long deliverSeq) {
 
         Member member = memberService.findByMemberId(memberId);
 
-        DeliverAddress deliveryAddress = deliveryAddressService.findById(deliverId);
+        DeliverAddress deliveryAddress = deliveryAddressService.findById(deliverSeq);
 
         if (member != deliveryAddress.getMember()) {
             throw new CustomAuthenticationException(ErrorCode.NON_PERMISSION);

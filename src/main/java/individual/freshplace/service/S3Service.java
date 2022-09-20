@@ -19,6 +19,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class S3Service {
 
+    private final static String SLASH = "/";
+
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -29,6 +31,7 @@ public class S3Service {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getSize());
         objectMetadata.setContentType(multipartFile.getContentType());
+        objectMetadata.setCacheControl("max-age=3600");
 
         String key = createFilePath(directoryName, objectName, multipartFile.getOriginalFilename());
 
@@ -47,6 +50,6 @@ public class S3Service {
     }
 
     private String createFilePath(String directoryName, Long objectName, String fileName) {
-        return directoryName.concat("/").concat(objectName.toString()).concat("/").concat(UUID.randomUUID().toString()).concat(fileName);
+        return directoryName + SLASH + objectName.toString() + SLASH + UUID.randomUUID().toString() + fileName;
     }
 }

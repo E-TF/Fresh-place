@@ -1,16 +1,18 @@
 package individual.freshplace.dto.item;
 
 import individual.freshplace.entity.Item;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor(force = true)
+@RequiredArgsConstructor
 public class ItemByCategoryResponse {
 
-    private String itemName;
+    private final String itemName;
 
-    private long price;
+    private final long price;
 
     public static ItemByCategoryResponse from(final Item item) {
         return new ItemByCategoryResponse(

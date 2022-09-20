@@ -12,7 +12,7 @@ import javax.persistence.Id;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Image {
+public class Image extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long imageSeq;

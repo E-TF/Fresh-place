@@ -1,12 +1,13 @@
 package individual.freshplace.repository;
 
 import individual.freshplace.entity.Item;
-import individual.freshplace.util.constant.CategoryType;
+import individual.freshplace.util.constant.SubCategory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    List<Item> findByCategoryCode(CategoryType categoryType);
+    Page<Item> findByCategoryCode(SubCategory subCategory, Pageable pageable);
 }

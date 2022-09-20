@@ -5,6 +5,7 @@ import individual.freshplace.config.auth.PrincipalDetailsService;
 import individual.freshplace.config.jwt.JwtAuthenticationEntryPoint;
 import individual.freshplace.config.jwt.JwtAuthenticationFilter;
 import individual.freshplace.config.jwt.JwtAuthorizationFilter;
+import individual.freshplace.util.constant.Authority;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -81,11 +82,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .mvcMatchers(HttpMethod.POST, "/public/signup").permitAll()
-                .mvcMatchers(HttpMethod.GET, "/category/**").permitAll()
-                .mvcMatchers(HttpMethod.GET, "/items/**").permitAll()
-                .mvcMatchers(HttpMethod.POST, "/items/image/upload").permitAll()
-                .mvcMatchers(HttpMethod.DELETE, "/delete/**").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/public/**").permitAll()
+                .mvcMatchers(HttpMethod.POST, "/public/**").permitAll()
+
+                .mvcMatchers(HttpMethod.POST, "/admin/**").hasAuthority(Authority.ADMIN.name())
+                .mvcMatchers(HttpMethod.PUT, "/admin/**").hasAuthority(Authority.ADMIN.name())
+
                 .anyRequest().authenticated()
 
                 .and()

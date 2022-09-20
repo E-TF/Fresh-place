@@ -2,6 +2,7 @@ package individual.freshplace.service;
 
 import individual.freshplace.entity.DiscountByGrade;
 import individual.freshplace.repository.DiscountByGradeRepository;
+import individual.freshplace.util.constant.Cache;
 import individual.freshplace.util.constant.ErrorCode;
 import individual.freshplace.util.exception.WrongValueException;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class DiscountByGradeService {
     private final DiscountByGradeRepository discountByGradeRepository;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "grade", key = "#id")
+    @Cacheable(value = Cache.GRADE, key = "#id")
     public DiscountByGrade findById(final String id) {
         return discountByGradeRepository.findById(id)
                 .orElseThrow(() -> new WrongValueException(ErrorCode.BAD_CODE, id));

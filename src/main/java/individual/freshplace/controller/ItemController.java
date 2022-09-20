@@ -2,18 +2,19 @@ package individual.freshplace.controller;
 
 import individual.freshplace.dto.item.ItemByCategoryResponse;
 import individual.freshplace.dto.item.ItemResponse;
+import individual.freshplace.dto.item.ItemUpdateRequest;
 import individual.freshplace.service.FCategoryService;
-import individual.freshplace.service.FImageUploadService;
 import individual.freshplace.service.FItemService;
+import individual.freshplace.util.constant.Cache;
 import individual.freshplace.util.constant.Category;
-import individual.freshplace.util.constant.CategoryType;
-import individual.freshplace.util.constant.ErrorCode;
-import individual.freshplace.util.exception.EmptyFileException;
+import individual.freshplace.util.constant.SubCategory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,39 +26,37 @@ public class ItemController {
 
     private final FItemService fItemService;
     private final FCategoryService fCategoryService;
-    private final FImageUploadService fImageUploadService;
 
-    @GetMapping("/category")
-    @Cacheable(value = "category")
+    @GetMapping("/public/category")
+    @Cacheable(cacheNames = Cache.CATEGORY, key = Cache.MAIN_CATEGORY_KEY)
     public List<String> getCategory() {
-        return Arrays.stream(Category.values()).map(Category::getCodeTypeName).collect(Collectors.toList());
+        return Arrays.stream(Category.values()).map(Category::getCodeKorName).collect(Collectors.toList());
     }
 
-    @GetMapping("/category/{codeTypeName}")
-    @Cacheable(value = "subCategory", key = "#codeTypeName")
-    public List<String> getCategories(@PathVariable String codeTypeName) {
-        return Category.findByCodeTypeName(codeTypeName).stream().map(CategoryType::getCodeName).collect(Collectors.toList());
+    @GetMapping("/public/category/{codeEngName}")
+    @Cacheable(cacheNames = Cache.SUB_CATEGORY, key = "#codeEngName")
+    public List<String> getCategories(@PathVariable String codeEngName) {
+        return Category.findByCodeEngName(codeEngName).stream().map(SubCategory::getCodeKorName).collect(Collectors.toList());
     }
 
-    @GetMapping("/items/category/{codeName}")
-    public ResponseEntity<List<ItemByCategoryResponse>> getItems(@PathVariable String codeName) {
-        CategoryType categoryType = CategoryType.findByCodeName(codeName);
-        return ResponseEntity.ok().body(fCategoryService.getItems(categoryType));
+    @GetMapping("/public/items/category")
+    @Cacheable(cacheNames = Cache.ITEMS_BY_CATEGORY, key = "#codeEngName + (#pageable.getPageNumber() + 1)")
+    public List<ItemByCategoryResponse> getItems(@RequestParam String codeEngName, @PageableDefault(size = 1) Pageable pageable) {
+        SubCategory subCategory = SubCategory.findByCodeEngName(codeEngName);
+        return fCategoryService.getItems(subCategory, pageable);
     }
 
-    @GetMapping("/items/{itemSeq}")
-    public ResponseEntity<ItemResponse> getItem(@PathVariable Long itemSeq) {
-        return ResponseEntity.ok().body(fItemService.getItemDetail(itemSeq));
+    @GetMapping("/public/item/{itemSeq}")
+    @Cacheable(cacheNames = Cache.ITEM, key = "#itemSeq")
+    public ItemResponse getItem(@PathVariable Long itemSeq) {
+        return fItemService.getItemDetail(itemSeq);
     }
 
-    @PostMapping("/items/image/upload")
-    public ResponseEntity itemsUploadRequest(@RequestParam("objectName") Long objectName,
-                                             @RequestParam("image") MultipartFile multipartFile) {
-
-        if (multipartFile.isEmpty()) {
-            throw new EmptyFileException(ErrorCode.FILE_ERROR, multipartFile.getName());
-        }
-        fImageUploadService.saveItemImage(objectName, multipartFile);
-        return ResponseEntity.ok().build();
+    @PutMapping("/admin/item")
+    @CacheEvict(cacheNames = Cache.ITEMS_BY_CATEGORY, allEntries = true)
+    @CachePut(cacheNames = Cache.ITEM, key = "#itemUpdateRequest.getItemSeq()")
+    public ItemResponse updateItem(@RequestBody ItemUpdateRequest itemUpdateRequest) {
+        return fItemService.updateItemDetail(itemUpdateRequest);
     }
+
 }

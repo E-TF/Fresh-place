@@ -10,24 +10,26 @@ import java.util.List;
 @AllArgsConstructor
 public enum Category {
 
-    FRU_CAT("과일", Arrays.asList(CategoryType.ECO_FRU, CategoryType.FRO_FRU, CategoryType.DOM_FRU, CategoryType.IMP_FRU)),
-    VEG_CAT("채소", Arrays.asList(CategoryType.ECO_VEG, CategoryType.ROO_VEG, CategoryType.LEF_VEG, CategoryType.CAB_VEG, CategoryType.SCA_VEG, CategoryType.FRU_VEG, CategoryType.MIX_VEG, CategoryType.SPR_VEG, CategoryType.MUS_VEG)),
-    MEA_CAT( "육류", Arrays.asList(CategoryType.BEE_MEA, CategoryType.POR_MEA, CategoryType.LAM_MEA, CategoryType.CHI_MEA, CategoryType.DUC_MEA, CategoryType.EGG_MEA)),
-    DRI_CAT("음료" , Arrays.asList(CategoryType.WAT_DRI, CategoryType.JUI_DRI, CategoryType.SPA_DRI, CategoryType.DAI_DRI, CategoryType.COF_DRI, CategoryType.TEA_DRI, CategoryType.ALC_DRI)),
-    SEA_CAT("해산물", Arrays.asList(CategoryType.FIS_SEA, CategoryType.CEP_SEA, CategoryType.SHE_SEA, CategoryType.CLA_SEA, CategoryType.WEE_SEA)),
-    SNA_CAT("간식", Arrays.asList(CategoryType.SNA_SNA, CategoryType.CHO_SNA, CategoryType.JEL_SNA, CategoryType.CAN_SNA, CategoryType.ICE_SNA)),
-    BAK_CAT("베이커리", Arrays.asList(CategoryType.BRE_BAK, CategoryType.SPR_BAK, CategoryType.PIE_BAK, CategoryType.CHE_BAK)),
-    SAU_CAT("양념", Arrays.asList(CategoryType.DRE_SAU, CategoryType.SOY_SAU, CategoryType.OIL_SAU, CategoryType.SPI_SAU, CategoryType.POW_SAU)),
-    KIT_CAT("밀키트", Arrays.asList(CategoryType.SER_KIT, CategoryType.NOO_KIT, CategoryType.SOU_KIT, CategoryType.SAL_KIT, CategoryType.BOX_KIT, CategoryType.SID_KIT, CategoryType.CAN_KIT, CategoryType.MIL_KIT));
+    FRU_CAT("C001", "fruit", "과일", Arrays.asList(SubCategory.ECO_FRU, SubCategory.FRO_FRU, SubCategory.DOM_FRU, SubCategory.IMP_FRU)),
+    VEG_CAT("C002", "vegetable", "채소", Arrays.asList(SubCategory.ECO_VEG, SubCategory.ROO_VEG, SubCategory.LEF_VEG, SubCategory.CAB_VEG, SubCategory.SCA_VEG, SubCategory.FRU_VEG, SubCategory.MIX_VEG, SubCategory.SPR_VEG, SubCategory.MUS_VEG)),
+    MEA_CAT("C003", "meat", "육류", Arrays.asList(SubCategory.BEE_MEA, SubCategory.POR_MEA, SubCategory.LAM_MEA, SubCategory.CHI_MEA, SubCategory.DUC_MEA, SubCategory.EGG_MEA)),
+    DRI_CAT("C004", "drink", "음료", Arrays.asList(SubCategory.WAT_DRI, SubCategory.JUI_DRI, SubCategory.SPA_DRI, SubCategory.DAI_DRI, SubCategory.COF_DRI, SubCategory.TEA_DRI, SubCategory.ALC_DRI)),
+    SEA_CAT("C005", "seafood", "해산물", Arrays.asList(SubCategory.FIS_SEA, SubCategory.CEP_SEA, SubCategory.CLA_SEA, SubCategory.CRU_SEA, SubCategory.WEE_SEA)),
+    SNA_CAT("C006", "snack", "간식", Arrays.asList(SubCategory.SNA_SNA, SubCategory.CHO_SNA, SubCategory.JEL_SNA, SubCategory.CAN_SNA, SubCategory.ICE_SNA)),
+    BAK_CAT("C007", "bakery", "베이커리", Arrays.asList(SubCategory.BRE_BAK, SubCategory.SPR_BAK, SubCategory.PIE_BAK, SubCategory.CHE_BAK)),
+    SAU_CAT("C008", "seasoning", "양념", Arrays.asList(SubCategory.DRE_SAU, SubCategory.SOY_SAU, SubCategory.OIL_SAU, SubCategory.SPI_SAU, SubCategory.POW_SAU)),
+    KIT_CAT("C009", "mealKit", "밀키트", Arrays.asList(SubCategory.SER_KIT, SubCategory.NOO_KIT, SubCategory.SOU_KIT, SubCategory.SAL_KIT, SubCategory.BOX_KIT, SubCategory.SID_KIT, SubCategory.CAN_KIT, SubCategory.MIL_KIT));
 
-    private String codeTypeName;
-    private List<CategoryType> categoryTypeList;
+    private String codeValue;
+    private String codeEngName;
+    private String codeKorName;
+    private List<SubCategory> subCategoryList;
 
-    public static List<CategoryType> findByCodeTypeName(String codeTypeName) {
+    public static List<SubCategory> findByCodeEngName(String codeEngName) {
         return Arrays.stream(Category.values())
-                .filter(c -> c.getCodeTypeName().equals(codeTypeName))
+                .filter(c -> c.getCodeEngName().equals(codeEngName))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new)
-                .getCategoryTypeList();
+                .getSubCategoryList();
     }
 }

@@ -7,7 +7,6 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class ProfileUpdateRequest {
 

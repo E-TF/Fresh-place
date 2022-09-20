@@ -1,6 +1,6 @@
 package individual.freshplace.util;
 
-import individual.freshplace.util.constant.CategoryType;
+import individual.freshplace.util.constant.SubCategory;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -8,16 +8,16 @@ import java.util.EnumSet;
 import java.util.NoSuchElementException;
 
 @Converter(autoApply = true)
-public class CategoryTypeConverter implements AttributeConverter<CategoryType, String> {
+public class CategoryTypeConverter implements AttributeConverter<SubCategory, String> {
 
     @Override
-    public String convertToDatabaseColumn(CategoryType attribute) {
+    public String convertToDatabaseColumn(SubCategory attribute) {
         return attribute.getCodeValue();
     }
 
     @Override
-    public CategoryType convertToEntityAttribute(String dbData) {
-        return EnumSet.allOf(CategoryType.class).stream()
+    public SubCategory convertToEntityAttribute(String dbData) {
+        return EnumSet.allOf(SubCategory.class).stream()
                 .filter(c -> c.getCodeValue().equals(dbData))
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException());

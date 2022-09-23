@@ -31,7 +31,7 @@ public class ItemResponse {
 
     private final List<String> imageUrlList;
 
-    public static ItemResponse from(final Item item, final List<Image> images) {
+    public static ItemResponse of(final Item item, final List<Image> images) {
         return new ItemResponse(
                 item.getItemName(),
                 item.getDescription(),

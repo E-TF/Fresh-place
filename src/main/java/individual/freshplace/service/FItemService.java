@@ -26,7 +26,7 @@ public class FItemService {
         Item item = itemService.findById(itemSeq);
         List<Image> images = imageService.findByImagePath(getUrlPrefix(itemSeq));
 
-        return ItemResponse.from(item, images);
+        return ItemResponse.of(item, images);
     }
 
     @Transactional
@@ -36,7 +36,7 @@ public class FItemService {
         item.updateItem(itemUpdateRequest);
         List<Image> images = imageService.findByImagePath(getUrlPrefix(itemUpdateRequest.getItemSeq()));
 
-        return ItemResponse.from(item, images);
+        return ItemResponse.of(item, images);
     }
 
     private String getUrlPrefix(final Long itemSeq) {

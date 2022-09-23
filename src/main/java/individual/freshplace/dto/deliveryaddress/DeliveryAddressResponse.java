@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DeliveryAddressResponse {
 
-    private final Long deliverSeq;
+    private final long deliverSeq;
 
     private final Address address;
 

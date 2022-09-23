@@ -1,5 +1,6 @@
 package individual.freshplace.service;
 
+import individual.freshplace.dto.image.ImageResizingResponse;
 import individual.freshplace.entity.Image;
 import individual.freshplace.util.ImageUtil;
 import individual.freshplace.util.constant.ErrorCode;
@@ -22,7 +23,7 @@ public class FImageUploadService {
     private final ImageService imageService;
 
     @Transactional
-    public void saveItemImage(final Long itemId, final MultipartFile multipartFile) {
+    public ImageResizingResponse saveItemImage(final Long itemId, final MultipartFile multipartFile) {
 
         if (!itemService.existsById(itemId)) {
             throw new NonExistentException(ErrorCode.BAD_VALUE, itemId.toString());
@@ -41,5 +42,7 @@ public class FImageUploadService {
 
         image = new Image(resizingObjectUrl);
         imageService.save(image);
+
+        return ImageResizingResponse.of(originObjectUrl, resizingObjectUrl);
     }
 }

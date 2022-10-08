@@ -1,0 +1,38 @@
+server:
+  servlet:
+    encoding:
+      force: 'true'
+      enabled: 'true'
+      charset: UTF-8
+  port: '8080'
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+    org:
+      springframework:
+        transaction: error
+spring:
+  config:
+    import:
+    - classpath:application-db.yml
+    - classpath:application-jwt.yml
+    - classpath:application-local.yml
+    - classpath:application-s3.yml
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      enabled: 'true'
+      max-request-size: 50MB
+  jpa:
+    show-sql: 'true'
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: 'true'
+lombok:
+  anyConstructor:
+    addConstructorProperties: 'true'

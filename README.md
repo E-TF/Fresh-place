@@ -1,2 +1,2 @@
-###test를 재실행   
-ci & cd retest7
+##build 를 해보자
+ci & cd retest8

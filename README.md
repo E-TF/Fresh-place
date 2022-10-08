@@ -1,2 +1,2 @@
 ###test를 재실행   
-ci & cd retest5 
+ci & cd retest6

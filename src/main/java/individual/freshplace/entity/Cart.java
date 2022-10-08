@@ -4,9 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@Getter
 @Entity
 @Table(name = "cart_detail")
-@Getter @Setter
 public class Cart extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

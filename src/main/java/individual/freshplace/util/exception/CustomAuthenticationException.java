@@ -1,6 +1,6 @@
 package individual.freshplace.util.exception;
 
-import individual.freshplace.util.ErrorCode;
+import individual.freshplace.util.constant.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

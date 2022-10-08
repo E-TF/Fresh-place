@@ -1,12 +1,11 @@
 package individual.freshplace.entity;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 
+@Getter
 @Entity
-@Getter @Setter
 public class OrderDetail {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

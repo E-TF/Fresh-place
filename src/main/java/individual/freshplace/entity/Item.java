@@ -1,13 +1,18 @@
 package individual.freshplace.entity;
 
+import individual.freshplace.dto.item.ItemUpdateRequest;
+import individual.freshplace.util.constant.SubCategory;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity
 @Getter
-public class Item {
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Item extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long itemSeq;
@@ -16,8 +21,7 @@ public class Item {
 
     private String description;
 
-    @Column(columnDefinition = "text")
-    private String image;
+    private long price;
 
     private long weight;
 
@@ -29,5 +33,15 @@ public class Item {
 
     private LocalDate expirationDate;
 
-    private String categoryCode;
+    private SubCategory categoryCode;
+
+    public void updateItem(final ItemUpdateRequest itemUpdateRequest) {
+        this.itemName = itemUpdateRequest.getItemName();
+        this.description = itemUpdateRequest.getDescription();
+        this.price = itemUpdateRequest.getPrice();
+        this.weight = itemUpdateRequest.getWeight();
+        this.origin = itemUpdateRequest.getOrigin();
+        this.expirationDate = itemUpdateRequest.getExpirationDate();
+        this.categoryCode = SubCategory.findByCodeEngName(itemUpdateRequest.getCategoryEngName());
+    }
 }

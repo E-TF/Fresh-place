@@ -4,9 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@Getter
 @Entity
-@Getter @Setter
-public class DailyRanking extends BaseEntity{
+public class DailyRanking extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long rankingSeq;

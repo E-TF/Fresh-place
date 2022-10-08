@@ -3,7 +3,7 @@ package individual.freshplace.service;
 import individual.freshplace.dto.profile.ProfileUpdateRequest;
 import individual.freshplace.dto.profile.ProfileResponse;
 import individual.freshplace.entity.Member;
-import individual.freshplace.util.ErrorCode;
+import individual.freshplace.util.constant.ErrorCode;
 import individual.freshplace.util.constant.LockPrefix;
 import individual.freshplace.util.exception.DuplicationException;
 import individual.freshplace.util.lock.UserLevelLock;
@@ -30,7 +30,7 @@ public class FProfileService {
 
     public ProfileResponse updateProfile(final String memberId, final ProfileUpdateRequest profileUpdateRequest) {
 
-        return userLevelLock.lockProcess(LockPrefix.UPDATE_MEMBER.getLockPrefix() + profileUpdateRequest.getMemberId(), () ->
+        return userLevelLock.lockProcess(LockPrefix.UPDATE_MEMBER.getMethodName() + profileUpdateRequest.getMemberId(), () ->
                 fProfileServiceObjectProvider.getObject().updateProfileInner(memberId, profileUpdateRequest));
     }
 

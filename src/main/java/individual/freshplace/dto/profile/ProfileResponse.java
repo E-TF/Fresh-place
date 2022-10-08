@@ -1,29 +1,25 @@
 package individual.freshplace.dto.profile;
 
 import individual.freshplace.entity.Member;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProfileResponse {
 
-    private String memberId;
+    private final String memberId;
 
-    private String memberName;
+    private final String memberName;
 
-    private String phoneNumber;
+    private final String phoneNumber;
 
-    private String email;
+    private final String email;
 
-    private LocalDate memberBirth;
+    private final LocalDate memberBirth;
 
-    private String gradeName;
+    private final String gradeName;
 
     public static ProfileResponse from(final Member member) {
         return new ProfileResponse(

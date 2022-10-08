@@ -2,17 +2,14 @@ package individual.freshplace.dto.signup;
 
 import individual.freshplace.entity.DiscountByGrade;
 import individual.freshplace.entity.Member;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class SignupRequest {
 

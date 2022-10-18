@@ -5,9 +5,11 @@ import individual.freshplace.config.auth.PrincipalDetailsService;
 import individual.freshplace.config.jwt.JwtAuthenticationEntryPoint;
 import individual.freshplace.config.jwt.JwtAuthenticationFilter;
 import individual.freshplace.config.jwt.JwtAuthorizationFilter;
+import individual.freshplace.filter.ServletFilter;
 import individual.freshplace.util.constant.Authority;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -63,11 +65,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
+    @Bean
+    public FilterRegistrationBean filterBean() {
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean(new ServletFilter());
+        registrationBean.setUrlPatterns(Arrays.asList("/members/*"));
+        return registrationBean;
+    }
+
     @Override
     public void configure(WebSecurity web) {
         web
                 .ignoring()
-                .antMatchers("/resources/**");
+                .antMatchers("/resources/**")
+                .antMatchers("/image.html")
+                .antMatchers("/imageOrigin.html")
+                .antMatchers("/Avif.html");
     }
 
     @Override
@@ -84,9 +96,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .mvcMatchers(HttpMethod.GET, "/public/**").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/public/**").permitAll()
+                .mvcMatchers(HttpMethod.DELETE, "/public/**").permitAll()
+
+                .mvcMatchers(HttpMethod.GET, "/image/**").permitAll()
 
                 .mvcMatchers(HttpMethod.POST, "/admin/**").hasAuthority(Authority.ADMIN.name())
                 .mvcMatchers(HttpMethod.PUT, "/admin/**").hasAuthority(Authority.ADMIN.name())
+                .mvcMatchers(HttpMethod.GET, "/admin/**").hasAuthority(Authority.ADMIN.name())
 
                 .anyRequest().authenticated()
 

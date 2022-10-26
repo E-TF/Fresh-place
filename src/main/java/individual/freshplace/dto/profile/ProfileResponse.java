@@ -19,7 +19,7 @@ public class ProfileResponse {
 
     private final LocalDate memberBirth;
 
-    private final String gradeName;
+    private final String membership;
 
     public static ProfileResponse from(final Member member) {
         return new ProfileResponse(
@@ -28,7 +28,7 @@ public class ProfileResponse {
                 member.getPhoneNumber(),
                 member.getEmail(),
                 member.getMemberBirth(),
-                member.getGradeCode().getGradeName());
+                member.getGradeCode().getCodeName());
     }
 
 }

@@ -47,7 +47,7 @@ public class FCartReadService {
                         , item.getPrice() * cookieList.stream().filter(cookie -> cookie.getName().equals(String.valueOf(item.getItemSeq()))).mapToLong(cookie -> Long.parseLong(cookie.getValue())).findFirst().getAsLong()
                         , Math.round(item.getPrice()
                                 * cookieList.stream().filter(cookie -> cookie.getName().equals(String.valueOf(item.getItemSeq()))).mapToLong(cookie -> Long.parseLong(cookie.getValue())).findFirst().getAsLong()
-                        * (100 - Membership.findByCodeName(profile.getGradeName()).getDiscountRate()) / 100.0)
+                        * (100 - Membership.findByCodeName(profile.getMembership()).getDiscountRate()) / 100.0)
                 )).collect(Collectors.toList());
     }
 }

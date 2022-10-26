@@ -5,11 +5,9 @@ import individual.freshplace.config.auth.PrincipalDetailsService;
 import individual.freshplace.config.jwt.JwtAuthenticationEntryPoint;
 import individual.freshplace.config.jwt.JwtAuthenticationFilter;
 import individual.freshplace.config.jwt.JwtAuthorizationFilter;
-import individual.freshplace.filter.ServletFilter;
 import individual.freshplace.util.constant.Authority;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -63,13 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
-    }
-
-    @Bean
-    public FilterRegistrationBean filterBean() {
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean(new ServletFilter());
-        registrationBean.setUrlPatterns(Arrays.asList("/members/*"));
-        return registrationBean;
     }
 
     @Override

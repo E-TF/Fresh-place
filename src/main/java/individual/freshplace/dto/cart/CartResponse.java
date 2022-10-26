@@ -1,6 +1,5 @@
 package individual.freshplace.dto.cart;
 
-import individual.freshplace.entity.Cart;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;

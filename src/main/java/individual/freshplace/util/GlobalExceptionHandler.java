@@ -29,22 +29,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(StringLockException.class)
-    public ResponseEntity<ErrorResponse> StringLockExceptionHandler(final StringLockException e) {
+    public ResponseEntity<ErrorResponse> stringLockExceptionHandler(final StringLockException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ErrorResponse.containsValue(e.getErrorCode(), e.getValue()));
     }
 
     @ExceptionHandler(CustomAuthenticationException.class)
-    public ResponseEntity<ErrorResponse> AuthenticationExceptionHandler(final CustomAuthenticationException e) {
+    public ResponseEntity<ErrorResponse> authenticationExceptionHandler(final CustomAuthenticationException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ErrorResponse.nothingValue(e.getErrorCode()));
     }
 
     @ExceptionHandler(NonExistentException.class)
-    public ResponseEntity<ErrorResponse> NonExistentExceptionHandler(final NonExistentException e) {
+    public ResponseEntity<ErrorResponse> nonExistentExceptionHandler(final NonExistentException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ErrorResponse.containsValue(e.getErrorCode(), e.getValue()));
     }
 
     @ExceptionHandler(EmptyFileException.class)
-    public ResponseEntity<ErrorResponse> EmptyFileExceptionHandler(final EmptyFileException e) {
+    public ResponseEntity<ErrorResponse> emptyFileExceptionHandler(final EmptyFileException e) {
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ErrorResponse.containsValue(e.getErrorCode(), e.getValue()));
+    }
+
+    @ExceptionHandler(OutOfInventoryException.class)
+    public ResponseEntity<ErrorResponse> outOfInventoryExceptionHandler(final OutOfInventoryException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ErrorResponse.containsValue(e.getErrorCode(), e.getValue()));
     }
 

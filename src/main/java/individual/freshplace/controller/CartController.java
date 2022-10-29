@@ -4,6 +4,8 @@ import individual.freshplace.config.auth.PrincipalDetails;
 import individual.freshplace.dto.cart.CartResponse;
 import individual.freshplace.service.FCartReadService;
 import individual.freshplace.util.CookieUtils;
+import individual.freshplace.util.constant.ErrorCode;
+import individual.freshplace.util.exception.OutOfInventoryException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,6 +26,7 @@ public class CartController {
     private static final String COOKIE_PARAMETER_COUNT = "itemCounting";
     private static final String COOKIE_PATH_FOR_PUBLIC = "/";
     private static final String COOKIE_PATH_FOR_MEMBER = "/members";
+    private static final long COOKIE_MAX_SIZE = 7;
 
     @GetMapping("/public/cart")
     public ResponseEntity<List<CartResponse>> getCart(HttpServletRequest request) {
@@ -41,6 +44,11 @@ public class CartController {
         //새 아이템이 추가되면 장바구니 모든 유지시간을 다시 셋팅.
         if (request.getCookies() != null) {
             Cookie[] cookies = request.getCookies();
+
+            if(cookies.length >= COOKIE_MAX_SIZE) {
+                throw new OutOfInventoryException(ErrorCode.FAILED_ADD_ITEM_TO_CART, String.valueOf(COOKIE_MAX_SIZE));
+            }
+
             Arrays.stream(cookies).forEach(cookie -> response.addCookie(CookieUtils.executeSetCookie(cookie.getName(), cookie.getValue(), COOKIE_PATH_FOR_PUBLIC)));
         }
 
@@ -83,6 +91,11 @@ public class CartController {
         //새 아이템이 추가되면 장바구니 모든 유지시간을 다시 셋팅.
         if (request.getCookies() != null) {
             Cookie[] cookies = request.getCookies();
+
+            if(cookies.length >= COOKIE_MAX_SIZE) {
+                throw new OutOfInventoryException(ErrorCode.FAILED_ADD_ITEM_TO_CART, String.valueOf(COOKIE_MAX_SIZE));
+            }
+
             Arrays.stream(cookies).forEach(cookie -> response.addCookie(CookieUtils.executeSetCookie(cookie.getName(), cookie.getValue(), COOKIE_PATH_FOR_MEMBER)));
         }
 

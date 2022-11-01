@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import individual.freshplace.util.constant.Cookies;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -22,11 +23,6 @@ import java.util.List;
 public class CartController {
 
     private final FCartReadService fCartReadService;
-    private static final String COOKIE_PARAMETER_SEQ = "itemSeq";
-    private static final String COOKIE_PARAMETER_COUNT = "itemCounting";
-    private static final String COOKIE_PATH_FOR_PUBLIC = "/";
-    private static final String COOKIE_PATH_FOR_MEMBER = "/members";
-    private static final long COOKIE_MAX_SIZE = 7;
 
     @GetMapping("/public/cart")
     public ResponseEntity<List<CartResponse>> getCart(HttpServletRequest request) {
@@ -45,14 +41,14 @@ public class CartController {
         if (request.getCookies() != null) {
             Cookie[] cookies = request.getCookies();
 
-            if(cookies.length >= COOKIE_MAX_SIZE) {
-                throw new OutOfInventoryException(ErrorCode.FAILED_ADD_ITEM_TO_CART, String.valueOf(COOKIE_MAX_SIZE));
+            if(cookies.length >= Cookies.COOKIE_MAX_SIZE) {
+                throw new OutOfInventoryException(ErrorCode.FAILED_ADD_ITEM_TO_CART, String.valueOf(Cookies.COOKIE_MAX_SIZE));
             }
 
-            Arrays.stream(cookies).forEach(cookie -> response.addCookie(CookieUtils.executeSetCookie(cookie.getName(), cookie.getValue(), COOKIE_PATH_FOR_PUBLIC)));
+            Arrays.stream(cookies).forEach(cookie -> response.addCookie(CookieUtils.executeSetCookie(cookie.getName(), cookie.getValue(), Cookies.COOKIE_PATH_FOR_PUBLIC)));
         }
 
-        Cookie cookie = CookieUtils.executeSetCookie(request.getParameter(COOKIE_PARAMETER_SEQ), request.getParameter(COOKIE_PARAMETER_COUNT), COOKIE_PATH_FOR_PUBLIC);
+        Cookie cookie = CookieUtils.executeSetCookie(request.getParameter(Cookies.COOKIE_PARAMETER_SEQ), request.getParameter(Cookies.COOKIE_PARAMETER_COUNT), Cookies.COOKIE_PATH_FOR_PUBLIC);
         response.addCookie(cookie);
         return;
     }
@@ -61,16 +57,16 @@ public class CartController {
     public void removeCart(HttpServletRequest request, HttpServletResponse response) {
 
         if (!request.getParameterNames().hasMoreElements()) {
-            Cookie[] cookies = CookieUtils.executeRemoveCookies(request.getCookies(), COOKIE_PATH_FOR_PUBLIC);
+            Cookie[] cookies = CookieUtils.executeRemoveCookies(request.getCookies(), Cookies.COOKIE_PATH_FOR_PUBLIC);
             Arrays.stream(cookies).forEach(cookie -> response.addCookie(cookie));
             return;
         }
 
         if (request.getParameterNames().hasMoreElements()) {
             Cookie[] cookies = request.getCookies();
-            String itemSeq = request.getParameter(COOKIE_PARAMETER_SEQ);
+            String itemSeq = request.getParameter(Cookies.COOKIE_PARAMETER_SEQ);
             Arrays.stream(cookies).filter(cookie -> itemSeq.equals(cookie.getName()))
-                    .peek(cookie -> CookieUtils.executeRemoveCookie(cookie, COOKIE_PATH_FOR_PUBLIC)).forEach(cookie -> response.addCookie(cookie));
+                    .peek(cookie -> CookieUtils.executeRemoveCookie(cookie, Cookies.COOKIE_PATH_FOR_PUBLIC)).forEach(cookie -> response.addCookie(cookie));
             return;
         }
     }
@@ -92,14 +88,14 @@ public class CartController {
         if (request.getCookies() != null) {
             Cookie[] cookies = request.getCookies();
 
-            if(cookies.length >= COOKIE_MAX_SIZE) {
-                throw new OutOfInventoryException(ErrorCode.FAILED_ADD_ITEM_TO_CART, String.valueOf(COOKIE_MAX_SIZE));
+            if(cookies.length >= Cookies.COOKIE_MAX_SIZE) {
+                throw new OutOfInventoryException(ErrorCode.FAILED_ADD_ITEM_TO_CART, String.valueOf(Cookies.COOKIE_MAX_SIZE));
             }
 
-            Arrays.stream(cookies).forEach(cookie -> response.addCookie(CookieUtils.executeSetCookie(cookie.getName(), cookie.getValue(), COOKIE_PATH_FOR_MEMBER)));
+            Arrays.stream(cookies).forEach(cookie -> response.addCookie(CookieUtils.executeSetCookie(cookie.getName(), cookie.getValue(), Cookies.COOKIE_PATH_FOR_MEMBER)));
         }
 
-        Cookie cookie = CookieUtils.executeSetCookie(request.getParameter(COOKIE_PARAMETER_SEQ), request.getParameter(COOKIE_PARAMETER_COUNT), COOKIE_PATH_FOR_MEMBER);
+        Cookie cookie = CookieUtils.executeSetCookie(request.getParameter(Cookies.COOKIE_PARAMETER_SEQ), request.getParameter(Cookies.COOKIE_PARAMETER_COUNT), Cookies.COOKIE_PATH_FOR_MEMBER);
         response.addCookie(cookie);
         return;
     }
@@ -108,16 +104,16 @@ public class CartController {
     public void removeCartMember(HttpServletRequest request, HttpServletResponse response) {
 
         if (!request.getParameterNames().hasMoreElements()) {
-            Cookie[] cookies = CookieUtils.executeRemoveCookies(request.getCookies(), COOKIE_PATH_FOR_MEMBER);
+            Cookie[] cookies = CookieUtils.executeRemoveCookies(request.getCookies(), Cookies.COOKIE_PATH_FOR_MEMBER);
             Arrays.stream(cookies).forEach(cookie -> response.addCookie(cookie));
             return;
         }
 
         if (request.getParameterNames().hasMoreElements()) {
             Cookie[] cookies = request.getCookies();
-            String itemSeq = request.getParameter(COOKIE_PARAMETER_SEQ);
+            String itemSeq = request.getParameter(Cookies.COOKIE_PARAMETER_SEQ);
             Arrays.stream(cookies).filter(cookie -> itemSeq.equals(cookie.getName()))
-                    .peek(cookie -> CookieUtils.executeRemoveCookie(cookie, COOKIE_PATH_FOR_MEMBER)).forEach(cookie -> response.addCookie(cookie));
+                    .peek(cookie -> CookieUtils.executeRemoveCookie(cookie, Cookies.COOKIE_PATH_FOR_MEMBER)).forEach(cookie -> response.addCookie(cookie));
             return;
         }
     }

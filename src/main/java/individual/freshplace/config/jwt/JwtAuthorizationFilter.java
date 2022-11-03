@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import individual.freshplace.config.JwtProperties;
 import individual.freshplace.config.auth.PrincipalDetailsService;
 import individual.freshplace.util.constant.ErrorCode;
 import org.springframework.security.authentication.AuthenticationManager;

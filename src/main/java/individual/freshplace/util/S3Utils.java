@@ -20,7 +20,6 @@ import java.util.UUID;
 public class S3Utils {
 
     private final static String SLASH = "/";
-
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -31,7 +30,6 @@ public class S3Utils {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getSize());
         objectMetadata.setContentType(multipartFile.getContentType());
-//        objectMetadata.setCacheControl("max-age=3600");
 
         String key = createFilePath(directoryName, objectName, multipartFile.getOriginalFilename());
 

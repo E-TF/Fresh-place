@@ -1,14 +1,17 @@
 package individual.freshplace.dto.order;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrderItem {
 
-    private long itemSeq;
-    private String itemName;
-    private long itemCount;
-    private long totalPrice;
+    private final String itemName;
+    private final long itemCount;
+    private final long totalPrice;
+
+    public static OrderItem of(String itemName, long itemCount, long totalPrice) {
+        return new OrderItem(itemName, itemCount, totalPrice);
+    }
 }

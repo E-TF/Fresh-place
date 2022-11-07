@@ -3,6 +3,7 @@ package individual.freshplace.entity;
 import individual.freshplace.dto.item.ItemUpdateRequest;
 import individual.freshplace.util.constant.SubCategory;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -43,5 +44,24 @@ public class Item extends BaseEntity {
         this.origin = itemUpdateRequest.getOrigin();
         this.expirationDate = itemUpdateRequest.getExpirationDate();
         this.categoryCode = SubCategory.findByCodeEngName(itemUpdateRequest.getCategoryEngName());
+    }
+
+    public void decreaseInventory(final long purchaseQuantity) {
+        this.inventory -= purchaseQuantity;
+        System.out.println("남은 수량 : " + inventory);
+    }
+
+    @Builder
+    public Item(Long itemSeq, String itemName, String description, long price, long weight, String origin, long inventory,
+                SubCategory subCategory) {
+        this.itemSeq = itemSeq;
+        this.itemName = itemName;
+        this.description = description;
+        this.price = price;
+        this.weight = weight;
+        this.origin = origin;
+        this.inventory = inventory;
+        this.salesQuantity = 0;
+        this.categoryCode = subCategory;
     }
 }

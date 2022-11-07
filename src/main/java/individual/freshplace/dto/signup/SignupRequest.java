@@ -1,7 +1,6 @@
 package individual.freshplace.dto.signup;
 
 import individual.freshplace.entity.Member;
-import individual.freshplace.util.constant.Membership;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
@@ -44,7 +43,6 @@ public class SignupRequest {
                 .phoneNumber(phoneNumber)
                 .email(email)
                 .memberBirth(memberBirth)
-                .gradeCode(Membership.GENERAL)
                 .build();
     }
 }

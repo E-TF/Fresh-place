@@ -45,14 +45,14 @@ public class Member extends BaseEntity {
     private List<Order> orderList = new ArrayList<>();
 
     @Builder
-    public Member(String memberId, String password, String memberName, String phoneNumber, String email, LocalDate memberBirth, Membership gradeCode) {
+    public Member(String memberId, String password, String memberName, String phoneNumber, String email, LocalDate memberBirth) {
         this.memberId = memberId;
         this.password = password;
         this.memberName = memberName;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.memberBirth = memberBirth;
-        this.gradeCode = gradeCode;
+        this.gradeCode = Membership.GENERAL;
         this.role = Authority.USER;
     }
 

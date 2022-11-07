@@ -50,7 +50,7 @@ public class KakaoPay {
         }
 
         return PayView.of(kakaoPayReadyResponse.getTid(), params.getFirst(KakaoPayProperties.ORDER_ID_KEY),
-                memberId, kakaoPayReadyResponse.getRedirectUrl());
+                memberId, kakaoPayReadyResponse.getNextRedirectPcUrl());
     }
 
     public KakaoPayApprovalResponse getKAKAOPaymentInformation(final String pgToken, final PayView payView) {

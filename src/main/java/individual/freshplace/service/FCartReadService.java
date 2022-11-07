@@ -1,6 +1,6 @@
 package individual.freshplace.service;
 
-import individual.freshplace.dto.cart.CartOnItems;
+import individual.freshplace.dto.cart.CartOnItem;
 import individual.freshplace.dto.cart.CartResponse;
 import individual.freshplace.dto.profile.ProfileResponse;
 import individual.freshplace.entity.Item;
@@ -30,8 +30,8 @@ public class FCartReadService {
         List<Item> items = Arrays.stream(cookies).map(cookie -> itemService.findById(Long.parseLong(cookie.getName()))).collect(Collectors.toList());
         Map<Long, Long> cookiesMap = convertArrayIntoMap(cookies);
 
-        List<CartOnItems> cartOnItems = items.stream()
-                .map(item -> CartOnItems.of(item.getItemName(), cookiesMap.get(item.getItemSeq()), item.getPrice() * cookiesMap.get(item.getItemSeq()),
+        List<CartOnItem> cartOnItems = items.stream()
+                .map(item -> CartOnItem.of(item.getItemName(), cookiesMap.get(item.getItemSeq()), item.getPrice() * cookiesMap.get(item.getItemSeq()),
                         item.getPrice() * cookiesMap.get(item.getItemSeq()))).collect(Collectors.toList());
 
         return CartResponse.from(cartOnItems);
@@ -44,8 +44,8 @@ public class FCartReadService {
         Map<Long, Long> cookiesMap = convertArrayIntoMap(cookies);
         ProfileResponse profile = fProfileService.getProfile(memberId);
 
-        List<CartOnItems> cartOnItems = items.stream()
-                .map(item -> CartOnItems.of(item.getItemName(), cookiesMap.get(item.getItemSeq()), item.getPrice() * cookiesMap.get(item.getItemSeq()),
+        List<CartOnItem> cartOnItems = items.stream()
+                .map(item -> CartOnItem.of(item.getItemName(), cookiesMap.get(item.getItemSeq()), item.getPrice() * cookiesMap.get(item.getItemSeq()),
                         Math.round(item.getPrice() * cookiesMap.get(item.getItemSeq()) * (PERCENTAGE_INTEGER - Membership.findByCodeName(profile.getMembership()).getDiscountRate()) / PERCENTAGE_SHORT)
                 )).collect(Collectors.toList());
 

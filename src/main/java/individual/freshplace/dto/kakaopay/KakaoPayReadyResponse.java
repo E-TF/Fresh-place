@@ -14,6 +14,6 @@ import java.time.LocalDateTime;
 public class KakaoPayReadyResponse {
 
     private String tid;
-    private String RedirectUrl;
+    private String nextRedirectPcUrl;
     private LocalDateTime createAt;
 }

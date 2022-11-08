@@ -74,7 +74,7 @@ class FCartReadServiceTest {
 
     private Item item() {
         return Item.builder().itemSeq(1L).itemName("커피").description("향긋한 원두커피").price(3900).inventory(2000)
-                .origin("원두:미국").subCategory(SubCategory.COF_DRI).build();
+                .origin("원두:미국산").subCategory(SubCategory.COF_DRI).build();
     }
 
     private Cookie[] cookies() {

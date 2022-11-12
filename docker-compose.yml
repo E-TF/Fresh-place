@@ -2,27 +2,33 @@ version: "3"
 services:
   mysql:
     image: mysql
-
     container_name: mysql
     environment:
       MYSQL_DATABASE: project
       MYSQL_ROOT_PASSWORD : dbdb7283
     ports:
       - 3308:3306
+    networks:
+      - our_net
 
   redis:
     container_name: redis
-
     image: redis
     ports:
       - 6359:6379
+    networks:
+      - our_net
 
   springbootapp:
     build: .
     container_name: springbootapp
-
     ports:
       - 80:8080
+    networks:
+      - our_net
     depends_on:
       - mysql
       - redis
+networks:
+  our_net:
+    driver: bridge

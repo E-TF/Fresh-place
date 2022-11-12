@@ -17,7 +17,7 @@ services:
 
     image: redis
     ports:
-      - 6379:6379
+      - 6359:6379
 
   springbootapp:
     build: .

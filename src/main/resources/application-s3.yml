@@ -1,0 +1,11 @@
+cloud:
+  aws:
+    credentials:
+      secret-key: hkrx3vHHBN3PAN3Jb3Yt+ZSs3KbjUeHM34kaTh1z
+      access-key: AKIAV5DNLPO53VVKHUG6
+    s3:
+      bucket: food-imagebucket
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: 'false'

@@ -36,3 +36,7 @@ spring:
 lombok:
   anyConstructor:
     addConstructorProperties: 'true'
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    password : 1234

@@ -1,0 +1,30 @@
+version: "3"
+services:
+  mysql:
+    image: mysql
+
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: project
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_PASSWORD : dbdb7283
+    ports:
+      - 3306:3306
+
+  redis:
+    container_name: redis
+
+    image: redis
+    ports:
+      - 6379:6379
+
+  springbootapp:
+    build: .
+    container_name: springbootapp
+
+    ports:
+      - 8080:8080
+    depends_on:
+      - mydb
+      - redis

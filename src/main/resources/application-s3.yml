@@ -1,8 +1,8 @@
 cloud:
   aws:
     credentials:
-      secret-key: hkrx3vHHBN3PAN3Jb3Yt+ZSs3KbjUeHM34kaTh1z
-      access-key: AKIAV5DNLPO53VVKHUG6
+      secret-key: ENC(dSBiHABGrye+9q8vYCFP9sNBWA4oQV+VbgIvVgg0UNbQS0cwcHtbxREHTYbZT5vi+WYsl3xA2p8=)
+      access-key: ENC(ZFAGPuu1sUMVamfS+UsIhT8ISTuK0ZN5t/McBnA1xNE=)
     s3:
       bucket: food-imagebucket
     region:

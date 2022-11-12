@@ -1,5 +1,6 @@
 version: "3"
 services:
+
   mysql:
     image: mysql
     container_name: mysql
@@ -8,27 +9,24 @@ services:
       MYSQL_ROOT_PASSWORD : dbdb7283
     ports:
       - 3308:3306
-    networks:
-      - our_net
+    volumes:
+      - ./docker/data:/var/lib/mysql
 
   redis:
     container_name: redis
     image: redis
     ports:
       - 6359:6379
-    networks:
-      - our_net
+    volumes:
+      - ./docker/data:/var/lib/redis
 
   springbootapp:
     build: .
     container_name: springbootapp
     ports:
       - 80:8080
-    networks:
-      - our_net
     depends_on:
       - mysql
       - redis
-networks:
-  our_net:
-    driver: bridge
+    volumes:
+      - ./:/app/

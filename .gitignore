@@ -37,8 +37,3 @@ out/
 .vscode/
 
 ### yml
-application-db.yml
-application-jwt.yml
-application-local.yml
-application-s3.yml
-

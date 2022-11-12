@@ -67,7 +67,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web
                 .ignoring()
-                .antMatchers("/resources/**");
+                .antMatchers("/resources/**")
+                .antMatchers("/image.html")
+                .antMatchers("/imageOrigin.html")
+                .antMatchers("/Avif.html");
     }
 
     @Override
@@ -84,9 +87,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .mvcMatchers(HttpMethod.GET, "/public/**").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/public/**").permitAll()
+                .mvcMatchers(HttpMethod.DELETE, "/public/**").permitAll()
+
+                .mvcMatchers(HttpMethod.GET, "/image/**").permitAll()
 
                 .mvcMatchers(HttpMethod.POST, "/admin/**").hasAuthority(Authority.ADMIN.name())
                 .mvcMatchers(HttpMethod.PUT, "/admin/**").hasAuthority(Authority.ADMIN.name())
+                .mvcMatchers(HttpMethod.GET, "/admin/**").hasAuthority(Authority.ADMIN.name())
 
                 .anyRequest().authenticated()
 

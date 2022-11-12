@@ -1,4 +1,4 @@
-package individual.freshplace.service;
+package individual.freshplace.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -8,16 +8,16 @@ import individual.freshplace.util.constant.ErrorCode;
 import individual.freshplace.util.exception.FileUploadFailedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class S3Service {
+public class S3Utils {
 
     private final static String SLASH = "/";
 
@@ -31,7 +31,7 @@ public class S3Service {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getSize());
         objectMetadata.setContentType(multipartFile.getContentType());
-        objectMetadata.setCacheControl("max-age=3600");
+//        objectMetadata.setCacheControl("max-age=3600");
 
         String key = createFilePath(directoryName, objectName, multipartFile.getOriginalFilename());
 

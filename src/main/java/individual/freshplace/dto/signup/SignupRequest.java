@@ -1,7 +1,7 @@
 package individual.freshplace.dto.signup;
 
-import individual.freshplace.entity.DiscountByGrade;
 import individual.freshplace.entity.Member;
+import individual.freshplace.util.constant.Membership;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
@@ -36,7 +36,7 @@ public class SignupRequest {
     @NotNull(message = "공백일 수 없습니다.")
     private LocalDate memberBirth;
 
-    public Member toMember(final DiscountByGrade grade, final String password) {
+    public Member toMember(final String password) {
         return Member.builder()
                 .memberId(memberId)
                 .password(password)
@@ -44,7 +44,7 @@ public class SignupRequest {
                 .phoneNumber(phoneNumber)
                 .email(email)
                 .memberBirth(memberBirth)
-                .gradeCode(grade)
+                .gradeCode(Membership.GENERAL)
                 .build();
     }
 }

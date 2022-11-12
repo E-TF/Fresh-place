@@ -12,7 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ImageUtil {
+public class ImageUtils {
 
     public static MultipartFile imageResize(MultipartFile multipartFile, int weight, int height) {
 

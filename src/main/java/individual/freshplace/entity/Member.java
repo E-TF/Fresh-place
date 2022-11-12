@@ -2,6 +2,7 @@ package individual.freshplace.entity;
 
 import individual.freshplace.dto.profile.ProfileUpdateRequest;
 import individual.freshplace.util.constant.Authority;
+import individual.freshplace.util.constant.Membership;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,9 +33,7 @@ public class Member extends BaseEntity {
 
     private LocalDate memberBirth;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "grade_code")
-    private DiscountByGrade gradeCode;
+    private Membership gradeCode;
 
     @Enumerated(EnumType.STRING)
     private Authority role;
@@ -46,7 +45,7 @@ public class Member extends BaseEntity {
     private List<Order> orderList = new ArrayList<>();
 
     @Builder
-    public Member(String memberId, String password, String memberName, String phoneNumber, String email, LocalDate memberBirth, DiscountByGrade gradeCode) {
+    public Member(String memberId, String password, String memberName, String phoneNumber, String email, LocalDate memberBirth, Membership gradeCode) {
         this.memberId = memberId;
         this.password = password;
         this.memberName = memberName;

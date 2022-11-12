@@ -26,8 +26,9 @@ public enum ErrorCode {
 
     FAILED_QUERY(HttpStatus.INTERNAL_SERVER_ERROR, "쿼리수행에 실패했습니다."),
     FAILED_FILE_TO_STREAM(HttpStatus.INTERNAL_SERVER_ERROR, "파일 읽기를 실패했습니다."),
-    FAILED_PIXEL_GRABBER(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 비율 축소에 실패했습니다.");
-
+    FAILED_PIXEL_GRABBER(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 비율 축소에 실패했습니다."),
+    FAILED_ADD_ITEM_TO_CART(HttpStatus.INTERNAL_SERVER_ERROR, "장바구니 수량은 최대 7개 입니다."),
+    NO_STOCK(HttpStatus.INTERNAL_SERVER_ERROR, "재고가 없습니다.");
     private final HttpStatus httpStatus;
     private final String message;
 }

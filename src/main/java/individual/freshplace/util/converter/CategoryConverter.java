@@ -1,4 +1,4 @@
-package individual.freshplace.util;
+package individual.freshplace.util.converter;
 
 import individual.freshplace.util.constant.SubCategory;
 
@@ -8,7 +8,7 @@ import java.util.EnumSet;
 import java.util.NoSuchElementException;
 
 @Converter(autoApply = true)
-public class CategoryTypeConverter implements AttributeConverter<SubCategory, String> {
+public class CategoryConverter implements AttributeConverter<SubCategory, String> {
 
     @Override
     public String convertToDatabaseColumn(SubCategory attribute) {

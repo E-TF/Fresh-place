@@ -2,7 +2,8 @@ package individual.freshplace.service;
 
 import individual.freshplace.dto.image.ImageResizingResponse;
 import individual.freshplace.entity.Image;
-import individual.freshplace.util.ImageUtil;
+import individual.freshplace.util.ImageUtils;
+import individual.freshplace.util.S3Utils;
 import individual.freshplace.util.constant.ErrorCode;
 import individual.freshplace.util.constant.Folder;
 import individual.freshplace.util.constant.ImageFormat;
@@ -18,7 +19,7 @@ public class FImageUploadService {
 
     private final static String SLASH = "/";
 
-    private final S3Service s3Service;
+    private final S3Utils s3Utils;
     private final ItemService itemService;
     private final ImageService imageService;
 
@@ -29,15 +30,15 @@ public class FImageUploadService {
             throw new NonExistentException(ErrorCode.BAD_VALUE, itemId.toString());
         }
 
-        MultipartFile resizingImage = ImageUtil.imageResize(multipartFile, ImageFormat.STANDARD.getWeight(), ImageFormat.STANDARD.getHeight());
+        MultipartFile resizingImage = ImageUtils.imageResize(multipartFile, ImageFormat.STANDARD.getWeight(), ImageFormat.STANDARD.getHeight());
 
-        String originObjectUrl = s3Service.upload(Folder.IMAGE.getDirectoryName()
+        String originObjectUrl = s3Utils.upload(Folder.IMAGE.getDirectoryName()
                 + SLASH + Folder.GOODS.getDirectoryName() + SLASH + Folder.ORIGIN.getDirectoryName(), itemId, multipartFile);
 
         Image image = new Image(originObjectUrl);
         imageService.save(image);
 
-        String resizingObjectUrl = s3Service.upload(Folder.IMAGE.getDirectoryName()
+        String resizingObjectUrl = s3Utils.upload(Folder.IMAGE.getDirectoryName()
                 + SLASH + Folder.GOODS.getDirectoryName(), itemId, resizingImage);
 
         image = new Image(resizingObjectUrl);

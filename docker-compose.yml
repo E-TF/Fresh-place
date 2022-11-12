@@ -24,7 +24,7 @@ services:
     container_name: springbootapp
 
     ports:
-      - 8080:8080
+      - 80:8080
     depends_on:
       - mydb
       - redis

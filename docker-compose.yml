@@ -6,8 +6,7 @@ services:
     container_name: mysql
     environment:
       MYSQL_DATABASE: project
-      MYSQL_USER: root
-      MYSQL_PASSWORD : dbdb7283
+      MYSQL_ROOT_PASSWORD : dbdb7283
     ports:
       - 3308:3306
 

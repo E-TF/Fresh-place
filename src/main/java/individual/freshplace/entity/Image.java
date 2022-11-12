@@ -1,6 +1,7 @@
 package individual.freshplace.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,7 @@ public class Image extends BaseEntity {
 
     private String imagePath;
 
+    @Builder
     public Image(String imagePath) {
         this.imagePath = imagePath;
     }

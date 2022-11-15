@@ -18,7 +18,7 @@ public class AccountController {
 
     @PostMapping("/public/signup")
     public ResponseEntity signup(@Valid @RequestBody SignupRequest signupRequest) {
-        fSignupService.signup(signupRequest);
+        fSignupService.signupFacade(signupRequest);
         return ResponseEntity.ok().build();
     }
 

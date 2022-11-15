@@ -29,7 +29,7 @@ public class KakaoPay {
     private final RestTemplate restTemplate;
     private final KakaoPayProperties kakaoPayProperties;
 
-    public PayView getKAKAOPayReadyResponse(final String memberId, final List<OrderItem> orderItems) {
+    public PayView getKakaoPayReadyResponse(final String memberId, final List<OrderItem> orderItems) {
 
         HttpHeaders httpHeaders = setHeaders();
 
@@ -53,7 +53,7 @@ public class KakaoPay {
                 memberId, kakaoPayReadyResponse.getNextRedirectPcUrl());
     }
 
-    public KakaoPayApprovalResponse getKAKAOPaymentInformation(final String pgToken, final PayView payView) {
+    public KakaoPayApprovalResponse getKakaoPaymentInformation(final String pgToken, final PayView payView) {
 
         HttpHeaders httpHeaders = setHeaders();
 
@@ -116,14 +116,14 @@ public class KakaoPay {
         return params;
     }
 
-    private MultiValueMap<String, String> setParamsApprove(String pg_token, PayView payView) {
+    private MultiValueMap<String, String> setParamsApprove(String pgToken, PayView payView) {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add(KakaoPayProperties.CID_KEY, kakaoPayProperties.getCid());
         params.add(KakaoPayProperties.TID_KEY, payView.getTid());
         params.add(KakaoPayProperties.ORDER_ID_KEY, payView.getOrderId());
         params.add(KakaoPayProperties.USER_ID_KEY, payView.getUserId());
-        params.add(kakaoPayProperties.PG_TOKEN, pg_token);
+        params.add(kakaoPayProperties.PG_TOKEN, pgToken);
 
         return params;
     }

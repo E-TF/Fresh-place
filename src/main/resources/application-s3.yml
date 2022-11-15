@@ -1,0 +1,11 @@
+cloud:
+  aws:
+    credentials:
+      secret-key: ENC(dSBiHABGrye+9q8vYCFP9sNBWA4oQV+VbgIvVgg0UNbQS0cwcHtbxREHTYbZT5vi+WYsl3xA2p8=)
+      access-key: ENC(ZFAGPuu1sUMVamfS+UsIhT8ISTuK0ZN5t/McBnA1xNE=)
+    s3:
+      bucket: food-imagebucket
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: 'false'

@@ -3,7 +3,7 @@ package individual.freshplace.service;
 import individual.freshplace.dto.image.ImageUploadResponse;
 import individual.freshplace.entity.Image;
 import individual.freshplace.util.ImageUtils;
-import individual.freshplace.util.S3Utils;
+import individual.freshplace.util.S3Uploader;
 import individual.freshplace.util.constant.ErrorCode;
 import individual.freshplace.util.constant.Folder;
 import individual.freshplace.util.constant.ImageFormat;
@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 public class FImageUploadService {
 
     private final static String SLASH = "/";
-    private final S3Utils s3Utils;
+    private final S3Uploader s3Uploader;
     private final ItemService itemService;
     private final ImageService imageService;
 
@@ -35,18 +35,22 @@ public class FImageUploadService {
         return ImageUploadResponse.from(originalUpload(itemId, multipartFile));
     }
 
-    public void resizingUpload(final Long itemId, final MultipartFile multipartFile) {
+    private void resizingUpload(final Long itemId, final MultipartFile multipartFile) {
         CompletableFuture.runAsync(() -> {
             MultipartFile resizingImage = ImageUtils.imageResize(multipartFile, ImageFormat.STANDARD.getWeight(), ImageFormat.STANDARD.getHeight());
-            String resizingItemImageUrl = s3Utils.upload(Folder.IMAGE.getDirectoryName() + SLASH + Folder.GOODS.getDirectoryName(), itemId, Folder.RESIZE.getDirectoryName(), resizingImage);
+            String resizingItemImageUrl = s3Uploader.upload(getDirectoryName(), itemId, Folder.RESIZE.getDirectoryName(), resizingImage);
             createItemEntityAndInsert(resizingItemImageUrl);
         });
     }
 
     private String originalUpload(final Long itemId, final MultipartFile multipartFile) {
-        String originalItemImageUrl = s3Utils.upload(Folder.IMAGE.getDirectoryName() + SLASH + Folder.GOODS.getDirectoryName(), itemId, Folder.ORIGIN.getDirectoryName(), multipartFile);
+        String originalItemImageUrl = s3Uploader.upload(getDirectoryName(), itemId, Folder.ORIGIN.getDirectoryName(), multipartFile);
         createItemEntityAndInsert(originalItemImageUrl);
         return originalItemImageUrl;
+    }
+
+    private String getDirectoryName() {
+        return Folder.IMAGE.getDirectoryName() + SLASH + Folder.GOODS.getDirectoryName();
     }
 
     private void createItemEntityAndInsert(final String url) {

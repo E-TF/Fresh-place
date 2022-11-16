@@ -29,7 +29,7 @@ public class KakaoPay {
     private final RestTemplate restTemplate;
     private final KakaoPayProperties kakaoPayProperties;
 
-    public PayView getKAKAOPayReadyResponse(final String memberId, final List<OrderItem> orderItems) {
+    public PayView getKakaoPayReadyResponse(final String memberId, final List<OrderItem> orderItems) {
 
         HttpHeaders httpHeaders = setHeaders();
 
@@ -39,21 +39,20 @@ public class KakaoPay {
         setParamsCommon(memberId, params);
 
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, httpHeaders);
-
-        KakaoPayReadyResponse kakaoPayReadyResponse;
         String paymentReadyRequestUrl = kakaoPayProperties.getHost() + kakaoPayProperties.getReadyPath();
 
         try {
-            kakaoPayReadyResponse = restTemplate.postForObject(new URI(paymentReadyRequestUrl), body, KakaoPayReadyResponse.class);
+            KakaoPayReadyResponse kakaoPayReadyResponse = restTemplate.postForObject(new URI(paymentReadyRequestUrl), body, KakaoPayReadyResponse.class);
+
+            return PayView.of(kakaoPayReadyResponse.getTid(), params.getFirst(KakaoPayProperties.ORDER_ID_KEY),
+                    memberId, kakaoPayReadyResponse.getNextRedirectPcUrl());
+
         } catch (URISyntaxException e) {
             throw new UriException(ErrorCode.NON_FOUND, paymentReadyRequestUrl);
         }
-
-        return PayView.of(kakaoPayReadyResponse.getTid(), params.getFirst(KakaoPayProperties.ORDER_ID_KEY),
-                memberId, kakaoPayReadyResponse.getNextRedirectPcUrl());
     }
 
-    public KakaoPayApprovalResponse getKAKAOPaymentInformation(final String pgToken, final PayView payView) {
+    public KakaoPayApprovalResponse getKakaoPaymentInformation(final String pgToken, final PayView payView) {
 
         HttpHeaders httpHeaders = setHeaders();
 
@@ -61,17 +60,14 @@ public class KakaoPay {
         setParamsCommon(payView.getUserId(), params);
 
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, httpHeaders);
-
-        KakaoPayApprovalResponse kakaoPayApprovalResponse;
         String paymentApproveRequestUrl = kakaoPayProperties.getHost() + kakaoPayProperties.getApprovePath();
 
         try {
-            kakaoPayApprovalResponse = restTemplate.postForObject(new URI(paymentApproveRequestUrl), body, KakaoPayApprovalResponse.class);
+            return restTemplate.postForObject(new URI(paymentApproveRequestUrl), body, KakaoPayApprovalResponse.class);
+
         } catch (URISyntaxException e) {
             throw new UriException(ErrorCode.NON_FOUND, paymentApproveRequestUrl);
         }
-
-        return kakaoPayApprovalResponse;
     }
 
     private HttpHeaders setHeaders() {
@@ -116,14 +112,14 @@ public class KakaoPay {
         return params;
     }
 
-    private MultiValueMap<String, String> setParamsApprove(String pg_token, PayView payView) {
+    private MultiValueMap<String, String> setParamsApprove(String pgToken, PayView payView) {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add(KakaoPayProperties.CID_KEY, kakaoPayProperties.getCid());
         params.add(KakaoPayProperties.TID_KEY, payView.getTid());
         params.add(KakaoPayProperties.ORDER_ID_KEY, payView.getOrderId());
         params.add(KakaoPayProperties.USER_ID_KEY, payView.getUserId());
-        params.add(kakaoPayProperties.PG_TOKEN, pg_token);
+        params.add(kakaoPayProperties.PG_TOKEN, pgToken);
 
         return params;
     }

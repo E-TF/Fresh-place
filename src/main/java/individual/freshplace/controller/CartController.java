@@ -1,15 +1,14 @@
 package individual.freshplace.controller;
 
-import individual.freshplace.config.auth.PrincipalDetails;
 import individual.freshplace.dto.cart.CartResponse;
 import individual.freshplace.service.FCartReadService;
 import individual.freshplace.util.CookieUtils;
+import individual.freshplace.util.PrincipalUtils;
 import individual.freshplace.util.constant.ErrorCode;
 import individual.freshplace.util.exception.OutOfInventoryException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import individual.freshplace.util.constant.Cookies;
 
@@ -33,8 +32,7 @@ public class CartController {
         }
 
         if (request.getCookies() != null && request.getHeader(HttpHeaders.AUTHORIZATION) != null) {
-            PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return ResponseEntity.ok().body(fCartReadService.getCartByMember(principalDetails.getUsername(), request.getCookies()));
+            return ResponseEntity.ok().body(fCartReadService.getCartByMember(PrincipalUtils.getUsername(), request.getCookies()));
         }
 
         return ResponseEntity.ok().build();
@@ -51,10 +49,10 @@ public class CartController {
                 throw new OutOfInventoryException(ErrorCode.FAILED_ADD_ITEM_TO_CART, String.valueOf(Cookies.COOKIE_MAX_SIZE));
             }
 
-            Arrays.stream(cookies).forEach(cookie -> response.addCookie(CookieUtils.setCookie(cookie.getName(), cookie.getValue())));
+            Arrays.stream(cookies).forEach(cookie -> response.addCookie(CookieUtils.createCookie(cookie.getName(), cookie.getValue())));
         }
 
-        Cookie cookie = CookieUtils.setCookie(request.getParameter(Cookies.COOKIE_PARAMETER_SEQ), request.getParameter(Cookies.COOKIE_PARAMETER_COUNT));
+        Cookie cookie = CookieUtils.createCookie(request.getParameter(Cookies.COOKIE_PARAMETER_SEQ), request.getParameter(Cookies.COOKIE_PARAMETER_COUNT));
         response.addCookie(cookie);
     }
 

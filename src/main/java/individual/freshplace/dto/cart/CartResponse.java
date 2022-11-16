@@ -9,9 +9,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CartResponse {
 
-    private final List<CartOnItem> cartOnItems;
+    private final List<CartItem> cartItems;
 
-    public static CartResponse from(final List<CartOnItem> cartOnItems) {
-        return new CartResponse(cartOnItems);
+    public static CartResponse from(final List<CartItem> cartItems) {
+        return new CartResponse(cartItems);
     }
 }

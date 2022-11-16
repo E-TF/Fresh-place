@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class S3Utils {
+public class S3Uploader {
 
     private final static String SLASH = "/";
     private final AmazonS3Client amazonS3Client;
@@ -25,13 +25,13 @@ public class S3Utils {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String upload(String directoryName, Long objectName, MultipartFile multipartFile) {
+    public String upload(String directoryName, Long objectName, String type, MultipartFile multipartFile) {
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getSize());
         objectMetadata.setContentType(multipartFile.getContentType());
 
-        String key = createFilePath(directoryName, objectName, multipartFile.getOriginalFilename());
+        String key = createFilePath(directoryName, objectName, type, multipartFile.getOriginalFilename());
 
         try (InputStream inputStream = multipartFile.getInputStream()){
             amazonS3Client.putObject(new PutObjectRequest(bucket, key, inputStream, objectMetadata)
@@ -47,7 +47,7 @@ public class S3Utils {
         amazonS3Client.deleteObject(bucket, filePath);
     }
 
-    private String createFilePath(String directoryName, Long objectName, String fileName) {
-        return directoryName + SLASH + objectName.toString() + SLASH + UUID.randomUUID().toString() + fileName;
+    private String createFilePath(String directoryName, Long objectName, String type, String fileName) {
+        return directoryName + SLASH + objectName + SLASH + type + SLASH + UUID.randomUUID().toString() + fileName;
     }
 }

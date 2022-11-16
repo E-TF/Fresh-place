@@ -10,7 +10,7 @@ public class CookieUtils {
     private static final Duration COOKIE_CONNECTION_BEGINNING = Duration.ofDays(3);
     private static final Duration COOKIE_CONNECTION_TERMINATE = Duration.ofDays(0);
 
-    public static Cookie setCookie(String itemSeq, String itemCounting) {
+    public static Cookie createCookie(String itemSeq, String itemCounting) {
         Cookie cookie = new Cookie(itemSeq, itemCounting);
         cookie.setMaxAge((int)COOKIE_CONNECTION_BEGINNING.toHours());
         cookie.setPath(COOKIE_PATH_FOR_PUBLIC);

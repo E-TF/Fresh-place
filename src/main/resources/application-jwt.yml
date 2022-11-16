@@ -1,0 +1,3 @@
+jwt:
+  claim: id
+  secret: ENC(AiZRFqD48YQx5p//siMiVh+gv7vYuTh3/n2w/G9f74YX+Cwjv52NJBbZNWtGJ2O77amlaBF/YWtr4V9Rk23KKLCFq7Ii4euOJc3zTlZ0oPz+U/G4k6tsRSoNNmg0tIs0xTaQwBaDlCQCR6jTH8Wu1JorW4n62hybTcBRdebgLZSaliTsNSg9yeRl+L5ota4D)

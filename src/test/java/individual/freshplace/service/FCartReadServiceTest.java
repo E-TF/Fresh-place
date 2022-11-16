@@ -1,6 +1,6 @@
 package individual.freshplace.service;
 
-import individual.freshplace.dto.cart.CartOnItem;
+import individual.freshplace.dto.cart.CartItem;
 import individual.freshplace.dto.profile.ProfileResponse;
 import individual.freshplace.entity.Item;
 import individual.freshplace.entity.Member;
@@ -43,10 +43,10 @@ class FCartReadServiceTest {
         Cookie[] cookies = cookies();
 
         //when
-        CartOnItem cartOnItem = fCartReadService.getCartByNonMember(cookies).getCartOnItems().get(0);
+        CartItem cartItem = fCartReadService.getCartByNonMember(cookies).getCartItems().get(0);
 
         //then
-        assertEquals(cartOnItem.getPrice(), cartOnItem.getDiscountPrice());
+        assertEquals(cartItem.getPrice(), cartItem.getDiscountPrice());
     }
 
     @Test
@@ -61,10 +61,10 @@ class FCartReadServiceTest {
         Cookie[] cookies = cookies();
 
         //when
-        CartOnItem cartOnItem = fCartReadService.getCartByMember(profileResponse.getMemberId(), cookies).getCartOnItems().get(0);
+        CartItem cartItem = fCartReadService.getCartByMember(profileResponse.getMemberId(), cookies).getCartItems().get(0);
 
         //then
-        assertNotEquals(cartOnItem.getPrice(), cartOnItem.getDiscountPrice());
+        assertNotEquals(cartItem.getPrice(), cartItem.getDiscountPrice());
     }
 
     private Member member() {
@@ -78,7 +78,7 @@ class FCartReadServiceTest {
     }
 
     private Cookie[] cookies() {
-        return new Cookie[]{CookieUtils.setCookie("1", "1")};
+        return new Cookie[]{CookieUtils.createCookie("1", "1")};
     }
 
     private ProfileResponse profileResponse() {

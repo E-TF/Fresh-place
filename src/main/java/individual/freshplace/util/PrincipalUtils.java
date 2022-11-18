@@ -1,6 +1,8 @@
 package individual.freshplace.util;
 
 import individual.freshplace.config.auth.PrincipalDetails;
+import individual.freshplace.util.constant.ErrorCode;
+import individual.freshplace.util.exception.CustomAuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class PrincipalUtils {
@@ -14,6 +16,10 @@ public class PrincipalUtils {
     }
 
     private static PrincipalDetails getPrincipalDetails() {
-        return (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            return (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        } catch (ClassCastException e) {
+            throw new CustomAuthenticationException(ErrorCode.INVALID_TOKEN);
+        }
     }
 }

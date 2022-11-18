@@ -31,13 +31,13 @@ public class PaymentController {
 
         Cookie[] cookies = httpServletRequest.getCookies();
         CartResponse cartResponses = fCartReadService.getCartByMember(principalDetails.getUsername(), cookies);
-        List<OrderItem> orderItems = cartResponses.getCartOnItems().stream().map(cartResponse -> OrderItem.of(cartResponse.getItemName(), cartResponse.getItemCounting(), cartResponse.getDiscountPrice())).collect(Collectors.toList());
-        return ResponseEntity.ok().body(kakaoPay.getKAKAOPayReadyResponse(principalDetails.getUsername(), orderItems));
+        List<OrderItem> orderItems = cartResponses.getCartItems().stream().map(cartResponse -> OrderItem.of(cartResponse.getItemName(), cartResponse.getItemCounting(), cartResponse.getDiscountPrice())).collect(Collectors.toList());
+        return ResponseEntity.ok().body(kakaoPay.getKakaoPayReadyResponse(principalDetails.getUsername(), orderItems));
     }
 
     //결제 승인 요청
     @GetMapping("/kakaopaySuccess")
     public ResponseEntity<KakaoPayApprovalResponse> kakaoPaySuccess(@RequestParam("pg_token") String pgToken, @Valid @RequestBody PayView payView) {
-        return ResponseEntity.ok().body(kakaoPay.getKAKAOPaymentInformation(pgToken, payView));
+        return ResponseEntity.ok().body(kakaoPay.getKakaoPaymentInformation(pgToken, payView));
     }
 }

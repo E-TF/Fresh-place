@@ -54,7 +54,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UriException.class)
-    public ResponseEntity<ErrorResponse> outOfInventoryExceptionHandler(final UriException e) {
+    public ResponseEntity<ErrorResponse> UriExceptionHandler(final UriException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ErrorResponse.containsValue(e.getErrorCode(), e.getValue()));
     }
 

@@ -10,7 +10,8 @@ public enum Folder {
     IMAGE("image"),
     GOODS("goods"),
     REVIEW("review"),
-    ORIGIN("origin");
+    ORIGIN("origin"),
+    RESIZE("resize");
 
     private String directoryName;
 }

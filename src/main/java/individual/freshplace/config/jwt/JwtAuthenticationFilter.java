@@ -3,7 +3,6 @@ package individual.freshplace.config.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import individual.freshplace.config.JwtProperties;
 import individual.freshplace.config.auth.PrincipalDetails;
 import individual.freshplace.dto.login.LoginRequest;
 import individual.freshplace.util.constant.ErrorCode;

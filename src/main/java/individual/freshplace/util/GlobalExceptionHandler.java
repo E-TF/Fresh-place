@@ -18,12 +18,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = DuplicationException.class)
+    @ExceptionHandler(DuplicationException.class)
     public ResponseEntity<ErrorResponse> duplicationExceptionHandler(final DuplicationException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ErrorResponse.containsValue(e.getErrorCode(), e.getValue()));
     }
 
-    @ExceptionHandler(value = WrongValueException.class)
+    @ExceptionHandler(WrongValueException.class)
     public ResponseEntity<ErrorResponse> wrongValueExceptionHandler(final WrongValueException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ErrorResponse.containsValue(e.getErrorCode(), e.getValue()));
     }
@@ -50,6 +50,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(OutOfInventoryException.class)
     public ResponseEntity<ErrorResponse> outOfInventoryExceptionHandler(final OutOfInventoryException e) {
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ErrorResponse.containsValue(e.getErrorCode(), e.getValue()));
+    }
+
+    @ExceptionHandler(UriException.class)
+    public ResponseEntity<ErrorResponse> UriExceptionHandler(final UriException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ErrorResponse.containsValue(e.getErrorCode(), e.getValue()));
     }
 

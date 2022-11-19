@@ -1,6 +1,5 @@
 package individual.freshplace.config.jwt;
 
-import individual.freshplace.config.JwtProperties;
 import individual.freshplace.util.constant.ErrorCode;
 import org.json.simple.JSONObject;
 import org.springframework.http.MediaType;

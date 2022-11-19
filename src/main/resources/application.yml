@@ -40,3 +40,4 @@ jasypt:
   encryptor:
     bean: jasyptStringEncryptor
     password: 1234
+    

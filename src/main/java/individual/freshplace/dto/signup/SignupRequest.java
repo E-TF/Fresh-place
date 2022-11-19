@@ -44,7 +44,6 @@ public class SignupRequest {
                 .phoneNumber(phoneNumber)
                 .email(email)
                 .memberBirth(memberBirth)
-                .gradeCode(Membership.GENERAL)
                 .build();
     }
 }

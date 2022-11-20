@@ -36,11 +36,10 @@ public class FImageUploadService {
     }
 
     private void resizingUpload(final Long itemId, final MultipartFile multipartFile) {
-        CompletableFuture.runAsync(() -> {
-            MultipartFile resizingImage = ImageUtils.imageResize(multipartFile, ImageFormat.STANDARD.getWeight(), ImageFormat.STANDARD.getHeight());
-            String resizingItemImageUrl = s3Uploader.upload(getDirectoryName(), itemId, Folder.RESIZE.getDirectoryName(), resizingImage);
-            createItemEntityAndInsert(resizingItemImageUrl);
-        });
+        CompletableFuture
+                .supplyAsync(() -> ImageUtils.imageResize(multipartFile, ImageFormat.STANDARD.getWeight(), ImageFormat.STANDARD.getHeight()))
+                .thenApply((resizingImage) -> s3Uploader.upload(getDirectoryName(), itemId, Folder.RESIZE.getDirectoryName(), resizingImage))
+                .thenAccept((resizingItemImageUrl) -> createItemEntityAndInsert(resizingItemImageUrl));
     }
 
     private String originalUpload(final Long itemId, final MultipartFile multipartFile) {

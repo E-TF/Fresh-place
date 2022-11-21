@@ -25,8 +25,8 @@ public class DeliveryAddressController {
         return ResponseEntity.ok().body(fDeliveryAddressService.getDeliveryAddresses(principalDetails.getUsername()));
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<DeliveryAddressResponse> AddDeliveryAddress(@AuthenticationPrincipal PrincipalDetails principalDetails, @Valid @RequestBody DeliveryAddressAddRequest deliverAddressAddRequest) {
+    @PostMapping
+    public ResponseEntity<DeliveryAddressResponse> addDeliveryAddress(@AuthenticationPrincipal PrincipalDetails principalDetails, @Valid @RequestBody DeliveryAddressAddRequest deliverAddressAddRequest) {
         return ResponseEntity.ok().body(fDeliveryAddressService.addDeliveryAddress(principalDetails.getUsername(), deliverAddressAddRequest));
     }
 

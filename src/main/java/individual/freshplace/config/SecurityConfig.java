@@ -5,6 +5,7 @@ import individual.freshplace.config.auth.PrincipalDetailsService;
 import individual.freshplace.config.jwt.JwtAuthenticationEntryPoint;
 import individual.freshplace.config.jwt.JwtAuthenticationFilter;
 import individual.freshplace.config.jwt.JwtAuthorizationFilter;
+import individual.freshplace.config.jwt.JwtProperties;
 import individual.freshplace.util.constant.Authority;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,7 +68,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web
                 .ignoring()
-                .antMatchers("/resources/**");
+                .antMatchers("/resources/**")
+                .antMatchers("/image.html")
+                .antMatchers("/imageOrigin.html")
+                .antMatchers("/Avif.html");
     }
 
     @Override
@@ -84,9 +88,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .mvcMatchers(HttpMethod.GET, "/public/**").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/public/**").permitAll()
+                .mvcMatchers(HttpMethod.DELETE, "/public/**").permitAll()
+
+                .mvcMatchers(HttpMethod.GET, "/image/**").permitAll()
 
                 .mvcMatchers(HttpMethod.POST, "/admin/**").hasAuthority(Authority.ADMIN.name())
                 .mvcMatchers(HttpMethod.PUT, "/admin/**").hasAuthority(Authority.ADMIN.name())
+                .mvcMatchers(HttpMethod.GET, "/admin/**").hasAuthority(Authority.ADMIN.name())
 
                 .anyRequest().authenticated()
 

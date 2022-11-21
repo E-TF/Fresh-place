@@ -1,4 +1,4 @@
-package individual.freshplace.service;
+package individual.freshplace.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -8,32 +8,30 @@ import individual.freshplace.util.constant.ErrorCode;
 import individual.freshplace.util.exception.FileUploadFailedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class S3Service {
+public class S3Uploader {
 
     private final static String SLASH = "/";
-
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String upload(String directoryName, Long objectName, MultipartFile multipartFile) {
+    public String upload(String directoryName, Long objectName, String type, MultipartFile multipartFile) {
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getSize());
         objectMetadata.setContentType(multipartFile.getContentType());
-        objectMetadata.setCacheControl("max-age=3600");
 
-        String key = createFilePath(directoryName, objectName, multipartFile.getOriginalFilename());
+        String key = createFilePath(directoryName, objectName, type, multipartFile.getOriginalFilename());
 
         try (InputStream inputStream = multipartFile.getInputStream()){
             amazonS3Client.putObject(new PutObjectRequest(bucket, key, inputStream, objectMetadata)
@@ -49,7 +47,7 @@ public class S3Service {
         amazonS3Client.deleteObject(bucket, filePath);
     }
 
-    private String createFilePath(String directoryName, Long objectName, String fileName) {
-        return directoryName + SLASH + objectName.toString() + SLASH + UUID.randomUUID().toString() + fileName;
+    private String createFilePath(String directoryName, Long objectName, String type, String fileName) {
+        return directoryName + SLASH + objectName + SLASH + type + SLASH + UUID.randomUUID().toString() + fileName;
     }
 }

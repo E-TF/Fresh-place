@@ -1,10 +1,8 @@
 package individual.freshplace.service;
 
 import individual.freshplace.dto.signup.SignupRequest;
-import individual.freshplace.entity.DiscountByGrade;
 import individual.freshplace.entity.Member;
 import individual.freshplace.util.constant.ErrorCode;
-import individual.freshplace.util.constant.GradeCode;
 import individual.freshplace.util.constant.LockPrefix;
 import individual.freshplace.util.exception.DuplicationException;
 import individual.freshplace.util.lock.UserLevelLock;
@@ -20,7 +18,6 @@ public class FSignupService {
     private final UserLevelLock userLevelLock;
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
-    private final DiscountByGradeService discountByGradeService;
 
     public void signup(final SignupRequest signupRequest) {
 
@@ -36,9 +33,7 @@ public class FSignupService {
             throw new DuplicationException(ErrorCode.ID_DUPLICATE_PREVENTION, signupRequest.getMemberId());
         }
 
-        DiscountByGrade discountByGrade = discountByGradeService.findById(GradeCode.GENERAL.getCodeValue());
-
-        Member member = signupRequest.toMember(discountByGrade, passwordEncoder.encode(signupRequest.getPassword()));
+        Member member = signupRequest.toMember(passwordEncoder.encode(signupRequest.getPassword()));
 
         memberService.save(member);
     }

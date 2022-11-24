@@ -28,6 +28,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 	implementation 'com.auth0:java-jwt:3.19.1'
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'

@@ -33,6 +33,18 @@ spring:
     properties:
       hibernate:
         format_sql: 'true'
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ENC(6NFu+m2WQ5FGKHTKFcEOk+E2/XswsFG6pCkY4H1WRkc=)
+    password: ENC(IcSnydQfBYwUFAJK25xwcwlbPEqBR97VMtNfZI0WWCM=)
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 lombok:
   anyConstructor:
     addConstructorProperties: 'true'
@@ -40,4 +52,3 @@ jasypt:
   encryptor:
     bean: jasyptStringEncryptor
     password: 1234
-    

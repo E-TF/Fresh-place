@@ -1,8 +1,11 @@
 package individual.freshplace.util;
 
 import individual.freshplace.dto.error.ErrorResponse;
+import individual.freshplace.dto.mail.MailRequest;
 import individual.freshplace.util.constant.ErrorCode;
+import individual.freshplace.util.constant.MailFormat;
 import individual.freshplace.util.exception.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,10 +16,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private final static String RECEIVER =  "rnjstndus23@gmail.com";
+    private final CustomMailSender customMailSender;
 
     @ExceptionHandler(DuplicationException.class)
     public ResponseEntity<ErrorResponse> duplicationExceptionHandler(final DuplicationException e) {
@@ -56,6 +62,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UriException.class)
     public ResponseEntity<ErrorResponse> UriExceptionHandler(final UriException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ErrorResponse.containsValue(e.getErrorCode(), e.getValue()));
+    }
+
+    @ExceptionHandler(FileUploadFailedException.class)
+    public ResponseEntity<ErrorResponse> FileUploadFailedExceptionHandler(final FileUploadFailedException e) {
+        customMailSender.sendMail(MailRequest.builder()
+                .address(RECEIVER)
+                .title(MailFormat.IMAGE_UPLOAD_FAILED.getTitle())
+                .content(createMailContent(e.getValue(), e.getErrorCode().getMessage())).build());
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ErrorResponse.containsValue(e.getErrorCode(), e.getValue()));
+    }
+
+    private String createMailContent(String imageName, String cause) {
+        return imageName + "이 (" + cause + ")에 의해 업로드 실패 했습니다.";
     }
 
     @Override

@@ -7,6 +7,7 @@ import individual.freshplace.util.constant.MailFormat;
 import individual.freshplace.util.exception.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RequiredArgsConstructor
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private final static String RECEIVER =  "rnjstndus23@gmail.com";
+    @Value("${spring.mail.username}")
+    private String receiver;
+
     private final CustomMailSender customMailSender;
 
     @ExceptionHandler(DuplicationException.class)
@@ -67,7 +70,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(FileUploadFailedException.class)
     public ResponseEntity<ErrorResponse> FileUploadFailedExceptionHandler(final FileUploadFailedException e) {
         customMailSender.sendMail(MailRequest.builder()
-                .address(RECEIVER)
+                .address(receiver)
                 .title(MailFormat.IMAGE_UPLOAD_FAILED.getTitle())
                 .content(createMailContent(e.getValue(), e.getErrorCode().getMessage())).build());
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ErrorResponse.containsValue(e.getErrorCode(), e.getValue()));

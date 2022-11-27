@@ -4,5 +4,5 @@ spring:
     url: ENC(HsY8okf+qYCwL9Sf63G1C6jyFHdcOEQ3vec+QUgPtd6hLxfpZMYdOqRA0njgwabcqYAGHCuxiZchjfyOnFKpamU7jd8EaS0N75LksynnLYghki/LNBOa0WeedZqtv3cSNdlXl1PHM4GwOj8LGvjas1gSzRnKFQ+Obk6nm8yiDwBivLnYLc7fhgy7Upw43F6Q/Smx7Ho9G+vtjOEf4pJgKRCsYiHp2299M7VyMEJxhvQ=)
     password: ENC(pC2eHGbDZRWOiVv1DkdLY7OnSo4FzPUG)
   redis:
-    host: 127.0.0.1
+    host: host.docker.internal
     port: '6379'

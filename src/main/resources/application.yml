@@ -51,4 +51,4 @@ lombok:
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
-    password: 1234
+    password: PASSWORD

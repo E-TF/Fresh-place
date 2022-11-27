@@ -1,6 +1,6 @@
 package individual.freshplace.controller;
 
-import individual.freshplace.dto.image.ImageResizingResponse;
+import individual.freshplace.dto.image.ImageUploadResponse;
 import individual.freshplace.service.FImageUploadService;
 import individual.freshplace.util.constant.ErrorCode;
 import individual.freshplace.util.exception.EmptyFileException;
@@ -17,8 +17,8 @@ public class ImageController {
     private final FImageUploadService fImageUploadService;
 
     @PostMapping("/image/upload")
-    public ResponseEntity<ImageResizingResponse> itemsUploadRequest(@RequestParam("objectName") Long objectName,
-                                                                    @RequestParam("image") MultipartFile multipartFile) {
+    public ResponseEntity<ImageUploadResponse> itemsUploadRequest(@RequestParam("objectName") Long objectName,
+                                                                  @RequestParam("image") MultipartFile multipartFile) {
 
         if (multipartFile.isEmpty()) {
             throw new EmptyFileException(ErrorCode.FILE_ERROR, multipartFile.getName());

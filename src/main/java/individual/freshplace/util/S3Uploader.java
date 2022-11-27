@@ -37,7 +37,7 @@ public class S3Uploader {
             amazonS3Client.putObject(new PutObjectRequest(bucket, key, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));//새로운 개체에 대한 선택적 액세스 제어를 public read 함. ['public-read']
         } catch (IOException e) {
-            throw new FileUploadFailedException(ErrorCode.FAILED_FILE_TO_STREAM);
+            throw new FileUploadFailedException(ErrorCode.FAILED_FILE_TO_STREAM, multipartFile.getOriginalFilename());
         }
 
         return amazonS3Client.getUrl(bucket, key).toString();

@@ -1,7 +1,7 @@
 package individual.freshplace.service;
 
 import individual.freshplace.dto.item.ItemByCategoryResponse;
-import individual.freshplace.util.constant.SubCategory;
+import individual.freshplace.util.constant.code.category.SubCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

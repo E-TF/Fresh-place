@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum GradeCode {
+public enum MailFormat {
 
-    GENERAL("G001");
+    IMAGE_UPLOAD_FAILED("이미지처리 오류입니다.");
 
-    private String codeValue;
+    private String title;
 }

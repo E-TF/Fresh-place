@@ -35,9 +35,9 @@ public class ImageUtils {
             return new ConvertToMultipartFile(imageByte, multipartFile.getOriginalFilename(), multipartFile.getContentType(), imageByte.length);
 
         } catch (IOException e) {
-            throw new FileUploadFailedException(ErrorCode.FAILED_FILE_TO_STREAM);
+            throw new FileUploadFailedException(ErrorCode.FAILED_FILE_TO_STREAM, multipartFile.getOriginalFilename());
         } catch (InterruptedException e) {
-            throw new FileUploadFailedException(ErrorCode.FAILED_PIXEL_GRABBER);
+            throw new FileUploadFailedException(ErrorCode.FAILED_PIXEL_GRABBER, multipartFile.getOriginalFilename());
         }
     }
 

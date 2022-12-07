@@ -1,0 +1,14 @@
+cors:
+  alloworigin: http://localhost:8080
+
+kakaopay:
+  host: https://kapi.kakao.com
+  ready_path: /v1/payment/ready
+  approve_path: /v1/payment/approve
+  order_path: /v1/payment/order
+  cid: TC0ONETIME
+  tax_free_amount: 0
+  admin_key: ENC(4UpCZyI0FD0uqNDWzKJhUdfCXPvr6Vah8cNF9AdLHVljQm8Aju+wJmHWVOJijTWD)
+  approval_url: http://localhost:8080/kakaopaySuccess
+  cancel_url: http://localhost:8080
+  fail_url: http://localhost:8080/kakaopaySuccessFail

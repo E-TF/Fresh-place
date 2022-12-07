@@ -1,4 +1,4 @@
-package individual.freshplace.util.constant;
+package individual.freshplace.util.constant.code.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

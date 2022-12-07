@@ -2,7 +2,7 @@ package individual.freshplace.entity;
 
 import individual.freshplace.dto.profile.ProfileUpdateRequest;
 import individual.freshplace.util.constant.Authority;
-import individual.freshplace.util.constant.Membership;
+import individual.freshplace.util.constant.code.grade.Membership;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

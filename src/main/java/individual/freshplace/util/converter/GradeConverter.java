@@ -1,6 +1,6 @@
 package individual.freshplace.util.converter;
 
-import individual.freshplace.util.constant.Membership;
+import individual.freshplace.util.constant.code.grade.Membership;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

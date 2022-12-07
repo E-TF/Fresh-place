@@ -28,6 +28,7 @@ public class KakaoPayProperties {
     private final String host;
     private final String readyPath;
     private final String approvePath;
+    private final String orderPath;
     private final String adminKey;
     private final String cid;
     private final String taxFreeAmount;
@@ -36,12 +37,13 @@ public class KakaoPayProperties {
     private final String failUrl;
 
     public KakaoPayProperties(@Value("${kakaopay.host}") String host, @Value("${kakaopay.ready_path}") String readyPath, @Value("${kakaopay.approve_path}") String approvePath,
-                              @Value("${kakaopay.admin_key}") String adminKey, @Value("${kakaopay.cid}") String cid,
+                              @Value("${kakaopay.order_path}") String orderPath, @Value("${kakaopay.admin_key}") String adminKey, @Value("${kakaopay.cid}") String cid,
                               @Value("${kakaopay.tax_free_amount}") String taxFreeAmount, @Value("${kakaopay.approval_url}") String approvalUrl,
                               @Value("${kakaopay.cancel_url}") String cancelUrl, @Value("${kakaopay.fail_url}") String failUrl) {
         this.host = host;
         this.readyPath = readyPath;
         this.approvePath = approvePath;
+        this.orderPath = orderPath;
         this.adminKey = adminKey;
         this.cid = cid;
         this.taxFreeAmount = taxFreeAmount;

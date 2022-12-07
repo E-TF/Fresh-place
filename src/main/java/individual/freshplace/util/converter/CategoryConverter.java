@@ -1,6 +1,6 @@
 package individual.freshplace.util.converter;
 
-import individual.freshplace.util.constant.SubCategory;
+import individual.freshplace.util.constant.code.category.SubCategory;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

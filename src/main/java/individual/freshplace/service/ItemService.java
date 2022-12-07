@@ -2,7 +2,7 @@ package individual.freshplace.service;
 
 import individual.freshplace.entity.Item;
 import individual.freshplace.repository.ItemRepository;
-import individual.freshplace.util.constant.SubCategory;
+import individual.freshplace.util.constant.code.category.SubCategory;
 import individual.freshplace.util.constant.ErrorCode;
 import individual.freshplace.util.exception.NonExistentException;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 @Service
 @RequiredArgsConstructor

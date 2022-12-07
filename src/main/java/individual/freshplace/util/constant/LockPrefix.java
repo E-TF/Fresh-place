@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum LockPrefix {
 
     SIGNUP("signup"),
-    UPDATE_MEMBER("updateMember");
+    UPDATE_MEMBER("updateMember"),
+    STOCK_CHECKING("stockChecking");
 
     private String methodName;
 }

@@ -1,7 +1,7 @@
 package individual.freshplace.entity;
 
 import individual.freshplace.dto.item.ItemUpdateRequest;
-import individual.freshplace.util.constant.SubCategory;
+import individual.freshplace.util.constant.code.category.SubCategory;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,9 +46,9 @@ public class Item extends BaseEntity {
         this.categoryCode = SubCategory.findByCodeEngName(itemUpdateRequest.getCategoryEngName());
     }
 
-    public void decreaseInventory(final long purchaseQuantity) {
+    public void decreaseInventoryAndIncreaseSalesQuantity(final long purchaseQuantity) {
         this.inventory -= purchaseQuantity;
-        System.out.println("남은 수량 : " + inventory);
+        this.salesQuantity += purchaseQuantity;
     }
 
     @Builder

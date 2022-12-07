@@ -1,6 +1,5 @@
 package individual.freshplace.dto.deliveryaddress;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
 
@@ -10,7 +9,6 @@ import javax.validation.constraints.Pattern;
 public class DeliveryAddressUpdateRequest {
 
     @Getter
-    @AllArgsConstructor
     public static class ZipCode {
 
         private Long deliverSeq;
@@ -21,7 +19,6 @@ public class DeliveryAddressUpdateRequest {
     }
 
     @Getter
-    @AllArgsConstructor
     public static class Address {
 
         private Long deliverSeq;
@@ -31,7 +28,6 @@ public class DeliveryAddressUpdateRequest {
     }
 
     @Getter
-    @AllArgsConstructor
     public static class Recipient {
 
         private Long deliverSeq;
@@ -42,7 +38,6 @@ public class DeliveryAddressUpdateRequest {
     }
 
     @Getter
-    @AllArgsConstructor
     public static class Contact {
 
         private Long deliverSeq;

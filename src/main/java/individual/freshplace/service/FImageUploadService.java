@@ -36,7 +36,6 @@ public class FImageUploadService {
     }
 
     private void resizingUpload(final Long itemId, final MultipartFile multipartFile) {
-
         CompletableFuture
                 .supplyAsync(() -> ImageUtils.imageResize(multipartFile, ImageFormat.STANDARD.getWeight(), ImageFormat.STANDARD.getHeight()))
                 .thenApply((resizingImage) -> s3Uploader.upload(getDirectoryName(), itemId, Folder.RESIZE.getDirectoryName(), resizingImage))

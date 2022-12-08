@@ -37,10 +37,10 @@ public class FOrderService {
     private final DeliveryAddressService deliveryAddressService;
     private final PaymentService paymentService;
 
-    public String getPaymentRedirectUrl(final String memberId, final OrderRequest orderRequest, final Cookie[] cookies) {
+    public String addOrderAndGetPaymentRedirectUrl(final String memberId, final OrderRequest orderRequest, final Cookie[] cookies) {
 
         List<OrderItem> orderItems = fCartReadService.getCartByMember(memberId, cookies).getCartItems().stream().map(cartItem -> new OrderItem(cartItem.getItemSeq(), cartItem.getItemName(), cartItem.getItemCounting(), cartItem.getPrice())).collect(Collectors.toList());
-        Long orderSeq = userLevelLock.lockProcess(LockPrefix.STOCK_CHECKING.getMethodName(), () -> addOrder(memberId, orderItems, orderRequest));
+        Long orderSeq = userLevelLock.lockProcess(LockPrefix.STOCK_CHECKING.getMethodName(), () -> changeItemsStockAndAddOrder(memberId, orderItems, orderRequest));
         orderSeqSaveToRedis(memberId, String.valueOf(orderSeq));
         KakaoPayReadyResponse kakaoPayReadyResponse = kakaoPay.getKakaoPayReadyResponse(memberId, orderItems);
         tidSaveToRedis(memberId, kakaoPayReadyResponse.getTid());
@@ -48,7 +48,7 @@ public class FOrderService {
     }
 
     @Transactional
-    protected Long addOrder(String memberId, List<OrderItem> orderItems, OrderRequest orderRequest) {
+    protected Long changeItemsStockAndAddOrder(String memberId, List<OrderItem> orderItems, OrderRequest orderRequest) {
 
         fStockService.stockCheckAndChange(orderItems);
         final Member member = memberService.findByMemberId(memberId);
@@ -59,6 +59,7 @@ public class FOrderService {
         return order.getOrderSeq();
     }
 
+    @Transactional
     public Receipt addPayment(final String pgToken, final String memberId) {
 
         String tid = redisTemplate.opsForValue().get(RedisKeyPrefix.PAYMENT + memberId);

@@ -35,6 +35,7 @@ public class KakaoPayOrderDetailsResponse {
     private PaymentActionDetails[] paymentActionDetails;
 
     @Getter
+    @ToString
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -48,6 +49,7 @@ public class KakaoPayOrderDetailsResponse {
     }
 
     @Getter
+    @ToString
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -61,6 +63,7 @@ public class KakaoPayOrderDetailsResponse {
     }
 
     @Getter
+    @ToString
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -74,6 +77,7 @@ public class KakaoPayOrderDetailsResponse {
     }
 
     @Getter
+    @ToString
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -85,6 +89,7 @@ public class KakaoPayOrderDetailsResponse {
     }
 
     @Getter
+    @ToString
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)

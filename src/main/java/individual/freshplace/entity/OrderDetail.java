@@ -19,11 +19,11 @@ public class OrderDetail {
     @Column(name = "total_price")
     private long price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "item_seq")
     private Item item;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "order_seq")
     private Order order;
 

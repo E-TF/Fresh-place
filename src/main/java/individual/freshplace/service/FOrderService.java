@@ -44,7 +44,7 @@ public class FOrderService {
         String orderName = createOrderTitle(orderItems.get(0).getItemName(), orderItems.size());
         Long orderSeq = userLevelLock.lockProcess(LockPrefix.STOCK_CHECKING.getMethodName(), () -> changeItemsStockAndAddOrder(memberId, orderItems, orderRequest, orderName));
         orderSeqSaveToRedis(memberId, String.valueOf(orderSeq));
-        KakaoPayReadyResponse kakaoPayReadyResponse = kakaoPay.getKakaoPayReadyResponse(memberId, orderItems, orderName);
+        KakaoPayReadyResponse kakaoPayReadyResponse = kakaoPay.getKakaoPayReadyResponse(memberId, orderItems);
         log.info(kakaoPayReadyResponse.getNextRedirectPcUrl());
         tidSaveToRedis(memberId, kakaoPayReadyResponse.getTid());
         return kakaoPayReadyResponse.getNextRedirectPcUrl();

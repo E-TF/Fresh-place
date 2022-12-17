@@ -6,7 +6,6 @@ import individual.freshplace.dto.order.OrderRequest;
 import individual.freshplace.dto.order.OrderResponse;
 import individual.freshplace.service.FOrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +22,13 @@ public class OrderController {
     private final FOrderService fOrderService;
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> getOrdersInformation(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return ResponseEntity.ok(fOrderService.getOrders(principalDetails.getUsername()));
+    public @ResponseBody List<OrderResponse> getOrdersInformation(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return fOrderService.getOrders(principalDetails.getUsername());
     }
 
     @GetMapping("/{orderSeq}")
-    public ResponseEntity<OrderDetailResponse> getOrderDetailsInformation(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable Long orderSeq) {
-        return ResponseEntity.ok(fOrderService.getOrderDetailsAndPayment(orderSeq));
+    public @ResponseBody OrderDetailResponse getOrderDetailsInformation(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable Long orderSeq) {
+        return fOrderService.getOrderDetailsAndPayment(orderSeq);
     }
 
     @PostMapping

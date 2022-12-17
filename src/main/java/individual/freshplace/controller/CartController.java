@@ -5,10 +5,11 @@ import individual.freshplace.service.FCartReadService;
 import individual.freshplace.util.CookieUtils;
 import individual.freshplace.util.PrincipalUtils;
 import individual.freshplace.util.constant.ErrorCode;
+import individual.freshplace.util.exception.NonExistentException;
 import individual.freshplace.util.exception.OutOfInventoryException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import individual.freshplace.util.constant.Cookies;
 
@@ -25,20 +26,21 @@ public class CartController {
     private final FCartReadService fCartReadService;
 
     @GetMapping
-    public ResponseEntity<CartResponse> getItemsInCart(HttpServletRequest request) {
+    public CartResponse getItemsInCart(HttpServletRequest request) {
 
-        if (request.getCookies() != null && request.getHeader(HttpHeaders.AUTHORIZATION) == null) {
-            return ResponseEntity.ok().body(fCartReadService.getCartByNonMember(request.getCookies()));
+        if (request.getCookies() == null) {
+            throw new NonExistentException(ErrorCode.EMPTY_CART, "수량");
         }
 
-        if (request.getCookies() != null && request.getHeader(HttpHeaders.AUTHORIZATION) != null) {
-            return ResponseEntity.ok().body(fCartReadService.getCartByMember(PrincipalUtils.getUsername(), request.getCookies()));
+        if (request.getHeader(HttpHeaders.AUTHORIZATION) != null) {
+            return fCartReadService.getCartByMember(PrincipalUtils.getUsername(), request.getCookies());
         }
 
-        return ResponseEntity.ok().build();
+        return fCartReadService.getCartByNonMember(request.getCookies());
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void addItemToCart(HttpServletRequest request, HttpServletResponse response) {
 
         //새 아이템이 추가되면 장바구니 모든 유지시간을 다시 셋팅.
@@ -57,6 +59,7 @@ public class CartController {
     }
 
     @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteItemInCart(HttpServletRequest request, HttpServletResponse response) {
 
         if (!request.getParameterNames().hasMoreElements()) {

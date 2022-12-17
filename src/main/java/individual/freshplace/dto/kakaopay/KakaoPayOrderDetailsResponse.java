@@ -5,12 +5,10 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -35,7 +33,6 @@ public class KakaoPayOrderDetailsResponse {
     private PaymentActionDetails[] paymentActionDetails;
 
     @Getter
-    @ToString
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -49,7 +46,6 @@ public class KakaoPayOrderDetailsResponse {
     }
 
     @Getter
-    @ToString
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -63,7 +59,6 @@ public class KakaoPayOrderDetailsResponse {
     }
 
     @Getter
-    @ToString
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -77,7 +72,6 @@ public class KakaoPayOrderDetailsResponse {
     }
 
     @Getter
-    @ToString
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -89,7 +83,6 @@ public class KakaoPayOrderDetailsResponse {
     }
 
     @Getter
-    @ToString
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)

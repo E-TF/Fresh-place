@@ -6,6 +6,7 @@ import individual.freshplace.dto.deliveryaddress.DeliveryAddressResponse;
 import individual.freshplace.dto.deliveryaddress.DeliveryAddressUpdateRequest;
 import individual.freshplace.service.FDeliveryAddressService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -21,23 +22,24 @@ public class DeliveryAddressController {
     private final FDeliveryAddressService fDeliveryAddressService;
 
     @GetMapping
-    public ResponseEntity<List<DeliveryAddressResponse>> getDeliveryAddresses(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return ResponseEntity.ok().body(fDeliveryAddressService.getDeliveryAddresses(principalDetails.getUsername()));
+    public List<DeliveryAddressResponse> getDeliveryAddresses(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return fDeliveryAddressService.getDeliveryAddresses(principalDetails.getUsername());
     }
 
     @PostMapping
-    public ResponseEntity<DeliveryAddressResponse> addDeliveryAddress(@AuthenticationPrincipal PrincipalDetails principalDetails, @Valid @RequestBody DeliveryAddressAddRequest deliverAddressAddRequest) {
-        return ResponseEntity.ok().body(fDeliveryAddressService.addDeliveryAddress(principalDetails.getUsername(), deliverAddressAddRequest));
+    @ResponseStatus(HttpStatus.CREATED)
+    public DeliveryAddressResponse addDeliveryAddress(@AuthenticationPrincipal PrincipalDetails principalDetails, @Valid @RequestBody DeliveryAddressAddRequest deliverAddressAddRequest) {
+        return fDeliveryAddressService.addDeliveryAddress(principalDetails.getUsername(), deliverAddressAddRequest);
     }
 
     @PatchMapping("/zipcode")
-    public ResponseEntity<DeliveryAddressResponse> updateDeliveryAddressZipCode(@AuthenticationPrincipal PrincipalDetails principalDetails, @Valid @RequestBody DeliveryAddressUpdateRequest.ZipCode zipCode) {
-        return ResponseEntity.ok().body(fDeliveryAddressService.updateDeliveryAddressZipCode(principalDetails.getUsername(), zipCode));
+    public DeliveryAddressResponse updateDeliveryAddressZipCode(@AuthenticationPrincipal PrincipalDetails principalDetails, @Valid @RequestBody DeliveryAddressUpdateRequest.ZipCode zipCode) {
+        return fDeliveryAddressService.updateDeliveryAddressZipCode(principalDetails.getUsername(), zipCode);
     }
 
     @PatchMapping("/address")
-    public ResponseEntity<DeliveryAddressResponse> updateDeliveryAddressDetailAddress(@AuthenticationPrincipal PrincipalDetails principalDetails, @Valid @RequestBody DeliveryAddressUpdateRequest.Address address) {
-        return ResponseEntity.ok().body(fDeliveryAddressService.updateDeliveryAddressDetailAddress(principalDetails.getUsername(), address));
+    public DeliveryAddressResponse updateDeliveryAddressDetailAddress(@AuthenticationPrincipal PrincipalDetails principalDetails, @Valid @RequestBody DeliveryAddressUpdateRequest.Address address) {
+        return fDeliveryAddressService.updateDeliveryAddressDetailAddress(principalDetails.getUsername(), address);
     }
 
     @PatchMapping("/recipient")
@@ -46,13 +48,13 @@ public class DeliveryAddressController {
     }
 
     @PatchMapping("/contact")
-    public ResponseEntity<DeliveryAddressResponse> updateDeliveryAddressContact(@AuthenticationPrincipal PrincipalDetails principalDetails, @Valid @RequestBody DeliveryAddressUpdateRequest.Contact contact) {
-        return ResponseEntity.ok().body(fDeliveryAddressService.updateDeliveryAddressContact(principalDetails.getUsername(), contact));
+    public DeliveryAddressResponse updateDeliveryAddressContact(@AuthenticationPrincipal PrincipalDetails principalDetails, @Valid @RequestBody DeliveryAddressUpdateRequest.Contact contact) {
+        return fDeliveryAddressService.updateDeliveryAddressContact(principalDetails.getUsername(), contact);
     }
 
     @DeleteMapping("/{deliverSeq}")
-    public ResponseEntity deleteDeliveryAddress(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable Long deliverSeq) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDeliveryAddress(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable Long deliverSeq) {
         fDeliveryAddressService.deleteDeliveryAddress(principalDetails.getUsername(), deliverSeq);
-        return ResponseEntity.ok().build();
     }
 }

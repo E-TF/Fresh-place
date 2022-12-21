@@ -22,7 +22,7 @@ public class Payment extends BaseEntity {
 
     private String paymentMethod;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_seq")
     private Order order;
 

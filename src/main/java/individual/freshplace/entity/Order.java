@@ -44,9 +44,6 @@ public class Order extends BaseEntity {
     @OneToMany(mappedBy = "order")
     private List<OrderDetail> orderDetailList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "order")
-    private Payment payment;
-
     @Builder
     public Order(final String orderName, final Member member, final Address address, final String receiverName, final String receiverPhoneNumber, final PlaceToReceive placeToReceiveCode) {
         this.orderName = orderName;

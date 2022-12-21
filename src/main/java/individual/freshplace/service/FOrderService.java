@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -115,17 +116,19 @@ public class FOrderService {
     }
 
     private List<OrderResponse> getOrdersInformationFromOrderListOfMember(List<Order> orders) {
+        final Map<Order, Payment> orderPaymentMap = convertListIntoMap(orders);
         return orders.stream().map(order -> new OrderResponse(order.getCreatedAt(), order.getDeliveryStatusCode().getCodeName(), order.getOrderName(),
-                order.getPayment().getPaymentMethod(), order.getPayment().getPaymentAmount())).collect(Collectors.toList());
+                orderPaymentMap.get(order).getPaymentMethod(), orderPaymentMap.get(order).getPaymentAmount())).collect(Collectors.toList());
     }
 
     private OrderDetailResponse getOrderDetailInformationFromOrder(Order order) {
         List<OrderedItem> orderedItems = createOrderedItems(order.getOrderDetailList());
+        final Payment payment = paymentService.findByOrder(order);
         long orderedItemsOriginPrice = getOrderedItemsOriginAmount(order.getOrderDetailList());
-        long orderedItemsDiscountPrice = getOrderedItemsDiscountAmount(orderedItemsOriginPrice, order.getPayment().getPaymentAmount());
+        long orderedItemsDiscountPrice = getOrderedItemsDiscountAmount(orderedItemsOriginPrice, payment.getPaymentAmount());
         return new OrderDetailResponse(orderedItems,
-                orderedItemsOriginPrice, orderedItemsDiscountPrice, 0, order.getPayment().getPaymentAmount(), order.getPayment().getPaymentMethod(),
-                order.getMember().getMemberName(), order.getPayment().getPaymentDate(),
+                orderedItemsOriginPrice, orderedItemsDiscountPrice, 0, payment.getPaymentAmount(), payment.getPaymentMethod(),
+                order.getMember().getMemberName(), payment.getPaymentDate(),
                 order.getReceiverName(), order.getReceiverPhoneNumber(), order.getAddress().getZipCode() + " " + order.getAddress().getAddress(), order.getPlaceToReceiveCode().getCodeName());
     }
 
@@ -141,4 +144,7 @@ public class FOrderService {
         return originAmount - paymentAmount;
     }
 
+    private Map<Order, Payment> convertListIntoMap(List<Order> orders) {
+        return orders.stream().collect(Collectors.toMap(order -> order, order -> paymentService.findByOrder(order)));
+    }
 }

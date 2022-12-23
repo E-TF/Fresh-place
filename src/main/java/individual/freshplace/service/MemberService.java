@@ -15,7 +15,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
-    public Member findByMemberId(final String memberId) {
+    public Member getByMemberId(final String memberId) {
         return memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new WrongValueException(ErrorCode.USERNAME_NOT_FOUND, memberId));
     }

@@ -21,7 +21,7 @@ public class FStockService {
     public void stockCheckAndChange(final List<OrderItem> orderItems) {
 
         Map<Long, Long> orderItemsMap = convertListIntoMap(orderItems);
-        orderItems.stream().map(orderItem -> itemService.findById(orderItem.getItemSeq()))
+        orderItems.stream().map(orderItem -> itemService.getById(orderItem.getItemSeq()))
                 .forEach(item -> {
                     if (item.getInventory() < orderItemsMap.get(item.getItemSeq())) {
                         throw new OutOfInventoryException(ErrorCode.NO_STOCK, item.getItemName());

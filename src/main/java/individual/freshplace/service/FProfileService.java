@@ -23,7 +23,7 @@ public class FProfileService {
     @Transactional
     public ProfileResponse getProfile(final String memberId) {
 
-        Member member = memberService.findByMemberId(memberId);
+        Member member = memberService.getByMemberId(memberId);
 
         return ProfileResponse.from(member);
     }
@@ -41,7 +41,7 @@ public class FProfileService {
             throw new DuplicationException(ErrorCode.UN_AVAILABLE_ID, profileUpdateRequest.getMemberId());
         }
 
-        Member member = memberService.findByMemberId(memberId);
+        Member member = memberService.getByMemberId(memberId);
 
         member.updateProfile(profileUpdateRequest);
 

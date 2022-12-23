@@ -20,7 +20,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Order findById(final Long id) {
+    public Order getById(final Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new WrongValueException(ErrorCode.BAD_VALUE, id.toString()));
     }

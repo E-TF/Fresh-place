@@ -1,5 +1,6 @@
 package individual.freshplace.service;
 
+import individual.freshplace.dto.cart.CartItem;
 import individual.freshplace.dto.kakaopay.KakaoPayApprovalResponse;
 import individual.freshplace.dto.kakaopay.KakaoPayOrderDetailsResponse;
 import individual.freshplace.dto.kakaopay.KakaoPayReadyResponse;
@@ -25,9 +26,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FOrderService {
 
-    private final FCartReadService fCartReadService;
     private final UserLevelLock userLevelLock;
     private final FStockService fStockService;
+    private final FCartReadService fCartReadService;
     private final MemberService memberService;
     private final OrderService orderService;
     private final OrderDetailService orderDetailService;
@@ -39,7 +40,8 @@ public class FOrderService {
 
     public String addOrderAndGetPaymentRedirectUrl(final String memberId, final OrderRequest orderRequest, final Cookie[] cookies) {
 
-        List<OrderItem> orderItems = fCartReadService.getCartByMember(memberId, cookies).getCartItems().stream().map(cartItem -> new OrderItem(cartItem.getItemSeq(), cartItem.getItemName(), cartItem.getItemCounting(), cartItem.getPrice())).collect(Collectors.toList());
+        List<CartItem> cartItems = fCartReadService.getCartByMember(memberId, cookies).getCartItems();
+        List<OrderItem> orderItems = cartItems.stream().map(cartItem -> new OrderItem(cartItem.getItemSeq(), cartItem.getItemName(), cartItem.getItemCounting(), cartItem.getPrice())).collect(Collectors.toList());
         Long orderSeq = userLevelLock.lockProcess(LockPrefix.STOCK_CHECKING.getMethodName(), () -> changeItemsStockAndAddOrder(memberId, orderItems, orderRequest));
         orderSeqSaveToRedis(memberId, String.valueOf(orderSeq));
         KakaoPayReadyResponse kakaoPayReadyResponse = kakaoPay.getKakaoPayReadyResponse(memberId, orderItems);
@@ -51,8 +53,8 @@ public class FOrderService {
     protected Long changeItemsStockAndAddOrder(String memberId, List<OrderItem> orderItems, OrderRequest orderRequest) {
 
         fStockService.stockCheckAndChange(orderItems);
-        final Member member = memberService.findByMemberId(memberId);
-        final DeliverAddress deliverAddress = deliveryAddressService.findById(orderRequest.getRecipientInformation());
+        final Member member = memberService.getByMemberId(memberId);
+        final DeliverAddress deliverAddress = deliveryAddressService.getById(orderRequest.getRecipientInformation());
         final Order order = Order.builder().member(member).address(deliverAddress.getAddress()).receiverName(deliverAddress.getRecipient()).receiverPhoneNumber(deliverAddress.getContact()).placeToReceiveCode(PlaceToReceive.findByCodeName(orderRequest.getDeliveryRequirements())).build();
         orderService.save(order);
         addOrderDetails(order, orderItems);
@@ -66,7 +68,7 @@ public class FOrderService {
         KakaoPayOrderDetailsResponse kakaoPayOrderDetailsResponse = kakaoPay.getOrderDetailsResponse(tid);
         KakaoPayApprovalResponse kakaoPayApprovalResponse = kakaoPay.getKakaoPayApprovalResponse(pgToken, kakaoPayOrderDetailsResponse.getPartnerUserId(), kakaoPayOrderDetailsResponse.getTid(), kakaoPayOrderDetailsResponse.getPartnerOrderId());
         Long orderSeq = Long.parseLong(redisTemplate.opsForValue().get(RedisKeyPrefix.ORDER + memberId));
-        final Order order = orderService.findById(orderSeq);
+        final Order order = orderService.getById(orderSeq);
         final Payment payment = Payment.builder().paymentMethod(kakaoPayApprovalResponse.getPaymentMethodType()).order(order).paymentDate(kakaoPayApprovalResponse.getCreatedAt()).paymentTid(kakaoPayApprovalResponse.getTid()).build();
         paymentService.save(payment);
         return new Receipt(kakaoPayApprovalResponse.getItemName(),payment.getOrder().getReceiverName() + " / " + payment.getOrder().getReceiverPhoneNumber(), payment.getOrder().getAddress().getZipCode() + " " + payment.getOrder().getAddress().getAddress(),
@@ -76,7 +78,7 @@ public class FOrderService {
     private void addOrderDetails(Order order, List<OrderItem> orderItems) {
         orderItems.stream().map(orderItem -> OrderDetail.builder()
                 .order(order)
-                .item(itemService.findById(orderItem.getItemSeq()))
+                .item(itemService.getById(orderItem.getItemSeq()))
                 .count(orderItem.getItemCount())
                 .price(orderItem.getTotalPrice()).build()).forEach(orderDetailService::save);
     }

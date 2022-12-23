@@ -23,7 +23,7 @@ public class FItemService {
     @Transactional(readOnly = true)
     public ItemResponse getItemDetail(final Long itemSeq) {
 
-        Item item = itemService.findById(itemSeq);
+        Item item = itemService.getById(itemSeq);
         List<Image> images = imageService.findByImagePath(getUrlPrefix(itemSeq));
 
         return ItemResponse.of(item, images);
@@ -32,7 +32,7 @@ public class FItemService {
     @Transactional
     public ItemResponse updateItemDetail(final ItemUpdateRequest itemUpdateRequest) {
 
-        Item item = itemService.findById(itemUpdateRequest.getItemSeq());
+        Item item = itemService.getById(itemUpdateRequest.getItemSeq());
         item.updateItem(itemUpdateRequest);
         List<Image> images = imageService.findByImagePath(getUrlPrefix(itemUpdateRequest.getItemSeq()));
 

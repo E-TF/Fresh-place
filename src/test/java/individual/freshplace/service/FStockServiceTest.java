@@ -34,11 +34,11 @@ public class FStockServiceTest {
         Item item = item();
         final long purchaseAmount = 3L;
         List<OrderItem> orderItems = List.of(orderItem(item.getItemSeq(), item.getItemName(), purchaseAmount, purchaseAmount * item.getPrice()));
-        given(itemService.findById(anyLong())).willReturn(item);
+        given(itemService.getById(anyLong())).willReturn(item);
 
         //when
         fStockService.stockCheckAndChange(orderItems);
-        Item changedItem = itemService.findById(item.getItemSeq());
+        Item changedItem = itemService.getById(item.getItemSeq());
 
         //then
         Assertions.assertAll(
@@ -54,7 +54,7 @@ public class FStockServiceTest {
         Item item = item();
         final long purchaseAmount = item.getInventory() + 1;
         List<OrderItem> orderItems = List.of(orderItem(item.getItemSeq(), item.getItemName(), purchaseAmount, purchaseAmount * item.getPrice()));
-        given(itemService.findById(anyLong())).willReturn(item);
+        given(itemService.getById(anyLong())).willReturn(item);
 
         //when && then
         Assertions.assertThrowsExactly(OutOfInventoryException.class, () -> fStockService.stockCheckAndChange(orderItems));

@@ -24,7 +24,7 @@ public class FDeliveryAddressService {
     @Transactional
     public List<DeliveryAddressResponse> getDeliveryAddresses(final String memberId) {
 
-        Member member = memberService.findByMemberId(memberId);
+        Member member = memberService.getByMemberId(memberId);
 
         return member.getAddressList().stream().map(DeliveryAddressResponse::from).collect(Collectors.toList());
     }
@@ -32,7 +32,7 @@ public class FDeliveryAddressService {
     @Transactional
     public DeliveryAddressResponse addDeliveryAddress(final String memberId, final DeliveryAddressAddRequest deliverAddressAddRequest) {
 
-        Member member = memberService.findByMemberId(memberId);
+        Member member = memberService.getByMemberId(memberId);
 
         DeliverAddress deliverAddress = deliverAddressAddRequest.toDeliverAddress(member);
 
@@ -91,9 +91,9 @@ public class FDeliveryAddressService {
 
     private DeliverAddress getDeliveryAddressAndMemberCheck(final String memberId, final Long deliverSeq) {
 
-        Member member = memberService.findByMemberId(memberId);
+        Member member = memberService.getByMemberId(memberId);
 
-        DeliverAddress deliveryAddress = deliveryAddressService.findById(deliverSeq);
+        DeliverAddress deliveryAddress = deliveryAddressService.getById(deliverSeq);
 
         if (member != deliveryAddress.getMember()) {
             throw new CustomAuthenticationException(ErrorCode.NON_PERMISSION);

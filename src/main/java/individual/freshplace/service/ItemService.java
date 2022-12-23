@@ -18,7 +18,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
 
     @Transactional(readOnly = true)
-    public Item findById(final Long id) {
+    public Item getById(final Long id) {
         return itemRepository.findById(id).orElseThrow(() -> new NonExistentException(ErrorCode.BAD_VALUE, id.toString()));
     }
 

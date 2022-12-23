@@ -17,7 +17,7 @@ public class DeliveryAddressService {
     private final DeliveryAddressRepository deliveryAddressRepository;
 
     @Transactional(readOnly = true)
-    public DeliverAddress findById(final Long id) {
+    public DeliverAddress getById(final Long id) {
         return deliveryAddressRepository.findById(id)
                 .orElseThrow(() -> new WrongValueException(ErrorCode.BAD_VALUE, id.toString()));
     }

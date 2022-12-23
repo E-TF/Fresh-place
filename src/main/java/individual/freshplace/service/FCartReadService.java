@@ -2,9 +2,8 @@ package individual.freshplace.service;
 
 import individual.freshplace.dto.cart.CartItem;
 import individual.freshplace.dto.cart.CartResponse;
-import individual.freshplace.dto.profile.ProfileResponse;
 import individual.freshplace.entity.Item;
-import individual.freshplace.util.constant.code.grade.Membership;
+import individual.freshplace.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,12 +21,12 @@ public class FCartReadService {
     private final static int PERCENTAGE_INTEGER = 100;
     private final static float PERCENTAGE_SHORT = 100.0f;
     private final ItemService itemService;
-    private final FProfileService fProfileService;
+    private final MemberService memberService;
 
     @Transactional
     public CartResponse getCartByNonMember(final Cookie[] cookies) {
 
-        List<Item> items = Arrays.stream(cookies).map(cookie -> itemService.findById(Long.parseLong(cookie.getName()))).collect(Collectors.toList());
+        List<Item> items = Arrays.stream(cookies).map(cookie -> itemService.getById(Long.parseLong(cookie.getName()))).collect(Collectors.toList());
         Map<Long, Long> cookiesMap = convertArrayIntoMap(cookies);
 
         List<CartItem> cartItems = items.stream()
@@ -42,14 +41,14 @@ public class FCartReadService {
     @Transactional
     public CartResponse getCartByMember(final String memberId, final Cookie[] cookies) {
 
-        List<Item> items = Arrays.stream(cookies).map(cookie -> itemService.findById(Long.parseLong(cookie.getName()))).collect(Collectors.toList());
+        List<Item> items = Arrays.stream(cookies).map(cookie -> itemService.getById(Long.parseLong(cookie.getName()))).collect(Collectors.toList());
         Map<Long, Long> cookiesMap = convertArrayIntoMap(cookies);
-        ProfileResponse profile = fProfileService.getProfile(memberId);
+        final Member member = memberService.getByMemberId(memberId);
 
         List<CartItem> cartItems = items.stream()
                 .map(item -> new CartItem(item.getItemSeq(), item.getItemName(), cookiesMap.get(item.getItemSeq()),
                         getPriceCartItem(item.getPrice(), cookiesMap.get(item.getItemSeq())),
-                        getDiscountPriceCartItem(item.getPrice(), cookiesMap.get(item.getItemSeq()), Membership.findByCodeName(profile.getMembership()).getDiscountRate())
+                        getDiscountPriceCartItem(item.getPrice(), cookiesMap.get(item.getItemSeq()), member.getGradeCode().getDiscountRate())
                 )).collect(Collectors.toList());
 
         return new CartResponse(cartItems);

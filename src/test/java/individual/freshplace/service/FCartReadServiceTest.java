@@ -39,7 +39,7 @@ class FCartReadServiceTest {
     void sameProductsCostAndDiscountPriceIntoCartOfNonMember() {
         //given
         Item item = item();
-        given(itemService.findById(anyLong())).willReturn(item);
+        given(itemService.getById(anyLong())).willReturn(item);
         Cookie[] cookies = cookies();
 
         //when
@@ -55,7 +55,7 @@ class FCartReadServiceTest {
         //given
         Item item = item();
         ProfileResponse profileResponse = profileResponse();
-        given(itemService.findById(anyLong())).willReturn(item);
+        given(itemService.getById(anyLong())).willReturn(item);
         given(fProfileService.getProfile(anyString())).willReturn(profileResponse);
 
         Cookie[] cookies = cookies();

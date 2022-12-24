@@ -3,8 +3,8 @@ package individual.freshplace.controller;
 import individual.freshplace.dto.item.ItemByCategoryResponse;
 import individual.freshplace.dto.item.ItemResponse;
 import individual.freshplace.dto.item.ItemUpdateRequest;
-import individual.freshplace.service.FCategoryService;
-import individual.freshplace.service.FItemService;
+import individual.freshplace.service.CategoryService;
+import individual.freshplace.service.ItemService;
 import individual.freshplace.util.constant.Cache;
 import individual.freshplace.util.constant.code.category.Category;
 import individual.freshplace.util.constant.code.category.SubCategory;
@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ItemController {
 
-    private final FItemService fItemService;
-    private final FCategoryService fCategoryService;
+    private final ItemService itemService;
+    private final CategoryService categoryService;
 
     @GetMapping("/public/category")
     @Cacheable(cacheNames = Cache.CATEGORY, key = Cache.MAIN_CATEGORY_KEY)
@@ -43,20 +43,20 @@ public class ItemController {
     @Cacheable(cacheNames = Cache.ITEMS_BY_CATEGORY, key = "#codeEngName + (#pageable.getPageNumber() + 1)")
     public List<ItemByCategoryResponse> getItems(@RequestParam String codeEngName, @PageableDefault(size = 1) Pageable pageable) {
         SubCategory subCategory = SubCategory.findByCodeEngName(codeEngName);
-        return fCategoryService.getItems(subCategory, pageable);
+        return categoryService.getItems(subCategory, pageable);
     }
 
     @GetMapping("/public/item/{itemSeq}")
     @Cacheable(cacheNames = Cache.ITEM, key = "#itemSeq")
     public ItemResponse getItem(@PathVariable Long itemSeq) {
-        return fItemService.getItemDetail(itemSeq);
+        return itemService.getItemDetail(itemSeq);
     }
 
     @PutMapping("/admin/item")
     @CacheEvict(cacheNames = Cache.ITEMS_BY_CATEGORY, allEntries = true)
     @CachePut(cacheNames = Cache.ITEM, key = "#itemUpdateRequest.getItemSeq()")
     public ItemResponse updateItem(@RequestBody ItemUpdateRequest itemUpdateRequest) {
-        return fItemService.updateItemDetail(itemUpdateRequest);
+        return itemService.updateItemDetail(itemUpdateRequest);
     }
 
 }

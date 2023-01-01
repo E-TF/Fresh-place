@@ -1,7 +1,7 @@
 package individual.freshplace.controller;
 
 import individual.freshplace.dto.cart.CartResponse;
-import individual.freshplace.service.FCartReadService;
+import individual.freshplace.service.CartReadService;
 import individual.freshplace.util.CookieUtils;
 import individual.freshplace.util.PrincipalUtils;
 import individual.freshplace.util.constant.ErrorCode;
@@ -23,7 +23,7 @@ import java.util.Arrays;
 @RequestMapping("/public/cart-item")
 public class CartController {
 
-    private final FCartReadService fCartReadService;
+    private final CartReadService cartReadService;
 
     @GetMapping
     public CartResponse getItemsInCart(HttpServletRequest request) {
@@ -33,10 +33,10 @@ public class CartController {
         }
 
         if (request.getHeader(HttpHeaders.AUTHORIZATION) != null) {
-            return fCartReadService.getCartByMember(PrincipalUtils.getUsername(), request.getCookies());
+            return cartReadService.getCartByMember(PrincipalUtils.getUsername(), request.getCookies());
         }
 
-        return fCartReadService.getCartByNonMember(request.getCookies());
+        return cartReadService.getCartByNonMember(request.getCookies());
     }
 
     @PostMapping

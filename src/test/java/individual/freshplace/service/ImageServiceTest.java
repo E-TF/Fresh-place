@@ -16,7 +16,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @ExtendWith(MockitoExtension.class)
-public class FImageUploadServiceTest {
+public class ImageServiceTest {
 
     @Test
     @DisplayName("파일사이즈가 주어지는 크기만큼 줄어드는지 확인")

@@ -3,7 +3,7 @@ package individual.freshplace.controller;
 import individual.freshplace.config.auth.PrincipalDetails;
 import individual.freshplace.dto.profile.ProfileUpdateRequest;
 import individual.freshplace.dto.profile.ProfileResponse;
-import individual.freshplace.service.FProfileService;
+import individual.freshplace.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +14,15 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class ProfileController {
 
-    private final FProfileService fProfileService;
+    private final ProfileService profileService;
 
     @GetMapping("/members/profile")
     public ProfileResponse getProfile(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return fProfileService.getProfile(principalDetails.getUsername());
+        return profileService.getProfile(principalDetails.getUsername());
     }
 
     @PutMapping("/members/profile")
     public ProfileResponse updateProfile(@AuthenticationPrincipal PrincipalDetails principalDetails, @Valid @RequestBody ProfileUpdateRequest profileUpdateRequest) {
-        return fProfileService.updateProfile(principalDetails.getUsername(), profileUpdateRequest);
+        return profileService.updateProfile(principalDetails.getUsername(), profileUpdateRequest);
     }
 }

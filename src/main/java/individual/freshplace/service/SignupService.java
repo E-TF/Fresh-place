@@ -2,6 +2,7 @@ package individual.freshplace.service;
 
 import individual.freshplace.dto.signup.SignupRequest;
 import individual.freshplace.entity.Member;
+import individual.freshplace.repository.MemberRepository;
 import individual.freshplace.util.constant.ErrorCode;
 import individual.freshplace.util.constant.LockPrefix;
 import individual.freshplace.util.exception.DuplicationException;
@@ -13,10 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class FSignupService {
+public class SignupService {
 
     private final UserLevelLock userLevelLock;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
     public void signup(final SignupRequest signupRequest) {
@@ -29,13 +30,12 @@ public class FSignupService {
     @Transactional
     protected void signupInner(final SignupRequest signupRequest) {
 
-        if (memberService.existsByMemberId(signupRequest.getMemberId())) {
+        if (memberRepository.existsByMemberId(signupRequest.getMemberId())) {
             throw new DuplicationException(ErrorCode.ID_DUPLICATE_PREVENTION, signupRequest.getMemberId());
         }
 
-        Member member = signupRequest.toMember(passwordEncoder.encode(signupRequest.getPassword()));
-
-        memberService.save(member);
+        final Member member = signupRequest.toMember(passwordEncoder.encode(signupRequest.getPassword()));
+        memberRepository.save(member);
     }
 
 }

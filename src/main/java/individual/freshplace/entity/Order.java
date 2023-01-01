@@ -22,9 +22,11 @@ public class Order extends BaseEntity {
     @Column(name = "order_seq")
     private Long orderSeq;
 
+    private String orderName;
+
     private OrderStatus orderStatusCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "member_seq")
     private Member member;
 
@@ -43,7 +45,8 @@ public class Order extends BaseEntity {
     private List<OrderDetail> orderDetailList = new ArrayList<>();
 
     @Builder
-    public Order(final Member member, final Address address, final String receiverName, final String receiverPhoneNumber, final PlaceToReceive placeToReceiveCode) {
+    public Order(final String orderName, final Member member, final Address address, final String receiverName, final String receiverPhoneNumber, final PlaceToReceive placeToReceiveCode) {
+        this.orderName = orderName;
         this.orderStatusCode = OrderStatus.SUCCESS;
         this.member = member;
         this.address = address;

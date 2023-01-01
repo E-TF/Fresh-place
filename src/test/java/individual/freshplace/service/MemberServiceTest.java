@@ -27,36 +27,7 @@ public class MemberServiceTest {
     private static final SignupRequest SIGNUP_REQUEST = new SignupRequest(TEST_ID, TEST_PW, TEST_NAME, TEST_PHONE_NUMBER, TEST_EMAIL, TEST_BIRTH);
 
     @Autowired
-    private FSignupService fSignupService;
-
-    @Test
-    @DisplayName("동일한 아이디로 회원가입 동시 요청 5번 일때 5번 성공, 0번 실패")
-    void joinWithOutConcurrencyControl() throws InterruptedException {
-
-        final int threadCount = 5;
-        AtomicInteger throwCount = new AtomicInteger(0);
-
-        ExecutorService service = Executors.newFixedThreadPool(threadCount);
-        CountDownLatch countDownLatch = new CountDownLatch(threadCount);
-
-        for (int i = 0; i < threadCount; i++) {
-
-            service.execute(() -> {
-
-                try {
-                    fSignupService.signupInner(SIGNUP_REQUEST);
-                } catch (DuplicationException e) {
-                    throwCount.getAndIncrement();
-                }
-
-                countDownLatch.countDown();
-
-            });
-        }
-
-        countDownLatch.await();
-        Assertions.assertEquals(throwCount.get(), 0);
-    }
+    private SignupService signupService;
 
     @Test
     @DisplayName("동일한 아이디로 회원가입 동시 요청 5번 일때 1번 성공, 4번 실패")
@@ -73,7 +44,7 @@ public class MemberServiceTest {
             service.execute(() -> {
 
                 try {
-                    fSignupService.signup(SIGNUP_REQUEST);
+                    signupService.signup(SIGNUP_REQUEST);
                 } catch (DuplicationException e) {
                     throwCount.getAndIncrement();
                 }

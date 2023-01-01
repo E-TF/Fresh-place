@@ -12,8 +12,4 @@ public class CartItem {
     private final long itemCounting;
     private final long price;
     private final long discountPrice;
-
-    public static CartItem of(final long itemSeq, final String itemName, final long itemCounting, final long price, final long discountPrice) {
-        return new CartItem(itemSeq, itemName, itemCounting, price, discountPrice);
-    }
 }

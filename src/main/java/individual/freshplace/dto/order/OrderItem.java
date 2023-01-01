@@ -7,11 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderItem {
 
+    private final long itemSeq;
     private final String itemName;
     private final long itemCount;
     private final long totalPrice;
-
-    public static OrderItem of(String itemName, long itemCount, long totalPrice) {
-        return new OrderItem(itemName, itemCount, totalPrice);
-    }
 }

@@ -1,11 +1,12 @@
 package individual.freshplace.entity;
 
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderDetail {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,14 +19,22 @@ public class OrderDetail {
     @Column(name = "total_price")
     private long price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "item_seq")
     private Item item;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "order_seq")
     private Order order;
 
     @OneToOne(mappedBy = "orderDetail")
     private Review review;
+
+    @Builder
+    public OrderDetail(final long count, final long price, final Item item, final Order order) {
+        this.count = count;
+        this.price = price;
+        this.item = item;
+        this.order = order;
+    }
 }

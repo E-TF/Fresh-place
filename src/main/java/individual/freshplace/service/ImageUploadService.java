@@ -2,6 +2,8 @@ package individual.freshplace.service;
 
 import individual.freshplace.dto.image.ImageUploadResponse;
 import individual.freshplace.entity.Image;
+import individual.freshplace.repository.ImageRepository;
+import individual.freshplace.repository.ItemRepository;
 import individual.freshplace.util.ImageUtils;
 import individual.freshplace.util.S3Uploader;
 import individual.freshplace.util.constant.ErrorCode;
@@ -17,22 +19,22 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
-public class FImageUploadService {
+public class ImageUploadService {
 
     private final static String SLASH = "/";
     private final S3Uploader s3Uploader;
-    private final ItemService itemService;
-    private final ImageService imageService;
+    private final ItemRepository itemRepository;
+    private final ImageRepository imageRepository;
 
     @Transactional
     public ImageUploadResponse saveItemImage(final Long itemId, final MultipartFile multipartFile) {
 
-        if (!itemService.existsById(itemId)) {
+        if (!itemRepository.existsById(itemId)) {
             throw new NonExistentException(ErrorCode.BAD_VALUE, itemId.toString());
         }
 
         resizingUpload(itemId, multipartFile);
-        return ImageUploadResponse.from(originalUpload(itemId, multipartFile));
+        return new ImageUploadResponse(originalUpload(itemId, multipartFile));
     }
 
     private void resizingUpload(final Long itemId, final MultipartFile multipartFile) {
@@ -53,7 +55,7 @@ public class FImageUploadService {
     }
 
     private void createItemEntityAndInsert(final String url) {
-        Image image = Image.builder().imagePath(url).build();
-        imageService.save(image);
+        final Image image = Image.builder().imagePath(url).build();
+        imageRepository.save(image);
     }
 }

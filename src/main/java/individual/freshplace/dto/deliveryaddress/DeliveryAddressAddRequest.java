@@ -3,7 +3,6 @@ package individual.freshplace.dto.deliveryaddress;
 import individual.freshplace.entity.Address;
 import individual.freshplace.entity.DeliverAddress;
 import individual.freshplace.entity.Member;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
 
@@ -11,7 +10,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Getter
-@AllArgsConstructor
 public class DeliveryAddressAddRequest {
 
     @NotBlank(message = "우편번호를 입력해주세요.")

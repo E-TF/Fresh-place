@@ -1,14 +1,15 @@
 package individual.freshplace.controller;
 
 import individual.freshplace.dto.cart.CartResponse;
-import individual.freshplace.service.FCartReadService;
+import individual.freshplace.service.CartReadService;
 import individual.freshplace.util.CookieUtils;
 import individual.freshplace.util.PrincipalUtils;
 import individual.freshplace.util.constant.ErrorCode;
+import individual.freshplace.util.exception.NonExistentException;
 import individual.freshplace.util.exception.OutOfInventoryException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import individual.freshplace.util.constant.Cookies;
 
@@ -22,23 +23,24 @@ import java.util.Arrays;
 @RequestMapping("/public/cart-item")
 public class CartController {
 
-    private final FCartReadService fCartReadService;
+    private final CartReadService cartReadService;
 
     @GetMapping
-    public ResponseEntity<CartResponse> getItemsInCart(HttpServletRequest request) {
+    public CartResponse getItemsInCart(HttpServletRequest request) {
 
-        if (request.getCookies() != null && request.getHeader(HttpHeaders.AUTHORIZATION) == null) {
-            return ResponseEntity.ok().body(fCartReadService.getCartByNonMember(request.getCookies()));
+        if (request.getCookies() == null) {
+            throw new NonExistentException(ErrorCode.EMPTY_CART, "수량");
         }
 
-        if (request.getCookies() != null && request.getHeader(HttpHeaders.AUTHORIZATION) != null) {
-            return ResponseEntity.ok().body(fCartReadService.getCartByMember(PrincipalUtils.getUsername(), request.getCookies()));
+        if (request.getHeader(HttpHeaders.AUTHORIZATION) != null) {
+            return cartReadService.getCartByMember(PrincipalUtils.getUsername(), request.getCookies());
         }
 
-        return ResponseEntity.ok().build();
+        return cartReadService.getCartByNonMember(request.getCookies());
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void addItemToCart(HttpServletRequest request, HttpServletResponse response) {
 
         //새 아이템이 추가되면 장바구니 모든 유지시간을 다시 셋팅.
@@ -57,11 +59,12 @@ public class CartController {
     }
 
     @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteItemInCart(HttpServletRequest request, HttpServletResponse response) {
 
         if (!request.getParameterNames().hasMoreElements()) {
             Cookie[] cookies = CookieUtils.removeCookies(request.getCookies());
-            Arrays.stream(cookies).forEach(cookie -> response.addCookie(cookie));
+            Arrays.stream(cookies).forEach(response::addCookie);
             return;
         }
 
@@ -69,7 +72,7 @@ public class CartController {
             Cookie[] cookies = request.getCookies();
             String itemSeq = request.getParameter(Cookies.COOKIE_PARAMETER_SEQ);
             Arrays.stream(cookies).filter(cookie -> itemSeq.equals(cookie.getName()))
-                    .peek(cookie -> CookieUtils.removeCookie(cookie)).forEach(cookie -> response.addCookie(cookie));
+                    .peek(CookieUtils::removeCookie).forEach(response::addCookie);
         }
     }
 }

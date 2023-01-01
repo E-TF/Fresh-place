@@ -8,8 +8,4 @@ import lombok.RequiredArgsConstructor;
 public class ImageUploadResponse {
 
     private final String originUrl;
-
-    public static ImageUploadResponse from(final String originUrl) {
-        return new ImageUploadResponse(originUrl);
-    }
 }

@@ -10,8 +10,4 @@ import java.util.List;
 public class CartResponse {
 
     private final List<CartItem> cartItems;
-
-    public static CartResponse from(final List<CartItem> cartItems) {
-        return new CartResponse(cartItems);
-    }
 }

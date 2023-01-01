@@ -7,7 +7,6 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Getter
-@AllArgsConstructor
 public class ProfileUpdateRequest {
 
     @NotBlank

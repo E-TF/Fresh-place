@@ -19,8 +19,8 @@ public class KakaoPayApprovalResponse {
     private String partnerOrderId;
     private String partnerUserId;
     private String paymentMethodType;
-    private Amount amount;  //수량
-    private Card cardInfo; //카드 정보
+    private Amount amount;
+    private Card cardInfo;
     private String itemName;
     private String itemCode;
     private String payload;
@@ -34,7 +34,7 @@ public class KakaoPayApprovalResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-    static class Amount {
+    public static class Amount {
         private long total;
         private long taxFree;
         private long vat;
@@ -46,7 +46,7 @@ public class KakaoPayApprovalResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-    static class Card {
+    public static class Card {
         private String purchaseCorp;
         private String purchaseCorpCode;
         private String issuerCorp;

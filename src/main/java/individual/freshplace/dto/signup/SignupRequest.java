@@ -1,7 +1,6 @@
 package individual.freshplace.dto.signup;
 
 import individual.freshplace.entity.Member;
-import individual.freshplace.util.constant.Membership;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Length;

@@ -2,6 +2,7 @@ package individual.freshplace.service;
 
 import individual.freshplace.dto.order.OrderItem;
 import individual.freshplace.entity.Item;
+import individual.freshplace.repository.ItemRepository;
 import individual.freshplace.util.constant.code.category.SubCategory;
 import individual.freshplace.util.exception.OutOfInventoryException;
 import org.junit.jupiter.api.Assertions;
@@ -13,18 +14,19 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-public class FStockServiceTest {
+public class StockServiceTest {
 
     @InjectMocks
-    private FStockService fStockService;
+    private StockService stockService;
 
     @Mock
-    private ItemService itemService;
+    private ItemRepository itemRepository;
 
     @Test
     @DisplayName("주문아이템을 받으면 아이템 재고가 감소하고 판매량이 증가한다.")
@@ -33,17 +35,19 @@ public class FStockServiceTest {
         //given
         Item item = item();
         final long purchaseAmount = 3L;
+        final long expectInventory = item.getInventory() - purchaseAmount;
+        final long expectSalesQuantity = item.getSalesQuantity() + purchaseAmount;
         List<OrderItem> orderItems = List.of(orderItem(item.getItemSeq(), item.getItemName(), purchaseAmount, purchaseAmount * item.getPrice()));
-        given(itemService.getById(anyLong())).willReturn(item);
+        given(itemRepository.findById(anyLong())).willReturn(Optional.of(item));
 
         //when
-        fStockService.stockCheckAndChange(orderItems);
-        Item changedItem = itemService.getById(item.getItemSeq());
+        stockService.stockCheckAndChange(orderItems);
+        Item changedItem = itemRepository.findById(item.getItemSeq()).get();
 
         //then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(changedItem.getInventory(), item.getInventory() - purchaseAmount),
-                () -> Assertions.assertEquals(changedItem.getSalesQuantity(), item.getSalesQuantity() + purchaseAmount));
+                () -> Assertions.assertEquals(expectInventory, changedItem.getInventory()),
+                () -> Assertions.assertEquals(expectSalesQuantity, changedItem.getSalesQuantity()));
     }
 
     @Test
@@ -54,10 +58,10 @@ public class FStockServiceTest {
         Item item = item();
         final long purchaseAmount = item.getInventory() + 1;
         List<OrderItem> orderItems = List.of(orderItem(item.getItemSeq(), item.getItemName(), purchaseAmount, purchaseAmount * item.getPrice()));
-        given(itemService.getById(anyLong())).willReturn(item);
+        given(itemRepository.findById(anyLong())).willReturn(Optional.of(item));
 
         //when && then
-        Assertions.assertThrowsExactly(OutOfInventoryException.class, () -> fStockService.stockCheckAndChange(orderItems));
+        Assertions.assertThrowsExactly(OutOfInventoryException.class, () -> stockService.stockCheckAndChange(orderItems));
     }
 
     private Item item() {

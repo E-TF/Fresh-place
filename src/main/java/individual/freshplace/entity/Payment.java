@@ -17,8 +17,7 @@ public class Payment extends BaseEntity {
 
     private long paymentAmount;
 
-    @Column(name = "payment_status_code")
-    private PaymentStatus statusCode;
+    private PaymentStatus paymentStatusCode;
 
     private String paymentMethod;
 
@@ -33,10 +32,14 @@ public class Payment extends BaseEntity {
     @Builder
     public Payment(final long paymentAmount, final String paymentMethod, final Order order, final LocalDateTime paymentDate, final String paymentTid) {
         this.paymentAmount = paymentAmount;
-        this.statusCode = PaymentStatus.SUCCESS;
+        this.paymentStatusCode = PaymentStatus.SUCCESS;
         this.paymentMethod = paymentMethod;
         this.order = order;
         this.paymentDate = paymentDate;
         this.paymentTid = paymentTid;
+    }
+
+    public void updatePaymentStatusToCancel() {
+        this.paymentStatusCode = PaymentStatus.CANCEL;
     }
 }

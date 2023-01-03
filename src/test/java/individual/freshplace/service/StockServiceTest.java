@@ -41,7 +41,7 @@ public class StockServiceTest {
         given(itemRepository.findById(anyLong())).willReturn(Optional.of(item));
 
         //when
-        stockService.stockCheckAndChange(orderItems);
+        stockService.checkStockAndChange(orderItems);
         Item changedItem = itemRepository.findById(item.getItemSeq()).get();
 
         //then
@@ -61,7 +61,7 @@ public class StockServiceTest {
         given(itemRepository.findById(anyLong())).willReturn(Optional.of(item));
 
         //when && then
-        Assertions.assertThrowsExactly(OutOfInventoryException.class, () -> stockService.stockCheckAndChange(orderItems));
+        Assertions.assertThrowsExactly(OutOfInventoryException.class, () -> stockService.checkStockAndChange(orderItems));
     }
 
     private Item item() {

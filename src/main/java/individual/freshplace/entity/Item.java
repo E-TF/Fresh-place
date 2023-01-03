@@ -51,6 +51,10 @@ public class Item extends BaseEntity {
         this.salesQuantity += purchaseQuantity;
     }
 
+    public void increaseInventoryForOrderCancel(final long purchaseQuantity) {
+        this.inventory += purchaseQuantity;
+    }
+
     @Builder
     public Item(Long itemSeq, String itemName, String description, long price, long weight, String origin, long inventory,
                 SubCategory subCategory) {

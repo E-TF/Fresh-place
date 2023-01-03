@@ -26,7 +26,7 @@ public class Order extends BaseEntity {
 
     private OrderStatus orderStatusCode;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_seq")
     private Member member;
 
@@ -54,5 +54,10 @@ public class Order extends BaseEntity {
         this.receiverPhoneNumber = receiverPhoneNumber;
         this.placeToReceiveCode = placeToReceiveCode;
         this.deliveryStatusCode = DeliveryStatus.READY;
+    }
+
+    public void updateOrderStatusAndDeliveryStatusToCancel() {
+        this.deliveryStatusCode = DeliveryStatus.CANCEL;
+        this.orderStatusCode = OrderStatus.CANCEL;
     }
 }

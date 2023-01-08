@@ -39,7 +39,8 @@ public class ImageUploadService {
 
     private void resizingUpload(final Long itemId, final MultipartFile multipartFile) {
         CompletableFuture
-                .supplyAsync(() -> ImageUtils.imageResize(multipartFile, ImageFormat.STANDARD.getWeight(), ImageFormat.STANDARD.getHeight()))
+                .supplyAsync(() -> multipartFile.getContentType().equals(Folder.IMAGE.getDirectoryName() + SLASH + ImageFormat.LETTERS.getExtension()) ? ImageUtils.pngToJpeg(multipartFile) : multipartFile)
+                .thenApply((file) -> ImageUtils.imageResize(file, ImageFormat.STANDARD.getWeight(), ImageFormat.STANDARD.getHeight()))
                 .thenApply((resizingImage) -> s3Uploader.upload(getDirectoryName(), itemId, Folder.RESIZE.getDirectoryName(), resizingImage))
                 .thenAccept((resizingItemImageUrl) -> createItemEntityAndInsert(resizingItemImageUrl));
     }

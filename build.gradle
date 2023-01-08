@@ -35,6 +35,9 @@ dependencies {
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
 
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+
+	implementation 'commons-io:commons-io:2.8.0'
+	implementation 'commons-fileupload:commons-fileupload:1.4'
 	
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

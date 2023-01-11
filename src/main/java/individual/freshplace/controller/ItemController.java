@@ -46,8 +46,8 @@ public class ItemController {
         return categoryService.getItems(subCategory, pageable);
     }
 
-//     @GetMapping("/public/item/{itemSeq}")
-    @Cacheable(cacheNames = Cache.ITEM, key = "#itemSeq")
+    @GetMapping("/public/item/{itemSeq}")
+//     @Cacheable(cacheNames = Cache.ITEM, key = "#itemSeq")
     public ItemResponse getItem(@PathVariable Long itemSeq) {
         return itemService.getItemDetail(itemSeq);
     }

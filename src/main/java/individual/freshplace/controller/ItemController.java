@@ -47,7 +47,7 @@ public class ItemController {
     }
 
     @GetMapping("/public/item/{itemSeq}")
-    @Cacheable(cacheNames = Cache.ITEM, key = "#itemSeq")
+//     @Cacheable(cacheNames = Cache.ITEM, key = "#itemSeq")
     public ItemResponse getItem(@PathVariable Long itemSeq) {
         return itemService.getItemDetail(itemSeq);
     }

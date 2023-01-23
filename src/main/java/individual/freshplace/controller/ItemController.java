@@ -28,19 +28,19 @@ public class ItemController {
     private final CategoryService categoryService;
 
     @GetMapping("/public/category")
-    @Cacheable(cacheNames = Cache.CATEGORY, key = Cache.MAIN_CATEGORY_KEY)
+//    @Cacheable(cacheNames = Cache.CATEGORY, key = Cache.MAIN_CATEGORY_KEY)
     public List<String> getCategory() {
         return Arrays.stream(Category.values()).map(Category::getCodeKorName).collect(Collectors.toList());
     }
 
     @GetMapping("/public/category/{codeEngName}")
-    @Cacheable(cacheNames = Cache.SUB_CATEGORY, key = "#codeEngName")
+//    @Cacheable(cacheNames = Cache.SUB_CATEGORY, key = "#codeEngName")
     public List<String> getCategories(@PathVariable String codeEngName) {
         return Category.findByCodeEngName(codeEngName).stream().map(SubCategory::getCodeKorName).collect(Collectors.toList());
     }
 
     @GetMapping("/public/items/category")
-    @Cacheable(cacheNames = Cache.ITEMS_BY_CATEGORY, key = "#codeEngName + (#pageable.getPageNumber() + 1)")
+//    @Cacheable(cacheNames = Cache.ITEMS_BY_CATEGORY, key = "#codeEngName + (#pageable.getPageNumber() + 1)")
     public List<ItemByCategoryResponse> getItems(@RequestParam String codeEngName, @PageableDefault(size = 1) Pageable pageable) {
         SubCategory subCategory = SubCategory.findByCodeEngName(codeEngName);
         return categoryService.getItems(subCategory, pageable);
@@ -53,8 +53,8 @@ public class ItemController {
     }
 
     @PutMapping("/admin/item")
-    @CacheEvict(cacheNames = Cache.ITEMS_BY_CATEGORY, allEntries = true)
-    @CachePut(cacheNames = Cache.ITEM, key = "#itemUpdateRequest.getItemSeq()")
+//    @CacheEvict(cacheNames = Cache.ITEMS_BY_CATEGORY, allEntries = true)
+//    @CachePut(cacheNames = Cache.ITEM, key = "#itemUpdateRequest.getItemSeq()")
     public ItemResponse updateItem(@RequestBody ItemUpdateRequest itemUpdateRequest) {
         return itemService.updateItemDetail(itemUpdateRequest);
     }

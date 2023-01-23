@@ -18,4 +18,10 @@ public class Cache {
 
     public static final String ITEM = "item";
     public static final long ITEM_EXPIRE = 1L;
+
+    public static final String ADDRESSES = "addresses";
+    public static final long ADDRESS_EXPIRE = 1L;
+
+    public static final String PROFILE = "profile";
+    public static final long PROFILE_EXPIRE = 3L;
 }

@@ -62,6 +62,18 @@ public class CacheConfig {
                         .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
                         .entryTtl(Duration.ofDays(Cache.ITEM_EXPIRE)));
 
+        redisCacheConfigurationMap.put(Cache.ADDRESSES,
+                RedisCacheConfiguration.defaultCacheConfig()
+                        .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                        .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
+                        .entryTtl(Duration.ofDays(Cache.ADDRESS_EXPIRE)));
+
+        redisCacheConfigurationMap.put(Cache.PROFILE,
+                RedisCacheConfiguration.defaultCacheConfig()
+                        .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                        .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
+                        .entryTtl(Duration.ofDays(Cache.PROFILE_EXPIRE)));
+
         return redisCacheConfigurationMap;
     }
 }

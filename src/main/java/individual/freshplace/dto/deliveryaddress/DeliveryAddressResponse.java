@@ -3,9 +3,11 @@ package individual.freshplace.dto.deliveryaddress;
 import individual.freshplace.entity.Address;
 import individual.freshplace.entity.DeliverAddress;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Getter
+@NoArgsConstructor(force = true)
 @RequiredArgsConstructor
 public class DeliveryAddressResponse {
 

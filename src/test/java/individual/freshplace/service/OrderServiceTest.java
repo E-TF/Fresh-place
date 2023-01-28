@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,7 +35,7 @@ public class OrderServiceTest {
     private PaymentRepository paymentRepository;
 
     @Test
-    @DisplayName("주문취소 시 주문상태와 결제상태가 모두 변경되는지 확인")
+    @DisplayName("주문취소 시 주문, 배송, 결제상태가 모두 취소로 변경된다.")
     void checkingOrderStatusAndPaymentStatusAfterOrderCancel() {
         //given
         final Order order = order(deliverAddress(member()));
@@ -47,9 +47,10 @@ public class OrderServiceTest {
         orderService.cancelOrderAndPaymentAndChangeStock(order.getOrderSeq());
 
         //then
-        Assertions.assertEquals(order.getOrderStatusCode(), OrderStatus.CANCEL);
-        Assertions.assertEquals(order.getDeliveryStatusCode(), DeliveryStatus.CANCEL);
-        Assertions.assertEquals(payment.getPaymentStatusCode(), PaymentStatus.CANCEL);
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(order.getOrderStatusCode(), OrderStatus.CANCEL),
+                () -> Assertions.assertEquals(order.getDeliveryStatusCode(), DeliveryStatus.CANCEL),
+                () -> Assertions.assertEquals(payment.getPaymentStatusCode(), PaymentStatus.CANCEL));
     }
 
     private Member member() {

@@ -7,56 +7,56 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class KakaoPayApprovalResponse {
 
-    private String aid;
-    private String tid;
-    private String cid;
-    private String sid;
-    private String partnerOrderId;
-    private String partnerUserId;
-    private String paymentMethodType;
-    private Amount amount;
-    private Card cardInfo;
-    private String itemName;
-    private String itemCode;
-    private String payload;
-    private long quantity;
-    private long taxFreeAmount;
-    private long vatAmount;
-    private LocalDateTime createdAt;
-    private LocalDateTime approvedAt;
+    private final String aid;
+    private final String tid;
+    private final String cid;
+    private final String sid;
+    private final String partnerOrderId;
+    private final String partnerUserId;
+    private final String paymentMethodType;
+    private final Amount amount;
+    private final Card cardInfo;
+    private final String itemName;
+    private final String itemCode;
+    private final String payload;
+    private final long quantity;
+    private final long taxFreeAmount;
+    private final long vatAmount;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime approvedAt;
 
     @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @NoArgsConstructor(force = true)
+    @RequiredArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Amount {
-        private long total;
-        private long taxFree;
-        private long vat;
-        private long point;
-        private long discount;
+        private final long total;
+        private final long taxFree;
+        private final long vat;
+        private final long point;
+        private final long discount;
     }
 
     @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @NoArgsConstructor(force = true)
+    @RequiredArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Card {
-        private String purchaseCorp;
-        private String purchaseCorpCode;
-        private String issuerCorp;
-        private String issuerCorpCode;
-        private String bin;
-        private String cardType;
-        private String installMonth;
-        private String approvedId;
-        private String cardMid;
-        private String interestFreeInstall;
-        private String cardItemCode;
+        private final String purchaseCorp;
+        private final String purchaseCorpCode;
+        private final String issuerCorp;
+        private final String issuerCorpCode;
+        private final String bin;
+        private final String cardType;
+        private final String installMonth;
+        private final String approvedId;
+        private final String cardMid;
+        private final String interestFreeInstall;
+        private final String cardItemCode;
     }
 }

@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Payment extends BaseEntity {
 
@@ -17,6 +16,7 @@ public class Payment extends BaseEntity {
 
     private long paymentAmount;
 
+    @Setter
     private PaymentStatus paymentStatusCode;
 
     private String paymentMethod;
@@ -37,9 +37,5 @@ public class Payment extends BaseEntity {
         this.order = order;
         this.paymentDate = paymentDate;
         this.paymentTid = paymentTid;
-    }
-
-    public void updatePaymentStatusToCancel() {
-        this.paymentStatusCode = PaymentStatus.CANCEL;
     }
 }

@@ -14,6 +14,8 @@ import individual.freshplace.util.constant.LockPrefix;
 import individual.freshplace.util.constant.RedisKeyPrefix;
 import individual.freshplace.util.constant.code.delivery.DeliveryStatus;
 import individual.freshplace.util.constant.code.delivery.PlaceToReceive;
+import individual.freshplace.util.constant.code.order.OrderStatus;
+import individual.freshplace.util.constant.code.payment.PaymentStatus;
 import individual.freshplace.util.exception.NonExistentException;
 import individual.freshplace.util.exception.StatusException;
 import individual.freshplace.util.lock.UserLevelLock;
@@ -105,10 +107,11 @@ public class OrderService {
 
         final Payment payment = paymentRepository.findByOrder(order);
         KakaoPayPaymentCancelResponse kakaoPayPaymentCancelResponse = kakaoPay.getPaymentCancelResponse(payment.getPaymentTid(), payment.getPaymentAmount());
-        payment.updatePaymentStatusToCancel();
-        order.updateOrderStatusAndDeliveryStatusToCancel();
+        payment.setPaymentStatusCode(PaymentStatus.CANCEL);
+        order.setOrderStatusCode(OrderStatus.CANCEL);
+        order.setDeliveryStatusCode(DeliveryStatus.CANCEL);
         increaseStock(order.getOrderSeq());
-        return new CancellationReceipt(createCanceledItems(order.getOrderDetailList()), order.getOrderName(), kakaoPayPaymentCancelResponse.getPayment_method_type(), kakaoPayPaymentCancelResponse.getApproved_cancel_amount().getTotal(), kakaoPayPaymentCancelResponse.getCanceled_at());
+        return new CancellationReceipt(createCanceledItems(order.getOrderDetailList()), order.getOrderName(), kakaoPayPaymentCancelResponse.getPaymentMethodType(), kakaoPayPaymentCancelResponse.getApprovedCancelAmount().getTotal(), kakaoPayPaymentCancelResponse.getCanceledAt());
     }
 
     private void increaseStock(Long orderSeq) {

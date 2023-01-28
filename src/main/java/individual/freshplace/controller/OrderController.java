@@ -43,7 +43,6 @@ public class OrderController {
     @PatchMapping("/{orderSeq}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public @ResponseBody CancellationReceipt orderAndPaymentCancelRequest(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable Long orderSeq) {
-        CancellationReceipt cancellationReceipt = orderService.cancelOrderAndPaymentAndChangeStock(orderSeq);
-        return cancellationReceipt;
+        return orderService.cancelOrderAndPaymentAndChangeStock(orderSeq);
     }
 }

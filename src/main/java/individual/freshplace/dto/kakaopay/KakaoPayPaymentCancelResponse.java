@@ -2,86 +2,87 @@ package individual.freshplace.dto.kakaopay;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class KakaoPayPaymentCancelResponse {
 
-    private String aid;
-    private String tid;
-    private String cid;
-    private String status;
-    private String partner_order_id;
-    private String partner_user_id;
-    private String payment_method_type;
-    private Amount amount;
-    private ApprovedCancelAmount approved_cancel_amount;
-    private CanceledAmount canceled_amount;
-    private CancelAvailableAmount cancel_available_amount;
-    private String item_name;
-    private String item_code;
-    private long quantity;
-    private LocalDateTime created_at;
-    private LocalDateTime approved_at;
-    private LocalDateTime canceled_at;
-    private String payload;
+    private final String aid;
+    private final String tid;
+    private final String cid;
+    private final String status;
+    private final String partnerOrderId;
+    private final String partnerUserId;
+    private final String paymentMethodType;
+    private final Amount amount;
+    private final ApprovedCancelAmount approvedCancelAmount;
+    private final CanceledAmount canceledAmount;
+    private final CancelAvailableAmount cancelAvailableAmount;
+    private final String itemName;
+    private final String itemCode;
+    private final long quantity;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime approvedAt;
+    private final LocalDateTime canceledAt;
+    private final String payload;
 
     @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @NoArgsConstructor(force = true)
+    @RequiredArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Amount {
-        private long total;
-        private long taxFree;
-        private long vat;
-        private long point;
-        private long discount;
-        private long greenDeposit;
+        private final long total;
+        private final long taxFree;
+        private final long vat;
+        private final long point;
+        private final long discount;
+        private final long greenDeposit;
     }
 
     @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @NoArgsConstructor(force = true)
+    @RequiredArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ApprovedCancelAmount {
-        private long total;
-        private long taxFree;
-        private long vat;
-        private long point;
-        private long discount;
-        private long greenDeposit;
+        private final long total;
+        private final long taxFree;
+        private final long vat;
+        private final long point;
+        private final long discount;
+        private final long greenDeposit;
     }
 
     @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @NoArgsConstructor(force = true)
+    @RequiredArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
     static class CanceledAmount {
-        private long total;
-        private long taxFree;
-        private long vat;
-        private long point;
-        private long discount;
-        private long greenDeposit;
+        private final long total;
+        private final long taxFree;
+        private final long vat;
+        private final long point;
+        private final long discount;
+        private final long greenDeposit;
     }
 
     @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @NoArgsConstructor(force = true)
+    @RequiredArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
     static class CancelAvailableAmount {
-        private long total;
-        private long taxFree;
-        private long vat;
-        private long point;
-        private long discount;
-        private long greenDeposit;
+        private final long total;
+        private final long taxFree;
+        private final long vat;
+        private final long point;
+        private final long discount;
+        private final long greenDeposit;
     }
 }

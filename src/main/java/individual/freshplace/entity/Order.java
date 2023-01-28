@@ -3,10 +3,7 @@ package individual.freshplace.entity;
 import individual.freshplace.util.constant.code.delivery.DeliveryStatus;
 import individual.freshplace.util.constant.code.order.OrderStatus;
 import individual.freshplace.util.constant.code.delivery.PlaceToReceive;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -24,9 +21,10 @@ public class Order extends BaseEntity {
 
     private String orderName;
 
+    @Setter
     private OrderStatus orderStatusCode;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_seq")
     private Member member;
 
@@ -39,6 +37,7 @@ public class Order extends BaseEntity {
 
     private PlaceToReceive placeToReceiveCode;
 
+    @Setter
     private DeliveryStatus deliveryStatusCode;
 
     @OneToMany(mappedBy = "order")

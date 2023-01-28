@@ -20,8 +20,7 @@ public class StockService {
     private final ItemRepository itemRepository;
 
     @Transactional
-    public void stockCheckAndChange(final List<OrderItem> orderItems) {
-
+    public void checkStockAndChange(final List<OrderItem> orderItems) {
         Map<Long, Long> orderItemsMap = convertListIntoMap(orderItems);
         orderItems.stream().map(orderItem -> itemRepository.findById(orderItem.getItemSeq())
                         .orElseThrow(() -> new NonExistentException(ErrorCode.BAD_VALUE, String.valueOf(orderItem.getItemSeq()))))
@@ -31,6 +30,14 @@ public class StockService {
                     }
                     item.decreaseInventoryAndIncreaseSalesQuantity(orderItemsMap.get(item.getItemSeq()));
                 });
+    }
+
+    @Transactional
+    public void revertStock(final List<OrderItem> orderItems) {
+        Map<Long, Long> orderItemsMap = convertListIntoMap(orderItems);
+        orderItems.stream().map(orderItem -> itemRepository.findById(orderItem.getItemSeq())
+                .orElseThrow(() -> new NonExistentException(ErrorCode.BAD_VALUE, String.valueOf(orderItem.getItemSeq()))))
+                        .forEach(item -> item.increaseInventoryForOrderCancel(orderItemsMap.get(item.getItemSeq())));
     }
 
     private Map<Long, Long> convertListIntoMap(List<OrderItem> orderItems) {

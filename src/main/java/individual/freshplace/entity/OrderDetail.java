@@ -3,6 +3,8 @@ package individual.freshplace.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -19,16 +21,16 @@ public class OrderDetail {
     @Column(name = "total_price")
     private long price;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_seq")
     private Item item;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_seq")
     private Order order;
 
-    @OneToOne(mappedBy = "orderDetail")
-    private Review review;
+    @OneToMany(mappedBy = "orderDetail")
+    private List<Review> review = new ArrayList<>();
 
     @Builder
     public OrderDetail(final long count, final long price, final Item item, final Order order) {

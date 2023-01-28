@@ -13,8 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class KakaoPayOrderDetailsResponse {
+public class KakaoPayPaymentCancelResponse {
 
+    private final String aid;
     private final String tid;
     private final String cid;
     private final String status;
@@ -22,22 +23,35 @@ public class KakaoPayOrderDetailsResponse {
     private final String partnerUserId;
     private final String paymentMethodType;
     private final Amount amount;
+    private final ApprovedCancelAmount approvedCancelAmount;
     private final CanceledAmount canceledAmount;
-    private final CanceledAvailableAmount canceledAvailableAmount;
+    private final CancelAvailableAmount cancelAvailableAmount;
     private final String itemName;
     private final String itemCode;
-    private final String quantity;
+    private final long quantity;
     private final LocalDateTime createdAt;
     private final LocalDateTime approvedAt;
     private final LocalDateTime canceledAt;
-    private final SelectedCardInfo selectedCardInfo;
-    private final PaymentActionDetails[] paymentActionDetails;
+    private final String payload;
 
     @Getter
     @NoArgsConstructor(force = true)
     @RequiredArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Amount {
+        private final long total;
+        private final long taxFree;
+        private final long vat;
+        private final long point;
+        private final long discount;
+        private final long greenDeposit;
+    }
+
+    @Getter
+    @NoArgsConstructor(force = true)
+    @RequiredArgsConstructor
+    @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class ApprovedCancelAmount {
         private final long total;
         private final long taxFree;
         private final long vat;
@@ -63,38 +77,12 @@ public class KakaoPayOrderDetailsResponse {
     @NoArgsConstructor(force = true)
     @RequiredArgsConstructor
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-    static class CanceledAvailableAmount {
+    static class CancelAvailableAmount {
         private final long total;
         private final long taxFree;
         private final long vat;
         private final long point;
         private final long discount;
         private final long greenDeposit;
-    }
-
-    @Getter
-    @NoArgsConstructor(force = true)
-    @RequiredArgsConstructor
-    @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-    static class SelectedCardInfo {
-        private final String cardBin;
-        private final long installMonth;
-        private final String cardCorpName;
-        private final String interestFreeInstall;
-    }
-
-    @Getter
-    @NoArgsConstructor(force = true)
-    @RequiredArgsConstructor
-    @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-    static class PaymentActionDetails {
-        private final String aid;
-        private final String approvedAt;
-        private final long amount;
-        private final long pointAmount;
-        private final long discountAmount;
-        private final long greenDeposit;
-        private final String paymentActionType;
-        private final String payload;
     }
 }

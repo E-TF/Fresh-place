@@ -2,6 +2,7 @@ package individual.freshplace.util.payment;
 
 import individual.freshplace.dto.kakaopay.KakaoPayApprovalResponse;
 import individual.freshplace.dto.kakaopay.KakaoPayOrderDetailsResponse;
+import individual.freshplace.dto.kakaopay.KakaoPayPaymentCancelResponse;
 import individual.freshplace.dto.kakaopay.KakaoPayReadyResponse;
 import individual.freshplace.dto.order.OrderItem;
 import individual.freshplace.util.constant.ErrorCode;
@@ -29,12 +30,12 @@ public class KakaoPay {
     private final RestTemplate restTemplate;
     private final KakaoPayProperties kakaoPayProperties;
 
-    public KakaoPayReadyResponse getKakaoPayReadyResponse(final String memberId, final List<OrderItem> orderItems) {
+    public KakaoPayReadyResponse getKakaoPayReadyResponse(final String memberId, final List<OrderItem> orderItems, final String orderTitle) {
 
         HttpHeaders httpHeaders = setHeaders();
-        MultiValueMap<String, String> params = setParamsReady(memberId, createOrderTitle(orderItems.get(0).getItemName(), orderItems.size())
-                , orderItems.stream().map(OrderItem::getItemCount).reduce(0L, Long::sum)
-                , orderItems.stream().map(OrderItem::getTotalPrice).reduce(0L, Long::sum));
+        MultiValueMap<String, String> params = setParamsReady(memberId, orderTitle,
+                orderItems.stream().map(OrderItem::getItemCount).reduce(0L, Long::sum),
+                orderItems.stream().map(OrderItem::getTotalPrice).reduce(0L, Long::sum));
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, httpHeaders);
         String paymentReadyRequestUrl = kakaoPayProperties.getHost() + kakaoPayProperties.getReadyPath();
 
@@ -70,6 +71,20 @@ public class KakaoPay {
             return restTemplate.postForObject(new URI(paymentOrderRequestUrl), body, KakaoPayOrderDetailsResponse.class);
         } catch (URISyntaxException e) {
             throw new UriException(ErrorCode.NOT_FOUND, paymentOrderRequestUrl);
+        }
+    }
+
+    public KakaoPayPaymentCancelResponse getPaymentCancelResponse(final String tid, final long cancelAmount) {
+
+        HttpHeaders httpHeaders = setHeaders();
+        MultiValueMap<String, String> params = setParamsCancel(tid, cancelAmount);
+        HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, httpHeaders);
+        String paymentCancelRequestUrl = kakaoPayProperties.getHost() + kakaoPayProperties.getCancelPath();
+
+        try {
+            return restTemplate.postForObject(new URI(paymentCancelRequestUrl), body, KakaoPayPaymentCancelResponse.class);
+        } catch (URISyntaxException e) {
+            throw new UriException(ErrorCode.NOT_FOUND, paymentCancelRequestUrl);
         }
     }
 
@@ -128,8 +143,15 @@ public class KakaoPay {
         return params;
     }
 
-    private String createOrderTitle(String firstItemName, long orderItemSize) {
-        return firstItemName + " 외" + (orderItemSize - 1) + "건";
+    private MultiValueMap<String, String> setParamsCancel(String tid, long cancelAmount) {
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add(KakaoPayProperties.CID_KEY, kakaoPayProperties.getCid());
+        params.add(KakaoPayProperties.TID_KEY, tid);
+        params.add(KakaoPayProperties.CANCEL_AMOUNT_KEY, String.valueOf(cancelAmount));
+        params.add(KakaoPayProperties.CANCEL_TAX_FREE_AMOUNT_KEY, kakaoPayProperties.getCancelTaxFreeAmount());
+
+        return params;
     }
 
     private long createRandomOrderId() {

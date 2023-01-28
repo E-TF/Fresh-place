@@ -15,6 +15,7 @@ public enum ErrorCode {
     BAD_VALUE(HttpStatus.BAD_REQUEST, "존재하지 않는 값입니다."),
     FILE_ERROR(HttpStatus.BAD_REQUEST, "파일을 확인해주세요,"),
     EMPTY_CART(HttpStatus.BAD_REQUEST, "장바구니가 비어있습니다."),
+    FAILED_ORDER_CANCEL(HttpStatus.BAD_REQUEST, "주문을 취소할 수 없는 상태입니다."),
 
     FAILED_LOGIN(HttpStatus.UNAUTHORIZED, "로그인에 실패하였습니다."),
     RE_REQUEST_LOGIN(HttpStatus.UNAUTHORIZED, "로그인을 다시 시도해주세요."),

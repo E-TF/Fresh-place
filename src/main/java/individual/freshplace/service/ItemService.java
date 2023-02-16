@@ -39,7 +39,7 @@ public class ItemService {
         return ItemResponse.of(item, images);
     }
 
-    private String getUrlPrefix(final Long itemSeq) {
+    protected static String getUrlPrefix(final Long itemSeq) {
         return Folder.IMAGE.getDirectoryName() + SLASH + Folder.GOODS.getDirectoryName() + SLASH + itemSeq.toString();
     }
 }

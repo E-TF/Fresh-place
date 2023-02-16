@@ -10,13 +10,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ItemByCategoryResponse {
 
+    private final long itemSeq;
     private final String itemName;
-
     private final long price;
+    private final String thumbNailImage;
 
-    public static ItemByCategoryResponse from(final Item item) {
-        return new ItemByCategoryResponse(
-                item.getItemName(),
-                item.getPrice());
+    public ItemByCategoryResponse(final Item item, final String thumbNailImage) {
+        this.itemSeq = item.getItemSeq();
+        this.itemName = item.getItemName();
+        this.price = item.getPrice();
+        this.thumbNailImage = thumbNailImage;
     }
 }

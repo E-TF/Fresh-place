@@ -46,9 +46,11 @@ public class CacheConfig {
                         .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
                         .entryTtl(Duration.ofSeconds(Cache.DEFAULT_EXPIRE_SECONDS)));
 
-        redisCacheConfigurationMap.put(Cache.CATEGORY, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(Cache.CATEGORY_EXPIRE)));
-
-        redisCacheConfigurationMap.put(Cache.SUB_CATEGORY, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(Cache.SUB_CATEGORY_EXPIRE)));
+        redisCacheConfigurationMap.put(Cache.CATEGORY,
+                RedisCacheConfiguration.defaultCacheConfig()
+                        .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                        .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
+                        .entryTtl(Duration.ofDays(Cache.CATEGORY_EXPIRE)));
 
         redisCacheConfigurationMap.put(Cache.ITEMS_BY_CATEGORY,
                 RedisCacheConfiguration.defaultCacheConfig()

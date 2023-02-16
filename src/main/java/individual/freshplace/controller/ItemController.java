@@ -1,12 +1,12 @@
 package individual.freshplace.controller;
 
+import individual.freshplace.dto.category.CategoryResponse;
 import individual.freshplace.dto.item.ItemByCategoryResponse;
 import individual.freshplace.dto.item.ItemResponse;
 import individual.freshplace.dto.item.ItemUpdateRequest;
 import individual.freshplace.service.CategoryService;
 import individual.freshplace.service.ItemService;
 import individual.freshplace.util.constant.Cache;
-import individual.freshplace.util.constant.code.category.Category;
 import individual.freshplace.util.constant.code.category.SubCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -16,9 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,19 +27,13 @@ public class ItemController {
 
     @GetMapping("/public/category")
     @Cacheable(cacheNames = Cache.CATEGORY, key = Cache.MAIN_CATEGORY_KEY)
-    public List<String> getCategory() {
-        return Arrays.stream(Category.values()).map(Category::getCodeKorName).collect(Collectors.toList());
-    }
-
-    @GetMapping("/public/category/{codeEngName}")
-    @Cacheable(cacheNames = Cache.SUB_CATEGORY, key = "#codeEngName")
-    public List<String> getCategories(@PathVariable String codeEngName) {
-        return Category.findByCodeEngName(codeEngName).stream().map(SubCategory::getCodeKorName).collect(Collectors.toList());
+    public List<CategoryResponse> getCategories() {
+        return categoryService.getCategories();
     }
 
     @GetMapping("/public/items/category")
     @Cacheable(cacheNames = Cache.ITEMS_BY_CATEGORY, key = "#codeEngName + (#pageable.getPageNumber() + 1)")
-    public List<ItemByCategoryResponse> getItems(@RequestParam String codeEngName, @PageableDefault(size = 1) Pageable pageable) {
+    public List<ItemByCategoryResponse> getItems(@RequestParam String codeEngName, @PageableDefault(size = 30) Pageable pageable) {
         SubCategory subCategory = SubCategory.findByCodeEngName(codeEngName);
         return categoryService.getItems(subCategory, pageable);
     }

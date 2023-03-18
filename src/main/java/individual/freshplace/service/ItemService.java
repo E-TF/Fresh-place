@@ -40,6 +40,7 @@ public class ItemService {
     }
 
     protected static String getUrlPrefix(final Long itemSeq) {
-        return Folder.IMAGE.getDirectoryName() + SLASH + Folder.GOODS.getDirectoryName() + SLASH + itemSeq.toString();
+        return Folder.IMAGE.getDirectoryName() + SLASH + Folder.GOODS.getDirectoryName() + SLASH + itemSeq.toString()
+                + SLASH + Folder.RESIZE;
     }
 }

@@ -9,6 +9,13 @@
   background-image: url("./img/main.jpg");
 }
 
+.standard-area {
+  margin-top: 5%;
+  margin-bottom: 10%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

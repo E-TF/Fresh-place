@@ -90,7 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(HttpMethod.POST, "/public/**").permitAll()
                 .mvcMatchers(HttpMethod.DELETE, "/public/**").permitAll()
 
-                .mvcMatchers(HttpMethod.GET, "/**").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/").permitAll()
 
                 .mvcMatchers(HttpMethod.GET, "/image/**").permitAll()
 

@@ -12,13 +12,14 @@ function App() {
     let navigate = useNavigate();
 
     useEffect(() => {
-        function getItems() {
-            axios.get('/public/category')
-                .then(data => {
-                    setCategory(data.data);
-                })
-        }
-        getItems()
+        axios.get('/public/category')
+            .then(data => {
+                setCategory(data.data);
+            })
+            .catch(() => {
+                const copy = [...'...']
+                setCategory(copy)
+            })
     }, [])
 
     return (
@@ -35,15 +36,15 @@ function App() {
                                 {
                                     category.map((category) =>
                                         <>
-                                            <NavDropdown title={category.korName} id="basic-nav-dropdown"
-                                                         key={category.engName}>
+                                            <NavDropdown title={category.mainCategoryKorName} id="basic-nav-dropdown"
+                                                         key={category.mainCategoryEngName}>
                                                 {
                                                     category.subCategoryResponses.map((subCategory) =>
                                                         <>
-                                                            <NavDropdown.Item key={subCategory.engName} onClick={() => {
-                                                                navigate('public/items/category/' + subCategory.engName)
+                                                            <NavDropdown.Item key={subCategory.subCategoryEngName} onClick={() => {
+                                                                navigate('public/items/category/' + subCategory.subCategoryEngName)
                                                             }}>
-                                                                {subCategory.korName}
+                                                                {subCategory.subCategoryKorName}
                                                             </NavDropdown.Item>
                                                             <NavDropdown.Divider/>
                                                         </>

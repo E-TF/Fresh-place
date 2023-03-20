@@ -14,7 +14,6 @@ function Signup(props) {
     } = useForm();
 
     const onSubmit = async (formData) => {
-        await console.log(formData);
         await axios.post('/public/signup', formData, {headers: {"Content-Type": `application/json`}})
             .then((response) => {
                 console.log(response.data);

@@ -8,15 +8,14 @@ function Items(props) {
     let {categoryName} = useParams();
 
     useEffect(() => {
-        async function getItems() {
-            await axios.get('/public/items/category?codeEngName=' + categoryName)
-                .then(data => {
-                    let copy = [...data.data];
-                    setItems(copy);
-                })
-        }
-        getItems()
-        console.log(items)
+        axios.get('/public/items/category?codeEngName=' + categoryName)
+            .then(data => {
+                let copy = [...data.data];
+                setItems(copy);
+            })
+            .catch(error => {
+                alert(error.response.data.error)
+            })
     }, [categoryName])
 
     return (

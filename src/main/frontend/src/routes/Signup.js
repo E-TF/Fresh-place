@@ -15,10 +15,9 @@ function Signup(props) {
 
     const onSubmit = async (formData) => {
         await axios.post('/public/signup', formData, {headers: {"Content-Type": `application/json`}})
-            .then((response) => {
-                console.log(response.data);
-                alert('축하합니다! 회원가입에 성공하였습니다.')
-                props.navigate('/login')
+            .then(() => {
+                alert('축하합니다! 회원가입에 성공하였습니다.');
+                props.navigate('/login');
             })
             .catch((error) => alert(error));
     }

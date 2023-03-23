@@ -3,12 +3,14 @@ package individual.freshplace.dto.signup;
 import individual.freshplace.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class SignupRequest {
 

@@ -19,8 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemService {
 
-    private final static String SLASH = "/";
-
     private final ItemRepository itemRepository;
     private final ImageRepository imageRepository;
 
@@ -39,7 +37,8 @@ public class ItemService {
         return ItemResponse.of(item, images);
     }
 
-    private String getUrlPrefix(final Long itemSeq) {
-        return Folder.IMAGE.getDirectoryName() + SLASH + Folder.GOODS.getDirectoryName() + SLASH + itemSeq.toString();
+    protected static String getUrlPrefix(final Long itemSeq) {
+        return String.format("%s/%s/%s/%s", Folder.IMAGE.getDirectoryName(), Folder.GOODS.getDirectoryName(),
+                itemSeq.toString(), Folder.RESIZE.getDirectoryName());
     }
 }

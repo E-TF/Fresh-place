@@ -8,6 +8,10 @@
   background-image: url("./img/main.jpg");
 }
 
+.standard-area {
+  margin: 5% 10% 10%;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

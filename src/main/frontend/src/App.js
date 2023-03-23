@@ -4,6 +4,7 @@ import {Routes, Route, useNavigate, Outlet} from "react-router-dom"
 import {useEffect, useState} from "react";
 import axios from 'axios'
 import Items from "./routes/Items";
+import Signup from "./routes/Signup";
 
 function App() {
 
@@ -57,6 +58,7 @@ function App() {
 
                             <Nav.Link href="/">Cart</Nav.Link>
                             <Nav.Link href="/">Login</Nav.Link>
+                            <Nav.Link href="/public/signup">Signup</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
@@ -69,6 +71,7 @@ function App() {
                     </>
                 }/>
                 <Route path="/public/items/category/:categoryName" element={<Items navigate={navigate} />} />
+                <Route path="/public/signup" element={<Signup navigate={navigate}/>} />
             </Routes>
 
         </div>

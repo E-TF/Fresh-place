@@ -1,6 +1,6 @@
 package individual.freshplace.controller;
 
-import individual.freshplace.config.auth.PrincipalDetails;
+import individual.freshplace.util.auth.PrincipalDetails;
 import individual.freshplace.dto.order.OrderDetailResponse;
 import individual.freshplace.dto.order.OrderRequest;
 import individual.freshplace.dto.order.OrderResponse;

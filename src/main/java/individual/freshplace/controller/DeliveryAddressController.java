@@ -1,6 +1,6 @@
 package individual.freshplace.controller;
 
-import individual.freshplace.config.auth.PrincipalDetails;
+import individual.freshplace.util.auth.PrincipalDetails;
 import individual.freshplace.dto.deliveryaddress.DeliveryAddressAddRequest;
 import individual.freshplace.dto.deliveryaddress.DeliveryAddressResponse;
 import individual.freshplace.dto.deliveryaddress.DeliveryAddressUpdateRequest;

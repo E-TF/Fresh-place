@@ -32,10 +32,9 @@ public class CacheConfig {
     }
 
     private RedisCacheConfiguration defaultCacheConfiguration() {
-        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+        return RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
-        return redisCacheConfiguration;
     }
 
     private Map<String, RedisCacheConfiguration> customCacheConfiguration() {
@@ -75,6 +74,12 @@ public class CacheConfig {
                         .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                         .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
                         .entryTtl(Duration.ofDays(Cache.PROFILE_EXPIRE)));
+
+        redisCacheConfigurationMap.put(Cache.REFRESH_TOKEN,
+                RedisCacheConfiguration.defaultCacheConfig()
+                        .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                        .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
+                        .entryTtl(Duration.ofDays(Cache.REFRESH_TOKEN_EXPIRE)));
 
         return redisCacheConfigurationMap;
     }

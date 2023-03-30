@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     USERNAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 아이디의 회원이 존재하지 않습니다."),
+    NOT_MATCH_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 틀립니다."),
     ID_DUPLICATE_PREVENTION(HttpStatus.BAD_REQUEST, "이미 가입된 회원입니다."),
     BAD_CODE(HttpStatus.BAD_REQUEST, "존재하지 않는 코드값 입니다."),
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "유효성 에러입니다."),

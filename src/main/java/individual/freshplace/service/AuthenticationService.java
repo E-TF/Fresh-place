@@ -19,8 +19,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
@@ -56,9 +58,11 @@ public class AuthenticationService {
     public TokenReissueResponse reissue(final HttpServletRequest httpServletRequest) {
 
         final String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        final String setCookie = httpServletRequest.getHeader(HttpHeaders.SET_COOKIE);
-
+        final String setCookie = Arrays.stream(httpServletRequest.getCookies())
+                .filter(cookie -> JwtTokenProvider.REFRESH_TOKEN_SUBJECT.equals(cookie.getName())).findFirst()
+                .map(Cookie::getValue).orElseThrow(() -> new CustomAuthenticationException(ErrorCode.BAD_VALUE));
         Authentication authentication = null;
+
         try {
             authentication = jwtTokenProvider.getAuthentication(authorization);
         } catch (JWTDecodeException e) {

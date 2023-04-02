@@ -1,15 +1,20 @@
 import './App.css'
 import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap"
-import {Routes, Route, useNavigate, Outlet} from "react-router-dom"
+import {Routes, Route, useNavigate} from "react-router-dom"
 import {useEffect, useState} from "react";
 import axios from 'axios'
 import Items from "./routes/Items";
 import Signup from "./routes/Signup";
+import {
+    getAuthorization,
+    Login
+} from "./routes/Authentication";
 
 function App() {
 
     let [category, setCategory] = useState([]);
-    let navigate = useNavigate();
+    let [loginStatus, setLoginStatus] = useState();
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get('/public/category')
@@ -20,7 +25,11 @@ function App() {
                 const copy = [...'...']
                 setCategory(copy)
             })
-    }, [])
+
+        if (getAuthorization()) {
+            setLoginStatus(getAuthorization());
+        }
+    }, []);
 
     return (
         <div className="App">
@@ -42,7 +51,7 @@ function App() {
                                                     category.subCategoryResponses.map((subCategory) =>
                                                         <>
                                                             <NavDropdown.Item key={subCategory.subCategoryEngName} onClick={() => {
-                                                                navigate('public/items/category/' + subCategory.subCategoryEngName)
+                                                                navigate(`public/items/category/${subCategory.subCategoryEngName}`)
                                                             }}>
                                                                 {subCategory.subCategoryKorName}
                                                             </NavDropdown.Item>
@@ -57,8 +66,16 @@ function App() {
                             </NavDropdown>
 
                             <Nav.Link href="/">Cart</Nav.Link>
-                            <Nav.Link href="/">Login</Nav.Link>
-                            <Nav.Link href="/public/signup">Signup</Nav.Link>
+                            {loginStatus == null ?
+                                <>
+                                    <Nav.Link href="/login">Login</Nav.Link>
+                                    <Nav.Link href="/public/signup">Signup</Nav.Link>
+                                </>
+                                :
+                                <>
+                                    <Nav.Link>Logout</Nav.Link>
+                                </>
+                            }
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
@@ -72,8 +89,8 @@ function App() {
                 }/>
                 <Route path="/public/items/category/:categoryName" element={<Items navigate={navigate} />} />
                 <Route path="/public/signup" element={<Signup navigate={navigate}/>} />
+                <Route path="/login" element={<Login />} />
             </Routes>
-
         </div>
     );
 }

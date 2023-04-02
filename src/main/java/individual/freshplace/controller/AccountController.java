@@ -4,13 +4,14 @@ import individual.freshplace.dto.auth.login.LoginRequest;
 import individual.freshplace.dto.auth.login.LoginResponse;
 import individual.freshplace.dto.auth.token.TokenReissueResponse;
 import individual.freshplace.dto.signup.SignupRequest;
-import individual.freshplace.dto.auth.token.TokenReissueRequest;
 import individual.freshplace.service.AuthenticationService;
 import individual.freshplace.service.SignupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -27,14 +28,13 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) {
-        return authenticationService.login(loginRequest);
+    public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse httpServletResponse) {
+        return authenticationService.login(loginRequest, httpServletResponse);
     }
 
     @PatchMapping("/reissue")
-    @ResponseStatus(HttpStatus.OK)
-    public TokenReissueResponse reissue(@Valid @RequestBody TokenReissueRequest reissueTokenRequest) {
-        return authenticationService.reissue(reissueTokenRequest);
+    public TokenReissueResponse reissue(HttpServletRequest httpServletRequest) {
+        return authenticationService.reissue(httpServletRequest);
     }
 
 }

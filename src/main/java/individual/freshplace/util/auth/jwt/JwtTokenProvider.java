@@ -2,6 +2,7 @@ package individual.freshplace.util.auth.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.Claim;
@@ -55,7 +56,7 @@ public class JwtTokenProvider {
             return true;
         } catch (TokenExpiredException e) {
             log.error(ErrorCode.EXPIRED_TOKEN.getMessage());
-        } catch (SignatureVerificationException e) {
+        } catch (SignatureVerificationException | JWTDecodeException e) {
             log.error(ErrorCode.INVALID_TOKEN.getMessage());
         } catch (NullPointerException e) {
             log.error(ErrorCode.NON_HEADER_AUTHORIZATION.getMessage());
@@ -74,6 +75,10 @@ public class JwtTokenProvider {
 
     public String getAuthorityClaim(String accessToken) {
         return getClaim(accessToken).asString().split(":")[1];
+    }
+
+    public String getRefreshToken(String setCookie) {
+        return setCookie.replace(REFRESH_TOKEN_SUBJECT+"=", "").split(";")[0];
     }
 
     private Claim getClaim(String accessToken) {

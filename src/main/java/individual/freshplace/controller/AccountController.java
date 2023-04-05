@@ -28,6 +28,7 @@ public class AccountController {
     }
 
     @PostMapping("/login")
+    @ResponseStatus(HttpStatus.CREATED)
     public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse httpServletResponse) {
         return authenticationService.login(loginRequest, httpServletResponse);
     }
@@ -35,6 +36,11 @@ public class AccountController {
     @PatchMapping("/reissue")
     public TokenReissueResponse reissue(HttpServletRequest httpServletRequest) {
         return authenticationService.reissue(httpServletRequest);
+    }
+
+    @DeleteMapping("/members/logout")
+    public void logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        authenticationService.logout(httpServletRequest, httpServletResponse);
     }
 
 }

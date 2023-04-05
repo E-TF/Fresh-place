@@ -64,6 +64,10 @@ public class JwtTokenProvider {
         return false;
     }
 
+    public void verifyToken(String token) {
+        JWT.require(Algorithm.HMAC512(secret)).build().verify(token);
+    }
+
     public Authentication getAuthentication(String accessToken) {
         UserDetails userDetails = new PrincipalDetails(getIdClaim(accessToken), null, getAuthorityClaim(accessToken));
         return new UsernamePasswordAuthenticationToken(userDetails, Optional.empty(), userDetails.getAuthorities());

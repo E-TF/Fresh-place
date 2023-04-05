@@ -6,6 +6,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import individual.freshplace.util.auth.PrincipalDetails;
 import individual.freshplace.util.constant.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
@@ -64,8 +65,8 @@ public class JwtTokenProvider {
         return false;
     }
 
-    public void verifyToken(String token) {
-        JWT.require(Algorithm.HMAC512(secret)).build().verify(token);
+    public DecodedJWT verifyToken(String token) {
+        return JWT.require(Algorithm.HMAC512(secret)).build().verify(token);
     }
 
     public Authentication getAuthentication(String accessToken) {
@@ -81,7 +82,7 @@ public class JwtTokenProvider {
         return getClaim(accessToken).asString().split(":")[1];
     }
 
-    public String getRefreshToken(String setCookie) {
+    public String getRefreshTokenParsing(String setCookie) {
         return setCookie.replace(REFRESH_TOKEN_SUBJECT+"=", "").split(";")[0];
     }
 

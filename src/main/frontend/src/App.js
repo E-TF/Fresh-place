@@ -5,16 +5,16 @@ import {useEffect, useState} from "react";
 import axios from 'axios'
 import Items from "./routes/Items";
 import Signup from "./routes/Signup";
-import {
-    getAuthorization,
-    Login
-} from "./routes/Authentication";
+import {getAuthorization, Login, Logout} from "./routes/Authentication";
 
 function App() {
 
+    const navigate = useNavigate();
+    const logout = () => {
+        Logout(navigate);
+    }
     let [category, setCategory] = useState([]);
     let [loginStatus, setLoginStatus] = useState();
-    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get('/public/category')
@@ -25,11 +25,13 @@ function App() {
                 const copy = [...'...']
                 setCategory(copy)
             })
+    }, []);
 
+    useEffect(() => {
         if (getAuthorization()) {
             setLoginStatus(getAuthorization());
         }
-    }, []);
+    });
 
     return (
         <div className="App">
@@ -50,9 +52,10 @@ function App() {
                                                 {
                                                     category.subCategoryResponses.map((subCategory) =>
                                                         <>
-                                                            <NavDropdown.Item key={subCategory.subCategoryEngName} onClick={() => {
-                                                                navigate(`public/items/category/${subCategory.subCategoryEngName}`)
-                                                            }}>
+                                                            <NavDropdown.Item key={subCategory.subCategoryEngName}
+                                                                              onClick={() => {
+                                                                                  navigate(`public/items/category/${subCategory.subCategoryEngName}`)
+                                                                              }}>
                                                                 {subCategory.subCategoryKorName}
                                                             </NavDropdown.Item>
                                                             <NavDropdown.Divider/>
@@ -73,7 +76,7 @@ function App() {
                                 </>
                                 :
                                 <>
-                                    <Nav.Link>Logout</Nav.Link>
+                                    <Nav.Link onClick={logout}>Logout</Nav.Link>
                                 </>
                             }
                         </Nav>
@@ -87,11 +90,12 @@ function App() {
                         <div className="main-bg"/>
                     </>
                 }/>
-                <Route path="/public/items/category/:categoryName" element={<Items navigate={navigate} />} />
-                <Route path="/public/signup" element={<Signup navigate={navigate}/>} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/public/items/category/:categoryName" element={<Items navigate={navigate}/>}/>
+                <Route path="/public/signup" element={<Signup navigate={navigate}/>}/>
+                <Route path="/login" element={<Login/>}/>
             </Routes>
         </div>
+
     );
 }
 

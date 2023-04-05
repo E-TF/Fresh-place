@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import {useState} from "react";
-import axios from "axios";
+import axios from "../Interceptor";
 import {useNavigate} from "react-router-dom";
 
 export const authorizationName = 'accessToken';
@@ -15,10 +15,6 @@ export const getAuthorization = () => {
 
 export const setAuthorization = (accessToken) => {
     localStorage.setItem(authorizationName, accessToken);
-}
-
-export const setAuthorizationTokenPutHeader = (accessToken) => {
-    axios.defaults.headers.common['Authorization'] = accessToken;
 }
 
 export const removeAuthorization = () => {
@@ -43,16 +39,17 @@ export const Login = () => {
         await axios.post(
             '/login'
             , formData
-            ,{headers: {'Content-Type': `application/json`}
+            ,{
+                headers: {
+                    'Content-Type': `application/json`
+                }
             })
             .then(response => {
                 setAuthorization(response.data.accessToken);
                 navigate('/');
             })
             .catch(error => {
-                if (error.response.data.status === 400) {
-                    alert(error.response.data.message);
-                }
+                error.response.data.status === 400 ? alert(error.response.data.message) : alert('로그인을 다시 시도해주세요.');
             })
     }
 
@@ -100,13 +97,25 @@ export const Login = () => {
 
 export const ReissueAuthorization = (navigate) => {
     axios
-        .patch('/reissue', {}, {withCredentials:true})
+        .patch('/reissue')
         .then(response => {
             setAuthorization(response.data.accessToken);
         })
-        .catch(() => {
-            removeAuthorization();
+        .catch((error) => {
+            if (error.response.data.status === 401) {
+                removeAuthorization();
+            }
             alert('로그인을 다시 해주세요');
             navigate('/login');
         })
+}
+
+export const Logout = (navigate) => {
+    axios
+        .delete('/members/logout')
+        .finally(() => {
+            removeAuthorization();
+            navigate('/');
+        });
+
 }

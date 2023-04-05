@@ -80,6 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .mvcMatchers(HttpMethod.POST, "/login").permitAll()
                 .mvcMatchers(HttpMethod.PATCH, "/reissue").permitAll()
+                .mvcMatchers(HttpMethod.DELETE, "/members/logout").permitAll()
 
                 .mvcMatchers(HttpMethod.GET, "/public/**").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/public/**").permitAll()

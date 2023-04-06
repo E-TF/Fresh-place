@@ -28,9 +28,7 @@ function App() {
     }, []);
 
     useEffect(() => {
-        if (getAuthorization()) {
-            setLoginStatus(getAuthorization());
-        }
+        getAuthorization() ? setLoginStatus(getAuthorization()) : setLoginStatus(null);
     });
 
     return (

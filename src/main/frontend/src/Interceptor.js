@@ -3,9 +3,8 @@ import {getAuthorization} from "./routes/Authentication";
 
 axios.interceptors.request.use(
     function (config) {
-        if(getAuthorization() != null) {
-            axios.defaults.headers.common['Authorization'] = getAuthorization();
-        }
+        if (getAuthorization())
+            config.headers['Authorization'] = getAuthorization();
         return config;
     }
 )

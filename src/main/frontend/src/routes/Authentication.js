@@ -117,5 +117,4 @@ export const Logout = (navigate) => {
             removeAuthorization();
             navigate('/');
         });
-
 }

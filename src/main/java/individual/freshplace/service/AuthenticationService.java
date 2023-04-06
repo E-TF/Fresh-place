@@ -85,7 +85,8 @@ public class AuthenticationService {
         final String refreshToken = jwtTokenProvider.getRefreshTokenParsing(CookieUtils.getRefreshToken(httpServletRequest.getCookies()).getValue());
         final String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
-            CookieUtils.removeRefreshToken(refreshToken);
+            ResponseCookie responseCookie = CookieUtils.removeRefreshToken(refreshToken);
+            httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
             throw new CustomAuthenticationException(ErrorCode.NON_HEADER_AUTHORIZATION);
         }
 

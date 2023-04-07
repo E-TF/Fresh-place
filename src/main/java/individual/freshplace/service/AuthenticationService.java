@@ -1,6 +1,5 @@
 package individual.freshplace.service;
 
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
@@ -51,24 +50,15 @@ public class AuthenticationService {
     @Transactional
     public TokenReissueResponse reissue(final HttpServletRequest httpServletRequest) {
         final String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization == null || !CookieUtils.exitsRefreshToken(httpServletRequest.getCookies())) {
+        if (checkingIsNull(authorization) || !CookieUtils.exitsRefreshToken(httpServletRequest.getCookies())) {
             throw new CustomAuthenticationException(ErrorCode.NON_HEADER_AUTHORIZATION);
         }
-
         try {
             jwtTokenProvider.verifyToken(authorization);
         } catch (TokenExpiredException e) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(authorization);
+            final PrincipalDetails principalDetails = (PrincipalDetails) jwtTokenProvider.getAuthentication(authorization).getPrincipal();
             final String refreshToken = jwtTokenProvider.getRefreshTokenParsing(CookieUtils.getRefreshToken(httpServletRequest.getCookies()).getValue());
-            final PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-            if (!jwtTokenProvider.validationToken(refreshToken)) {
-                String refreshTokenKey = String.format("%s::%s", JwtTokenProvider.REFRESH_TOKEN_SUBJECT, principalDetails.getUsername());
-                if (Boolean.TRUE.equals(customRedisTemplate.existsKey(refreshTokenKey))) {
-                    customRedisTemplate.delete(refreshTokenKey);
-                }
-                throw new CustomAuthenticationException(ErrorCode.INVALID_TOKEN);
-            }
-            return new TokenReissueResponse(jwtTokenProvider.createAccessToken(principalDetails));
+            return createReissueAccessToken(principalDetails, refreshToken);
         } catch (SignatureVerificationException e) {
             throw new CustomAuthenticationException(ErrorCode.INVALID_TOKEN);
         } catch (JWTVerificationException e) {
@@ -80,29 +70,40 @@ public class AuthenticationService {
     @Transactional
     public void logout(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse) {
         if (!CookieUtils.exitsRefreshToken(httpServletRequest.getCookies())) {
-            throw new CustomAuthenticationException(ErrorCode.NON_HEADER_AUTHORIZATION);
-        }
-        final String refreshToken = jwtTokenProvider.getRefreshTokenParsing(CookieUtils.getRefreshToken(httpServletRequest.getCookies()).getValue());
-        final String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization == null) {
-            ResponseCookie responseCookie = CookieUtils.removeRefreshToken(refreshToken);
-            httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
-            throw new CustomAuthenticationException(ErrorCode.NON_HEADER_AUTHORIZATION);
+            throw new CustomAuthenticationException(ErrorCode.EXPIRED_TOKEN);
         }
 
-        Authentication authentication = null;
+        final String refreshToken = jwtTokenProvider.getRefreshTokenParsing(CookieUtils.getRefreshToken(httpServletRequest.getCookies()).getValue());
+        final String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         try {
-            authentication = jwtTokenProvider.getAuthentication(authorization);
-        } catch (JWTDecodeException e) {
-            throw new CustomAuthenticationException(ErrorCode.INVALID_TOKEN);
+            if (checkingIsNull(authorization)) {
+                return;
+            }
+            final Authentication authentication = jwtTokenProvider.getAuthentication(authorization);
+            final PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+            checkingAndDeleteRefreshTokenToRepository(principalDetails.getUsername());
         } finally {
             ResponseCookie responseCookie = CookieUtils.removeRefreshToken(refreshToken);
             httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
-            final PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-            String refreshTokenKey = String.format("%s::%s", JwtTokenProvider.REFRESH_TOKEN_SUBJECT, principalDetails.getUsername());
-            if (Boolean.TRUE.equals(customRedisTemplate.existsKey(refreshTokenKey))) {
-                customRedisTemplate.delete(refreshTokenKey);
-            }
+        }
+    }
+
+    private boolean checkingIsNull(String object) {
+        return object == null;
+    }
+
+    private TokenReissueResponse createReissueAccessToken(final PrincipalDetails principalDetails, final String refreshToken) {
+        if (!jwtTokenProvider.validationToken(refreshToken)) {
+            checkingAndDeleteRefreshTokenToRepository(principalDetails.getUsername());
+            throw new CustomAuthenticationException(ErrorCode.INVALID_TOKEN);
+        }
+        return new TokenReissueResponse(jwtTokenProvider.createAccessToken(principalDetails));
+    }
+
+    private void checkingAndDeleteRefreshTokenToRepository(String userName) {
+        String refreshTokenKey = String.format("%s::%s", JwtTokenProvider.REFRESH_TOKEN_SUBJECT, userName);
+        if (customRedisTemplate.existsKey(refreshTokenKey)) {
+            customRedisTemplate.delete(refreshTokenKey);
         }
     }
 }

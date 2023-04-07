@@ -1,15 +1,20 @@
 import './App.css'
 import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap"
-import {Routes, Route, useNavigate, Outlet} from "react-router-dom"
+import {Routes, Route, useNavigate} from "react-router-dom"
 import {useEffect, useState} from "react";
 import axios from 'axios'
 import Items from "./routes/Items";
 import Signup from "./routes/Signup";
+import {getAuthorization, Login, Logout} from "./routes/Authentication";
 
 function App() {
 
+    const navigate = useNavigate();
+    const logout = () => {
+        Logout(navigate);
+    }
     let [category, setCategory] = useState([]);
-    let navigate = useNavigate();
+    let [loginStatus, setLoginStatus] = useState();
 
     useEffect(() => {
         axios.get('/public/category')
@@ -20,7 +25,11 @@ function App() {
                 const copy = [...'...']
                 setCategory(copy)
             })
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        getAuthorization() ? setLoginStatus(getAuthorization()) : setLoginStatus(null);
+    });
 
     return (
         <div className="App">
@@ -41,9 +50,10 @@ function App() {
                                                 {
                                                     category.subCategoryResponses.map((subCategory) =>
                                                         <>
-                                                            <NavDropdown.Item key={subCategory.subCategoryEngName} onClick={() => {
-                                                                navigate('public/items/category/' + subCategory.subCategoryEngName)
-                                                            }}>
+                                                            <NavDropdown.Item key={subCategory.subCategoryEngName}
+                                                                              onClick={() => {
+                                                                                  navigate(`public/items/category/${subCategory.subCategoryEngName}`)
+                                                                              }}>
                                                                 {subCategory.subCategoryKorName}
                                                             </NavDropdown.Item>
                                                             <NavDropdown.Divider/>
@@ -57,8 +67,16 @@ function App() {
                             </NavDropdown>
 
                             <Nav.Link href="/">Cart</Nav.Link>
-                            <Nav.Link href="/">Login</Nav.Link>
-                            <Nav.Link href="/public/signup">Signup</Nav.Link>
+                            {loginStatus == null ?
+                                <>
+                                    <Nav.Link href="/login">Login</Nav.Link>
+                                    <Nav.Link href="/public/signup">Signup</Nav.Link>
+                                </>
+                                :
+                                <>
+                                    <Nav.Link onClick={logout}>Logout</Nav.Link>
+                                </>
+                            }
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
@@ -70,11 +88,12 @@ function App() {
                         <div className="main-bg"/>
                     </>
                 }/>
-                <Route path="/public/items/category/:categoryName" element={<Items navigate={navigate} />} />
-                <Route path="/public/signup" element={<Signup navigate={navigate}/>} />
+                <Route path="/public/items/category/:categoryName" element={<Items navigate={navigate}/>}/>
+                <Route path="/public/signup" element={<Signup navigate={navigate}/>}/>
+                <Route path="/login" element={<Login/>}/>
             </Routes>
-
         </div>
+
     );
 }
 

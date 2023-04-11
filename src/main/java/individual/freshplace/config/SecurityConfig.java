@@ -20,6 +20,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -63,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web
                 .ignoring()
-                .antMatchers("/resources/**");
+                .antMatchers("/static/**");
     }
 
     @Override
@@ -90,9 +91,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .mvcMatchers(HttpMethod.GET, "/image/**").permitAll()
 
-                .mvcMatchers(HttpMethod.POST, "/admin/**").hasAuthority(Authority.ADMIN.name())
-                .mvcMatchers(HttpMethod.PUT, "/admin/**").hasAuthority(Authority.ADMIN.name())
-                .mvcMatchers(HttpMethod.GET, "/admin/**").hasAuthority(Authority.ADMIN.name())
+                .mvcMatchers(HttpMethod.GET, "/admin/**").hasAuthority(List.of(Authority.ADMIN.name()).toString())
+                .mvcMatchers(HttpMethod.POST, "/admin/**").hasAuthority(List.of(Authority.ADMIN.name()).toString())
+                .mvcMatchers(HttpMethod.PUT, "/admin/**").hasAuthority(List.of(Authority.ADMIN.name()).toString())
 
                 .anyRequest().authenticated()
                 .and()

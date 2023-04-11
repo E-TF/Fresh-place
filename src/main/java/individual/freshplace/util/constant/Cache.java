@@ -24,4 +24,7 @@ public class Cache {
 
     public static final String PROFILE = "profile";
     public static final long PROFILE_EXPIRE = 3L;
+
+    public static final String REFRESH_TOKEN = "refreshToken";
+    public static final long REFRESH_TOKEN_EXPIRE = 14L;
 }

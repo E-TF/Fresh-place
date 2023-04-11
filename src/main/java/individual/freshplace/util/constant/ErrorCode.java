@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     USERNAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 아이디의 회원이 존재하지 않습니다."),
+    NOT_MATCH_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 틀립니다."),
     ID_DUPLICATE_PREVENTION(HttpStatus.BAD_REQUEST, "이미 가입된 회원입니다."),
     BAD_CODE(HttpStatus.BAD_REQUEST, "존재하지 않는 코드값 입니다."),
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "유효성 에러입니다."),
@@ -16,12 +17,13 @@ public enum ErrorCode {
     FILE_ERROR(HttpStatus.BAD_REQUEST, "파일을 확인해주세요,"),
     EMPTY_CART(HttpStatus.BAD_REQUEST, "장바구니가 비어있습니다."),
     FAILED_ORDER_CANCEL(HttpStatus.BAD_REQUEST, "주문을 취소할 수 없는 상태입니다."),
+    NON_HEADER_AUTHORIZATION(HttpStatus.BAD_REQUEST, "헤더값이 유효하지 않습니다."),
+    NOT_PASSED_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "토큰 유효시간이 지나지 않았습니다"),
 
     FAILED_LOGIN(HttpStatus.UNAUTHORIZED, "로그인에 실패하였습니다."),
     RE_REQUEST_LOGIN(HttpStatus.UNAUTHORIZED, "로그인을 다시 시도해주세요."),
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "토큰 유효시간이 완료되었습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "토큰 값이 유효하지 않습니다."),
-    NON_HEADER_AUTHORIZATION(HttpStatus.UNAUTHORIZED, "헤더값이 유효하지 않습니다."),
     NON_PERMISSION(HttpStatus.UNAUTHORIZED, "권한이 없습니다"),
 
     NOT_FOUND(HttpStatus.NOT_FOUND, "해당 경로를 찾을 수 없습니다."),

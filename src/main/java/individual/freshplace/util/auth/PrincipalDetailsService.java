@@ -1,4 +1,4 @@
-package individual.freshplace.config.auth;
+package individual.freshplace.util.auth;
 
 import individual.freshplace.entity.Member;
 import individual.freshplace.repository.MemberRepository;
@@ -13,11 +13,10 @@ import org.springframework.stereotype.Service;
 public class PrincipalDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
-    private final static UsernameNotFoundException usernameNotFoundException = new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
 
     @Override
     public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
-        Member memberEntity = memberRepository.findByMemberId(memberId).orElseThrow(() -> usernameNotFoundException);
-        return new PrincipalDetails(memberEntity.getMemberId(), memberEntity.getPassword(), memberEntity.getRole().name());
+        final Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new UsernameNotFoundException(memberId + " 는 찾을 수 없습니다"));
+        return new PrincipalDetails(member.getMemberId(), member.getPassword(), member.getRole().name());
     }
 }

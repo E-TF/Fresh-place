@@ -1,11 +1,6 @@
 package individual.freshplace.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import individual.freshplace.config.auth.PrincipalDetailsService;
-import individual.freshplace.config.jwt.JwtAuthenticationEntryPoint;
-import individual.freshplace.config.jwt.JwtAuthenticationFilter;
-import individual.freshplace.config.jwt.JwtAuthorizationFilter;
-import individual.freshplace.config.jwt.JwtProperties;
+import individual.freshplace.util.auth.jwt.*;
 import individual.freshplace.util.constant.Authority;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -30,10 +26,9 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final JwtProperties jwtProperties;
-    private final PrincipalDetailsService principalDetailsService;
+    private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final ObjectMapper objectMapper;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Value("${cors.alloworigin}")
     private String localOrigin;
@@ -68,10 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web
                 .ignoring()
-                .antMatchers("/resources/**")
-                .antMatchers("/image.html")
-                .antMatchers("/imageOrigin.html")
-                .antMatchers("/Avif.html");
+                .antMatchers("/resources/**");
     }
 
     @Override
@@ -86,6 +78,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
+                .mvcMatchers(HttpMethod.POST, "/login").permitAll()
+                .mvcMatchers(HttpMethod.PATCH, "/reissue").permitAll()
+                .mvcMatchers(HttpMethod.DELETE, "/members/logout").permitAll()
+
                 .mvcMatchers(HttpMethod.GET, "/public/**").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/public/**").permitAll()
                 .mvcMatchers(HttpMethod.DELETE, "/public/**").permitAll()
@@ -99,11 +95,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(HttpMethod.GET, "/admin/**").hasAuthority(Authority.ADMIN.name())
 
                 .anyRequest().authenticated()
-
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtProperties, objectMapper))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtProperties, principalDetailsService))
+                .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint);
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler);
     }
 }

@@ -1,6 +1,6 @@
 package individual.freshplace.controller;
 
-import individual.freshplace.config.auth.PrincipalDetails;
+import individual.freshplace.util.auth.PrincipalDetails;
 import individual.freshplace.dto.profile.ProfileUpdateRequest;
 import individual.freshplace.dto.profile.ProfileResponse;
 import individual.freshplace.service.ProfileService;

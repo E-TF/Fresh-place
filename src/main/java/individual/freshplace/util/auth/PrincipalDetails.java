@@ -1,4 +1,4 @@
-package individual.freshplace.config.auth;
+package individual.freshplace.util.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

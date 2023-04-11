@@ -1,4 +1,4 @@
-package individual.freshplace.dto.login;
+package individual.freshplace.dto.auth.login;
 
 import lombok.Getter;
 

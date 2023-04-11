@@ -50,7 +50,7 @@ public class AuthenticationService {
     @Transactional
     public TokenReissueResponse reissue(final HttpServletRequest httpServletRequest) {
         final String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (checkingIsNull(authorization) || !CookieUtils.exitsRefreshToken(httpServletRequest.getCookies())) {
+        if (isNotNull(authorization) || !CookieUtils.exitsRefreshToken(httpServletRequest.getCookies())) {
             throw new CustomAuthenticationException(ErrorCode.NON_HEADER_AUTHORIZATION);
         }
         try {
@@ -76,7 +76,7 @@ public class AuthenticationService {
         final String refreshToken = jwtTokenProvider.getRefreshTokenParsing(CookieUtils.getRefreshToken(httpServletRequest.getCookies()).getValue());
         final String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         try {
-            if (checkingIsNull(authorization)) {
+            if (isNotNull(authorization)) {
                 return;
             }
             final Authentication authentication = jwtTokenProvider.getAuthentication(authorization);
@@ -88,7 +88,7 @@ public class AuthenticationService {
         }
     }
 
-    private boolean checkingIsNull(String object) {
+    private boolean isNotNull(String object) {
         return object == null;
     }
 

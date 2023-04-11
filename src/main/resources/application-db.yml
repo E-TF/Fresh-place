@@ -1,8 +1,8 @@
 spring:
   datasource:
-    username: ENC(LG0Uo86A6TZHsDJILcsvAA==)
-    url: ENC(HsY8okf+qYCwL9Sf63G1C6jyFHdcOEQ3vec+QUgPtd6hLxfpZMYdOqRA0njgwabcqYAGHCuxiZchjfyOnFKpamU7jd8EaS0N75LksynnLYghki/LNBOa0WeedZqtv3cSNdlXl1PHM4GwOj8LGvjas1gSzRnKFQ+Obk6nm8yiDwBivLnYLc7fhgy7Upw43F6Q/Smx7Ho9G+vtjOEf4pJgKRCsYiHp2299M7VyMEJxhvQ=)
-    password: ENC(pC2eHGbDZRWOiVv1DkdLY7OnSo4FzPUG)
+    username: ENC(AT1nIJMxDvl0ImnKwFf5KQ==)
+    url: ENC(WNnI13S3CPApSryu0wwUBYLK3/Q0/faaWINcbiYlncMIB4b3z86EkWO50W3ZQ4lYL1+AA4pwGAB31hBNF1DOpRrprH4dSD5CF34qih7EVMHLHgkVR4YBclyWEe8Baz9SzJPoCDvbH9DW3l0ubsSktrBQqjGDqWNYYZyx9PCe/2mdQFHssV0gtag0vRklMS5YsNXYDLSHVUNZLOM/V40/y6qoKEFdM/S2GGdLpqyJWkugLRmmX7BZWQ==)
+    password: ENC(62IrokPo8derpGOfHxzppjEc8y574JLJ)
   redis:
-    host: redis.84bt51.ng.0001.apn2.cache.amazonaws.com
+    host: redis.itbine.ng.0001.apn2.cache.amazonaws.com
     port: '6379'

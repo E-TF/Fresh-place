@@ -23,7 +23,7 @@ public class Review extends BaseEntity {
 
     private long rating;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_detail_seq")
     private OrderDetail orderDetail;
 }

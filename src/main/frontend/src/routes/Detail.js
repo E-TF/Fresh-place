@@ -3,10 +3,14 @@ import axios from "axios";
 import {useParams} from "react-router-dom";
 import {Table} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+import {useDispatch} from "react-redux";
+import {insertItem} from "../store/cartItemSlice";
+import {formatPrice} from "./Cart";
 
 function Detail() {
 
     const {itemSeq} = useParams();
+    const dispatch = useDispatch();
     let [item, setItem] = useState([]);
     let [quantity, setQuantity] = useState(1);
     let [totalAmount, setTotalAmount] = useState(0);
@@ -33,6 +37,17 @@ function Detail() {
         setTotalAmount(item.price * quantity);
     }
 
+    const addCartItem = () => {
+        dispatch(insertItem({
+            id: itemSeq,
+            name: item.itemName,
+            thumbnail: item.imageUrlList[0],
+            price: item.price,
+            quantity: quantity,
+            totalAmount: totalAmount
+        }));
+    }
+
     return (
         <>
             <div className='standard-area'>
@@ -54,7 +69,7 @@ function Detail() {
                                 <br/>
 
                                 <div>
-                                    <h2>{item.price}원</h2>
+                                    <h2>{formatPrice(item.price)}원</h2>
                                 </div>
                                 <hr/>
 
@@ -65,7 +80,7 @@ function Detail() {
                                     </tr>
                                     <tr>
                                         <td>원산지</td>
-                                        <td>{item.origin}</td>
+                                        <td>{formatPrice(item.origin)}</td>
                                     </tr>
                                     <tr>
                                         <td>유통기한</td>
@@ -84,13 +99,13 @@ function Detail() {
                                 </Table>
 
                                 <div>
-                                    <p>충 상픔 금액 : <strong>{totalAmount}</strong></p>
+                                    <p>충 상픔 금액 : <strong>{formatPrice(totalAmount)}</strong></p>
                                 </div>
 
                                 <br/><br/><br/><br/><br/>
 
                                 <div>
-                                    <Button variant="info">장바구니 담기</Button>{' '}
+                                    <Button variant="info" onClick={addCartItem}>장바구니 담기</Button>
                                 </div>
                             </div>
 

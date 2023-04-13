@@ -7,6 +7,7 @@ import Items from "./routes/Items";
 import Signup from "./routes/Signup";
 import {getAuthorization, Login, Logout} from "./routes/Authentication";
 import Item from "./routes/Detail";
+import Cart from "./routes/Cart";
 
 function App() {
 
@@ -67,7 +68,7 @@ function App() {
                                 }
                             </NavDropdown>
 
-                            <Nav.Link href="/">Cart</Nav.Link>
+                            <Nav.Link href="/public/cart">Cart</Nav.Link>
                             {loginStatus == null ?
                                 <>
                                     <Nav.Link href="/login">Login</Nav.Link>
@@ -93,6 +94,7 @@ function App() {
                 <Route path="/public/signup" element={<Signup navigate={navigate}/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/public/item/:itemSeq" element={<Item />}/>
+                <Route path="/public/cart" element={<Cart />}/>
             </Routes>
         </div>
 

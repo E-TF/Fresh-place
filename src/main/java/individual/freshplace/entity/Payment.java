@@ -4,7 +4,6 @@ import individual.freshplace.util.constant.code.payment.PaymentStatus;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -25,17 +24,14 @@ public class Payment extends BaseEntity {
     @JoinColumn(name = "order_seq")
     private Order order;
 
-    private LocalDateTime paymentDate;
-
     private String paymentTid;
 
     @Builder
-    public Payment(final long paymentAmount, final String paymentMethod, final Order order, final LocalDateTime paymentDate, final String paymentTid) {
+    public Payment(final long paymentAmount, final String paymentMethod, final Order order, final String paymentTid) {
         this.paymentAmount = paymentAmount;
         this.paymentStatusCode = PaymentStatus.SUCCESS;
         this.paymentMethod = paymentMethod;
         this.order = order;
-        this.paymentDate = paymentDate;
         this.paymentTid = paymentTid;
     }
 }

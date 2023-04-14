@@ -1,10 +1,10 @@
 cloud:
   aws:
     credentials:
-      secret-key: ENC(dSBiHABGrye+9q8vYCFP9sNBWA4oQV+VbgIvVgg0UNbQS0cwcHtbxREHTYbZT5vi+WYsl3xA2p8=)
-      access-key: ENC(ZFAGPuu1sUMVamfS+UsIhT8ISTuK0ZN5t/McBnA1xNE=)
+      access-key: ENC(VUvWk7Zfba5uWyEeXplQ+c5AerujSB1EGkKhtS3Lf9A=)
+      secret-key: ENC(3T6Y4GSTwpWmJzBlLUMi6PaH4pUtneNI1bLBsdMUvzlRTWKYao8by77nYs9J0U0Z2zhMLYdJ8d8=)
     s3:
-      bucket: food-imagebucket
+      bucket: fresh-pace-image
     region:
       static: ap-northeast-2
     stack:

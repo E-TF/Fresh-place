@@ -16,8 +16,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
@@ -69,6 +69,6 @@ public class OrderServiceTest {
 
     private Payment payment(Order order) {
         return Payment.builder().paymentAmount(3900L).paymentMethod("CARD").order(order)
-                .paymentDate(LocalDateTime.now()).paymentTid("").build();
+                .paymentTid(UUID.randomUUID().toString()).build();
     }
 }

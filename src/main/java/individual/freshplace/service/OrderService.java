@@ -80,7 +80,7 @@ public class OrderService {
         KakaoPayApprovalResponse kakaoPayApprovalResponse = kakaoPay.getKakaoPayApprovalResponse(pgToken, kakaoPayOrderDetailsResponse.getPartnerUserId(), kakaoPayOrderDetailsResponse.getTid(), kakaoPayOrderDetailsResponse.getPartnerOrderId());
         Long orderSeq = Long.parseLong(redisTemplate.opsForValue().get(RedisKeyPrefix.ORDER + memberId));
         final Order order = orderRepository.findById(orderSeq).orElseThrow(() -> new NonExistentException(ErrorCode.BAD_VALUE, String.valueOf(orderSeq)));
-        final Payment payment = Payment.builder().paymentAmount(kakaoPayApprovalResponse.getAmount().getTotal()).paymentMethod(kakaoPayApprovalResponse.getPaymentMethodType()).order(order).paymentDate(kakaoPayApprovalResponse.getCreatedAt()).paymentTid(kakaoPayApprovalResponse.getTid()).build();
+        final Payment payment = Payment.builder().paymentAmount(kakaoPayApprovalResponse.getAmount().getTotal()).paymentMethod(kakaoPayApprovalResponse.getPaymentMethodType()).order(order).paymentTid(kakaoPayApprovalResponse.getTid()).build();
         paymentRepository.save(payment);
         return createReceiptFromPaymentInformation(order.getOrderName(), payment, kakaoPayApprovalResponse.getCardInfo().getIssuerCorp());
     }
@@ -165,7 +165,7 @@ public class OrderService {
         long orderedItemsDiscountPrice = getOrderedItemsDiscountAmount(orderedItemsOriginPrice, payment.getPaymentAmount());
         return new OrderDetailResponse(orderedItems,
                 orderedItemsOriginPrice, orderedItemsDiscountPrice, 0, payment.getPaymentAmount(), payment.getPaymentMethod(),
-                order.getMember().getMemberName(), payment.getPaymentDate(),
+                order.getMember().getMemberName(), payment.getCreatedAt(),
                 order.getReceiverName(), order.getReceiverPhoneNumber(), order.getAddress().getZipCode() + " " + order.getAddress().getAddress(), order.getPlaceToReceiveCode().getCodeName());
     }
 

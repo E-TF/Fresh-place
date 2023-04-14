@@ -26,3 +26,4 @@
 - Jenkins를 사용하여 CI/CD 환경 구축
 - Docker를 이용하여 CD 구현
 - Ngrinder를 이용하여 성능 테스트
+ 

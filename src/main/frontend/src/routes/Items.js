@@ -29,7 +29,7 @@ function Items(props) {
                         {
                             items.map((item) =>
                                 <div key={item.itemSeq} className="col-md-4">
-                                    <img src={item.thumbNailImage} width="100%" height="100%" onClick={() => props.navigate(`/public/item/${item.itemSeq}`)}/>
+                                    <img alt={'thumbNail'} src={item.thumbNailImage} width="100%" height="100%" onClick={() => props.navigate(`/public/item/${item.itemSeq}`)}/>
                                     <h4 className="pt-5">{item.itemName}</h4>
                                     <p>{item.price}원</p>
                                 </div>

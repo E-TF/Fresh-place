@@ -75,7 +75,7 @@ function Detail(props) {
                                 <br/>
 
                                 <div>
-                                    <h2>{formatPrice(item.price)}원</h2>
+                                    <h2>{item.price && formatPrice(item.price)}원</h2>
                                 </div>
                                 <hr/>
 
@@ -86,7 +86,7 @@ function Detail(props) {
                                     </tr>
                                     <tr>
                                         <td>원산지</td>
-                                        <td>{formatPrice(item.origin)}</td>
+                                        <td>{item.origin && formatPrice(item.origin)}</td>
                                     </tr>
                                     <tr>
                                         <td>유통기한</td>
@@ -107,7 +107,7 @@ function Detail(props) {
                                 </Table>
 
                                 <div>
-                                    <p>충 상픔 금액 : <strong>{formatPrice(totalAmount)}원</strong></p>
+                                    <p>충 상픔 금액 : <strong>{totalAmount && formatPrice(totalAmount)}원</strong></p>
                                 </div>
 
                                 <br/><br/><br/><br/><br/>

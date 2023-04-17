@@ -94,7 +94,7 @@ function App() {
                 <Route path="/public/signup" element={<Signup navigate={navigate}/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/public/item/:itemSeq" element={<Item navigate={navigate}/>}/>
-                <Route path="/public/cart" element={<Cart />}/>
+                <Route path="/public/cart" element={<Cart navigate={navigate}/>}/>
             </Routes>
         </div>
 

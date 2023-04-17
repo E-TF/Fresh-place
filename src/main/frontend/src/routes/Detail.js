@@ -3,24 +3,28 @@ import axios from "axios";
 import {useParams} from "react-router-dom";
 import {Table} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import {useDispatch} from "react-redux";
 import {insertItem} from "../store/cartItemSlice";
 import {formatPrice} from "./Cart";
+import {useDispatch} from "react-redux";
 
-function Detail() {
+function Detail(props) {
 
     const {itemSeq} = useParams();
+    const [item, setItem] = useState([]);
+    const [quantity, setQuantity] = useState(1);
+    const [totalAmount, setTotalAmount] = useState(0);
     const dispatch = useDispatch();
-    let [item, setItem] = useState([]);
-    let [quantity, setQuantity] = useState(1);
-    let [totalAmount, setTotalAmount] = useState(0);
 
     useEffect(() => {
         axios.get(`/public/item/${itemSeq}`)
             .then(data => {
-                let copy = data.data;
+                const copy = data.data;
                 setItem(copy);
                 setTotalAmount(copy.price * quantity);
+            })
+            .catch(() => {
+                alert('존재하지 않는 상품입니다.');
+                props.navigate(-1);
             });
     }, [itemSeq])
 
@@ -28,14 +32,16 @@ function Detail() {
         if (quantity === 0) {
             return;
         }
-        setQuantity(--quantity);
-        setTotalAmount(item.price * quantity)
+        setQuantity(quantity - 1);
     };
 
     const increaseQuantity = () => {
-        setQuantity(++quantity);
-        setTotalAmount(item.price * quantity);
+        setQuantity(quantity + 1);
     }
+
+    useEffect(() => {
+        setTotalAmount(item.price * quantity);
+    }, [quantity]);
 
     const addCartItem = () => {
         dispatch(insertItem({
@@ -88,29 +94,30 @@ function Detail() {
                                     </tr>
                                     <tr>
                                         <td>구매수량</td>
-                                        <td><strong onClick={() => {
-                                            decreaseQuantity()
-                                        }}> - </strong>
+                                        <td>
+                                            <Button variant="outline-secondary" onClick={() => {
+                                                decreaseQuantity()
+                                            }}><strong>-</strong></Button>{' '}
                                             <em>{quantity}</em>
-                                            <strong onClick={() => {
+                                            <Button variant="outline-primary" onClick={() => {
                                                 increaseQuantity()
-                                            }}> + </strong></td>
+                                            }}><strong>+</strong></Button>{' '}
+                                        </td>
                                     </tr>
                                 </Table>
 
                                 <div>
-                                    <p>충 상픔 금액 : <strong>{formatPrice(totalAmount)}</strong></p>
+                                    <p>충 상픔 금액 : <strong>{formatPrice(totalAmount)}원</strong></p>
                                 </div>
 
                                 <br/><br/><br/><br/><br/>
-
-                                <div>
-                                    <Button variant="info" onClick={addCartItem}>장바구니 담기</Button>
+                                <div className="d-grid gap-2">
+                                    <Button variant="info" size={"lg"} onClick={addCartItem}>장바구니 담기</Button>{' '}
                                 </div>
+
                             </div>
 
                         </div>
-
                     </div>
                 </div>
 

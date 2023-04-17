@@ -92,7 +92,7 @@ function App() {
                 <Route path="/public/items/category/:categoryName" element={<Items navigate={navigate}/>}/>
                 <Route path="/public/signup" element={<Signup navigate={navigate}/>}/>
                 <Route path="/login" element={<Login/>}/>
-                <Route path="/public/item/:itemSeq" element={<Item />}/>
+                <Route path="/public/item/:itemSeq" element={<Item navigate={navigate}/>}/>
             </Routes>
         </div>
 

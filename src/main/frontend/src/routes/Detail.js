@@ -16,7 +16,7 @@ function Detail(props) {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        axios.get(`/public/item/${itemSeq}`)
+        axios.get(`/api/public/item/${itemSeq}`)
             .then(data => {
                 const copy = data.data;
                 setItem(copy);
@@ -40,7 +40,7 @@ function Detail(props) {
 
     useEffect(() => {
         setTotalAmount(item.price * quantity);
-    }, [itemSeq, quantity]);
+    }, [item, quantity]);
 
     const addCartItem = () => {
         dispatch(insertItem({
@@ -85,7 +85,7 @@ function Detail(props) {
                                     </tr>
                                     <tr>
                                         <td>원산지</td>
-                                        <td>{item.origin && formatPrice(item.origin)}</td>
+                                        <td>{item.origin}</td>
                                     </tr>
                                     <tr>
                                         <td>유통기한</td>

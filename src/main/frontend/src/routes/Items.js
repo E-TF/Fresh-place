@@ -8,7 +8,7 @@ function Items(props) {
     let {categoryName} = useParams();
 
     useEffect(() => {
-        axios.get(`/public/items/category?codeEngName=${categoryName}`)
+        axios.get(`/api/public/items/category?codeEngName=${categoryName}`)
             .then(data => {
                 let copy = [...data.data];
                 setItems(copy);

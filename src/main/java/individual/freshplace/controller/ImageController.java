@@ -15,7 +15,7 @@ public class ImageController {
 
     private final ImageUploadService imageUploadService;
 
-    @PostMapping("/admin/image/upload")
+    @PostMapping("/api/admin/image/upload")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ImageUploadResponse itemsUploadRequest(@RequestParam("objectName") Long objectName,
                                                                   @RequestParam("image") MultipartFile multipartFile) {

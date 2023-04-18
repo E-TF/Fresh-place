@@ -55,7 +55,7 @@ const CartItem = (props) => {
     return (
         <>
             <tr>
-                <td><img src={item.thumbnail} width={'30px'}/></td>
+                <td><img alt={'thumbNail'} src={item.thumbnail} width={'30px'}/></td>
                 <td>{item.name}</td>
                 <td>
                     <Button variant="outline-secondary" onClick={() => {

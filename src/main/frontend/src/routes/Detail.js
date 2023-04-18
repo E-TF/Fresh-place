@@ -16,7 +16,6 @@ function Detail(props) {
             .then(data => {
                 const copy = data.data;
                 setItem(copy);
-                setTotalAmount(copy.price * quantity);
             })
             .catch(() => {
                 alert('존재하지 않는 상품입니다.');
@@ -25,7 +24,7 @@ function Detail(props) {
     }, [itemSeq])
 
     const decreaseQuantity = () => {
-        if (quantity === 0) {
+        if (quantity <= 0) {
             return;
         }
         setQuantity(quantity - 1);
@@ -37,7 +36,7 @@ function Detail(props) {
 
     useEffect(() => {
         setTotalAmount(item.price * quantity);
-    }, [quantity]);
+    }, [itemSeq, quantity]);
 
     return (
         <>
@@ -48,7 +47,7 @@ function Detail(props) {
                         <div>
                             <div style={{float: 'left'}}>
                                 {
-                                    item.imageUrlList && <img src={item.imageUrlList[0]}/>
+                                    item.imageUrlList && <img alt={'thumbNail'} src={item.imageUrlList[0]}/>
                                 }
                             </div>
                             <div style={{float: 'right'}}>
@@ -117,7 +116,7 @@ function Detail(props) {
 
                             <>
                                 <div className="row">
-                                    <img src={a}/>
+                                    <img alt={'imageList'} src={a}/>
                                 </div>
                             </>
                         )

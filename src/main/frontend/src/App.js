@@ -30,7 +30,7 @@ function App() {
 
     useEffect(() => {
         getAuthorization() ? setLoginStatus(getAuthorization()) : setLoginStatus(null);
-    });
+    }, []);
 
     return (
         <div className="App">

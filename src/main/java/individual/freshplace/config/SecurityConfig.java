@@ -64,7 +64,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web
                 .ignoring()
-                .antMatchers("/static/**");
+                .antMatchers("/static/**")
+                .antMatchers("/favicon.ico")
+                .antMatchers("/logo192.png")
+                .antMatchers("/logo512.png")
+                .antMatchers("/manifest.json");
     }
 
     @Override
@@ -79,21 +83,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .mvcMatchers(HttpMethod.POST, "/login").permitAll()
-                .mvcMatchers(HttpMethod.PATCH, "/reissue").permitAll()
-                .mvcMatchers(HttpMethod.DELETE, "/members/logout").permitAll()
-
-                .mvcMatchers(HttpMethod.GET, "/public/**").permitAll()
-                .mvcMatchers(HttpMethod.POST, "/public/**").permitAll()
-                .mvcMatchers(HttpMethod.DELETE, "/public/**").permitAll()
+                .mvcMatchers(HttpMethod.POST, "/api/login").permitAll()
+                .mvcMatchers(HttpMethod.PATCH, "/api/reissue").permitAll()
+                .mvcMatchers(HttpMethod.DELETE, "/api/members/logout").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/api/public/**").permitAll()
+                .mvcMatchers(HttpMethod.POST, "/api/public/**").permitAll()
+                .mvcMatchers(HttpMethod.DELETE, "/api/public/**").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/api/admin/**").hasAuthority(List.of(Authority.ADMIN.name()).toString())
+                .mvcMatchers(HttpMethod.POST, "/api/admin/**").hasAuthority(List.of(Authority.ADMIN.name()).toString())
+                .mvcMatchers(HttpMethod.PUT, "/api/admin/**").hasAuthority(List.of(Authority.ADMIN.name()).toString())
 
                 .mvcMatchers(HttpMethod.GET, "/").permitAll()
-
-                .mvcMatchers(HttpMethod.GET, "/image/**").permitAll()
-
-                .mvcMatchers(HttpMethod.GET, "/admin/**").hasAuthority(List.of(Authority.ADMIN.name()).toString())
-                .mvcMatchers(HttpMethod.POST, "/admin/**").hasAuthority(List.of(Authority.ADMIN.name()).toString())
-                .mvcMatchers(HttpMethod.PUT, "/admin/**").hasAuthority(List.of(Authority.ADMIN.name()).toString())
+                .mvcMatchers(HttpMethod.GET, "/public/**").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/members/**").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/login").permitAll()
 
                 .anyRequest().authenticated()
                 .and()

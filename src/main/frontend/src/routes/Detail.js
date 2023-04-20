@@ -12,7 +12,7 @@ function Detail(props) {
     const [totalAmount, setTotalAmount] = useState(0);
 
     useEffect(() => {
-        axios.get(`/public/item/${itemSeq}`)
+        axios.get(`/api/public/item/${itemSeq}`)
             .then(data => {
                 const copy = data.data;
                 setItem(copy);

@@ -6,6 +6,7 @@ import axios from 'axios'
 import Items from "./routes/Items";
 import Signup from "./routes/Signup";
 import {getAuthorization, Login, Logout} from "./routes/Authentication";
+import Item from "./routes/Detail";
 
 function App() {
 
@@ -91,6 +92,7 @@ function App() {
                 <Route path="/public/items/category/:categoryName" element={<Items navigate={navigate}/>}/>
                 <Route path="/public/signup" element={<Signup navigate={navigate}/>}/>
                 <Route path="/login" element={<Login/>}/>
+                <Route path="/public/item/:itemSeq" element={<Item navigate={navigate}/>}/>
             </Routes>
         </div>
 

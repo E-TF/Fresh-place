@@ -13,10 +13,11 @@ function App() {
 
     const navigate = useNavigate();
     const logout = () => {
-        Logout(navigate);
-    }
-    let [category, setCategory] = useState([]);
-    let [loginStatus, setLoginStatus] = useState();
+        Logout(navigate)
+    };
+
+    const [category, setCategory] = useState([]);
+    const [loginStatus, setLoginStatus] = useState();
 
     useEffect(() => {
         axios.get('/public/category')
@@ -31,7 +32,7 @@ function App() {
 
     useEffect(() => {
         getAuthorization() ? setLoginStatus(getAuthorization()) : setLoginStatus(null);
-    }, []);
+    });
 
     return (
         <div className="App">
@@ -90,11 +91,11 @@ function App() {
                         <div className="main-bg"/>
                     </>
                 }/>
-                <Route path="/public/items/category/:categoryName" element={<Items navigate={navigate}/>}/>
-                <Route path="/public/signup" element={<Signup navigate={navigate}/>}/>
+                <Route path="/public/items/category/:categoryName" element={<Items/>}/>
+                <Route path="/public/signup" element={<Signup/>}/>
                 <Route path="/login" element={<Login/>}/>
-                <Route path="/public/item/:itemSeq" element={<Item navigate={navigate}/>}/>
-                <Route path="/public/cart" element={<Cart navigate={navigate}/>}/>
+                <Route path="/public/item/:itemSeq" element={<Item/>}/>
+                <Route path="/public/cart" element={<Cart/>}/>
             </Routes>
         </div>
 

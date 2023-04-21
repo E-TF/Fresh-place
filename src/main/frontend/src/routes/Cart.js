@@ -3,17 +3,19 @@ import {useDispatch, useSelector} from "react-redux";
 import {Table} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import {decreaseItem, increaseItem, removeItem} from "../store/cartItemSlice";
+import {useNavigate} from "react-router-dom";
 
 export const formatPrice = (target) => {
-    if (target) {
+    if (typeof target === 'number') {
         return target.toLocaleString('ko-KR');
     }
+    return '#';
 }
 
-function Cart(props) {
+function Cart() {
 
     const items = useSelector((state) => state.cartItem);
-    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     return (
         <>
@@ -29,7 +31,7 @@ function Cart(props) {
                                 <tbody>
                                 {
                                     items.map((item, i) => {
-                                        return <CartItem key={i} item={item} dispatch={dispatch}/>
+                                        return <CartItem key={i} item={item}/>
                                     })
                                 }
                                 </tbody>
@@ -38,7 +40,7 @@ function Cart(props) {
                         :
                         <>
                             <p>장바구니가 비어있습니다. </p>
-                            <Button variant="info" onClick={() => props.navigate('/')}>쇼핑하러 가기</Button>
+                            <Button variant="info" onClick={() => navigate('/')}>쇼핑하러 가기</Button>
                         </>
                     }
                 </Container>
@@ -47,10 +49,9 @@ function Cart(props) {
     )
 }
 
-const CartItem = (props) => {
+const CartItem = ({item}) => {
 
-    const item = props.item;
-    const dispatch = props.dispatch;
+    const dispatch = useDispatch();
 
     return (
         <>

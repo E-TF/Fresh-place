@@ -1,16 +1,18 @@
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {useEffect, useState} from "react";
+import {formatPrice} from "./Cart";
 
-function Items(props) {
+function Items() {
 
-    let [items, setItems] = useState([]);
-    let {categoryName} = useParams();
+    const [items, setItems] = useState([]);
+    const {categoryName} = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`/public/items/category?codeEngName=${categoryName}`)
             .then(data => {
-                let copy = [...data.data];
+                const copy = [...data.data];
                 setItems(copy);
             })
             .catch(error => {
@@ -29,9 +31,9 @@ function Items(props) {
                         {
                             items.map((item) =>
                                 <div key={item.itemSeq} className="col-md-4">
-                                    <img alt={'thumbNail'} src={item.thumbNailImage} width="100%" height="100%" onClick={() => props.navigate(`/public/item/${item.itemSeq}`)}/>
+                                    <img alt={'thumbNail'} src={item.thumbNailImage} width="100%" height="100%" onClick={() => navigate(`/public/item/${item.itemSeq}`)}/>
                                     <h4 className="pt-5">{item.itemName}</h4>
-                                    <p>{item.price}원</p>
+                                    <p>{item.price && formatPrice(item.price)}원</p>
                                 </div>
                             )
                         }

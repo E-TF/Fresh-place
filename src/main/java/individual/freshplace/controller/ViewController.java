@@ -1,19 +1,15 @@
 package individual.freshplace.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
-public class ViewController implements ErrorController {
+public class ViewController {
 
-    @GetMapping("/error")
-    public String redirectIndex(HttpServletResponse httpServletResponse) {
-        log.error(httpServletResponse.getStatus() + " error");
+    @RequestMapping("/index")
+    public String redirectIndex() {
         return "index.html";
     }
 }

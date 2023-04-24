@@ -86,7 +86,7 @@ function Detail() {
                                     </tr>
                                     <tr>
                                         <td>원산지</td>
-                                        <td>{item.origin && formatPrice(item.origin)}</td>
+                                        <td>{item.origin}</td>
                                     </tr>
                                     <tr>
                                         <td>유통기한</td>

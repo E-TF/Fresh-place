@@ -22,13 +22,11 @@ const cartItem = createSlice({
                     state[nums].quantity--;
                     state[nums].totalAmount = state[nums].quantity * state[nums].price;
                 }()
-                : removeItem(state, action);
+                : removeItem(state[nums].id);
 
         },
         removeItem(state, action) {
-            const copy = [...state];
-            copy.splice(action.payload, 1);
-            return copy;
+            return state.filter(item => item.id !== action.payload);
         }
     }
 });

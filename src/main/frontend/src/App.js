@@ -12,10 +12,6 @@ import Cart from "./routes/Cart";
 function App() {
 
     const navigate = useNavigate();
-    const logout = () => {
-        Logout(navigate)
-    };
-
     const [category, setCategory] = useState([]);
     const [loginStatus, setLoginStatus] = useState();
 
@@ -33,6 +29,8 @@ function App() {
     useEffect(() => {
         getAuthorization() ? setLoginStatus(getAuthorization()) : setLoginStatus(null);
     });
+
+    const logout = () => Logout(navigate);
 
     return (
         <div className="App">

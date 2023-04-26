@@ -1,15 +1,16 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {Table} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 
-function Detail(props) {
+function Detail() {
 
     const {itemSeq} = useParams();
     const [item, setItem] = useState([]);
     const [quantity, setQuantity] = useState(1);
     const [totalAmount, setTotalAmount] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`/public/item/${itemSeq}`)
@@ -19,9 +20,9 @@ function Detail(props) {
             })
             .catch(() => {
                 alert('존재하지 않는 상품입니다.');
-                props.navigate(-1);
+                navigate(-1);
             });
-    }, [itemSeq])
+    }, [itemSeq, navigate])
 
     const decreaseQuantity = () => {
         if (quantity <= 0) {
@@ -36,7 +37,7 @@ function Detail(props) {
 
     useEffect(() => {
         setTotalAmount(item.price * quantity);
-    }, [itemSeq, quantity]);
+    }, [item, quantity]);
 
     return (
         <>

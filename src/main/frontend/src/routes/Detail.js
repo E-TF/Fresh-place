@@ -4,6 +4,8 @@ import {useNavigate, useParams} from "react-router-dom";
 import {Table} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import {formatPrice} from "./Cart";
+import {useDispatch} from "react-redux";
+import {insertItem} from "../store/cartItemSlice";
 
 function Detail() {
 
@@ -12,6 +14,7 @@ function Detail() {
     const [quantity, setQuantity] = useState(1);
     const [totalAmount, setTotalAmount] = useState(0);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         axios.get(`/public/item/${itemSeq}`)
@@ -26,7 +29,7 @@ function Detail() {
     }, [itemSeq, navigate]);
 
     const decreaseQuantity = () => {
-        if (quantity <= 0) {
+        if (quantity <= 1) {
             return;
         }
         setQuantity(quantity - 1);
@@ -39,6 +42,17 @@ function Detail() {
     useEffect(() => {
         setTotalAmount(item.price * quantity);
     }, [item, quantity]);
+
+    const addCartItem = () => {
+        dispatch(insertItem({
+            id: itemSeq,
+            name: item.itemName,
+            thumbnail: item.imageUrlList[0],
+            price: item.price,
+            quantity: quantity,
+            totalAmount: totalAmount
+        }));
+    };
 
     return (
         <>
@@ -99,7 +113,8 @@ function Detail() {
                                 <br/><br/><br/><br/><br/>
 
                                 <div className="d-grid gap-2">
-                                    <Button variant="info" size={"lg"}>장바구니 담기</Button>{' '}
+                                    <Button variant="info" size={"lg"} onClick={() => addCartItem()}>장바구니
+                                        담기</Button>{' '}
                                 </div>
                             </div>
 

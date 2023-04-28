@@ -17,7 +17,7 @@ const cartItem = createSlice({
         },
         decreaseItem(state, action) {
             const nums = state.findIndex(a => a.id === action.payload);
-            state[nums].quantity > 0 ?
+            state[nums].quantity > 1 ?
                 function (){
                     state[nums].quantity--;
                     state[nums].totalAmount = state[nums].quantity * state[nums].price;

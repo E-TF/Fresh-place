@@ -30,8 +30,6 @@ function App() {
         getAuthorization() ? setLoginStatus(getAuthorization()) : setLoginStatus(null);
     });
 
-    const logout = () => Logout(navigate);
-
     return (
         <div className="App">
 
@@ -75,7 +73,7 @@ function App() {
                                 </>
                                 :
                                 <>
-                                    <Nav.Link onClick={logout}>Logout</Nav.Link>
+                                    <Nav.Link href={"/members/logout"}>Logout</Nav.Link>
                                 </>
                             }
                         </Nav>
@@ -94,6 +92,7 @@ function App() {
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/public/item/:itemSeq" element={<Item/>}/>
                 <Route path="/public/cart" element={<Cart/>}/>
+                <Route path="/members/logout" element={<Logout/>}/>
             </Routes>
         </div>
 

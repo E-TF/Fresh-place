@@ -3,9 +3,7 @@ import axios from "axios";
 import {useNavigate, useParams} from "react-router-dom";
 import {Table} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import {insertItem} from "../store/cartItemSlice";
 import {formatPrice} from "./Cart";
-import {useDispatch} from "react-redux";
 
 function Detail() {
 
@@ -13,7 +11,6 @@ function Detail() {
     const [item, setItem] = useState([]);
     const [quantity, setQuantity] = useState(1);
     const [totalAmount, setTotalAmount] = useState(0);
-    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,7 +23,7 @@ function Detail() {
                 alert('존재하지 않는 상품입니다.');
                 navigate(-1);
             });
-    }, [itemSeq]);
+    }, [itemSeq, navigate]);
 
     const decreaseQuantity = () => {
         if (quantity <= 0) {
@@ -42,17 +39,6 @@ function Detail() {
     useEffect(() => {
         setTotalAmount(item.price * quantity);
     }, [item, quantity]);
-
-    const addCartItem = () => {
-        dispatch(insertItem({
-            id: itemSeq,
-            name: item.itemName,
-            thumbnail: item.imageUrlList[0],
-            price: item.price,
-            quantity: quantity,
-            totalAmount: totalAmount
-        }));
-    };
 
     return (
         <>
@@ -75,7 +61,7 @@ function Detail() {
                                 <br/>
 
                                 <div>
-                                    <h2>{item.price && formatPrice(item.price)}원</h2>
+                                    <h2>{formatPrice(item.price)}원</h2>
                                 </div>
                                 <hr/>
 
@@ -107,17 +93,18 @@ function Detail() {
                                 </Table>
 
                                 <div>
-                                    <p>충 상픔 금액 : <strong>{totalAmount && formatPrice(totalAmount)}원</strong></p>
+                                    <p>충 상픔 금액 : <strong>{formatPrice(totalAmount)}원</strong></p>
                                 </div>
 
                                 <br/><br/><br/><br/><br/>
-                                <div className="d-grid gap-2">
-                                    <Button variant="info" size={"lg"} onClick={addCartItem}>장바구니 담기</Button>{' '}
-                                </div>
 
+                                <div className="d-grid gap-2">
+                                    <Button variant="info" size={"lg"}>장바구니 담기</Button>{' '}
+                                </div>
                             </div>
 
                         </div>
+
                     </div>
                 </div>
 

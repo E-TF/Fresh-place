@@ -37,7 +37,7 @@ export const Login = () => {
         }
 
         await axios.post(
-            '/login'
+            '/api/login'
             , formData
             ,{
                 headers: {
@@ -97,7 +97,7 @@ export const Login = () => {
 
 export const ReissueAuthorization = (navigate) => {
     axios
-        .patch('/reissue')
+        .patch('/api/reissue')
         .then(response => {
             setAuthorization(response.data.accessToken);
         })
@@ -112,7 +112,7 @@ export const ReissueAuthorization = (navigate) => {
 
 export const Logout = (navigate) => {
     axios
-        .delete('/members/logout')
+        .delete('/api/members/logout')
         .finally(() => {
             removeAuthorization();
             navigate('/');

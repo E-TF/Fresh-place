@@ -16,6 +16,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class AccountController {
 
     private final SignupService signupService;

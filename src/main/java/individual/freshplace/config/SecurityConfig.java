@@ -2,6 +2,7 @@ package individual.freshplace.config;
 
 import individual.freshplace.util.auth.jwt.*;
 import individual.freshplace.util.constant.Authority;
+import individual.freshplace.util.filter.ViewFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,9 +23,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
-@Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -64,7 +65,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web
                 .ignoring()
-                .antMatchers("/static/**");
+                .antMatchers("/static/**")
+                .antMatchers("/favicon.ico")
+                .antMatchers("/logo192.png")
+                .antMatchers("/logo512.png")
+                .antMatchers("/manifest.json");
     }
 
     @Override
@@ -79,25 +84,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .mvcMatchers(HttpMethod.POST, "/login").permitAll()
-                .mvcMatchers(HttpMethod.PATCH, "/reissue").permitAll()
-                .mvcMatchers(HttpMethod.DELETE, "/members/logout").permitAll()
-
-                .mvcMatchers(HttpMethod.GET, "/public/**").permitAll()
-                .mvcMatchers(HttpMethod.POST, "/public/**").permitAll()
-                .mvcMatchers(HttpMethod.DELETE, "/public/**").permitAll()
-
-                .mvcMatchers(HttpMethod.GET, "/").permitAll()
-
-                .mvcMatchers(HttpMethod.GET, "/image/**").permitAll()
-
-                .mvcMatchers(HttpMethod.GET, "/admin/**").hasAuthority(List.of(Authority.ADMIN.name()).toString())
-                .mvcMatchers(HttpMethod.POST, "/admin/**").hasAuthority(List.of(Authority.ADMIN.name()).toString())
-                .mvcMatchers(HttpMethod.PUT, "/admin/**").hasAuthority(List.of(Authority.ADMIN.name()).toString())
-
+                .mvcMatchers(HttpMethod.POST, "/api/login").permitAll()
+                .mvcMatchers(HttpMethod.PATCH, "/api/reissue").permitAll()
+                .mvcMatchers(HttpMethod.DELETE, "/api/members/logout").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/api/public/**").permitAll()
+                .mvcMatchers(HttpMethod.POST, "/api/public/**").permitAll()
+                .mvcMatchers(HttpMethod.DELETE, "/api/public/**").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/api/admin/**").hasAuthority(List.of(Authority.ADMIN.name()).toString())
+                .mvcMatchers(HttpMethod.POST, "/api/admin/**").hasAuthority(List.of(Authority.ADMIN.name()).toString())
+                .mvcMatchers(HttpMethod.PUT, "/api/admin/**").hasAuthority(List.of(Authority.ADMIN.name()).toString())
                 .anyRequest().authenticated()
+
                 .and()
-                .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new ViewFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtFilter(jwtTokenProvider), ViewFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler);

@@ -54,8 +54,13 @@ function App() {
                                                             <NavDropdown.Item key={subCategory.subCategoryEngName}
                                                                               onClick={() => {
                                                                                   navigate(`public/items/category/${subCategory.subCategoryEngName}`)
-                                                                              }}>
-                                                                {subCategory.subCategoryKorName}
+                                                                              }}
+                                                                              disabled={
+                                                                                  subCategory.subCategoryEngName !== 'driedFruit'
+                                                                                  && subCategory.subCategoryEngName !== 'coffeeDrink'
+                                                                              }>
+                                                                        {subCategory.subCategoryKorName}
+
                                                             </NavDropdown.Item>
                                                             <NavDropdown.Divider/>
                                                         </>

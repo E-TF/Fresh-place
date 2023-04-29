@@ -1,6 +1,6 @@
 import './App.css'
 import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap"
-import {Routes, Route, useNavigate, Link} from "react-router-dom"
+import {Routes, Route, useNavigate} from "react-router-dom"
 import {useEffect, useState} from "react";
 import axios from 'axios'
 import Items from "./routes/Items";
@@ -70,7 +70,7 @@ function App() {
                                 }
                             </NavDropdown>
 
-                            <Link to={'/public/cart'}>Cart</Link>
+                            <Nav.Link href="/public/cart">Cart</Nav.Link>
                             {loginStatus == null ?
                                 <>
                                     <Nav.Link href="/login">Login</Nav.Link>

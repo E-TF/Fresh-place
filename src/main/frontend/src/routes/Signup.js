@@ -17,7 +17,7 @@ function Signup() {
     const navigate = useNavigate();
 
     const onSubmit = async (formData) => {
-        await axios.post('/public/signup', formData, {headers: {"Content-Type": `application/json`}})
+        await axios.post('/api/public/signup', formData, {headers: {"Content-Type": `application/json`}})
             .then(() => {
                 alert('축하합니다! 회원가입에 성공하였습니다.');
                 navigate('/login');

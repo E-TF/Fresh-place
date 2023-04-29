@@ -17,7 +17,7 @@ function Detail() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        axios.get(`/public/item/${itemSeq}`)
+        axios.get(`/api/public/item/${itemSeq}`)
             .then(data => {
                 const copy = data.data;
                 setItem(copy);

@@ -11,11 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/admin/image/upload")
 public class ImageController {
 
     private final ImageUploadService imageUploadService;
 
-    @PostMapping("/admin/image/upload")
+    @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ImageUploadResponse itemsUploadRequest(@RequestParam("objectName") Long objectName,
                                                                   @RequestParam("image") MultipartFile multipartFile) {

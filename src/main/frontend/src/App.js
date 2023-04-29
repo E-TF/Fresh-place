@@ -16,7 +16,7 @@ function App() {
     const [loginStatus, setLoginStatus] = useState();
 
     useEffect(() => {
-        axios.get('/public/category')
+        axios.get('/api/public/category')
             .then(data => {
                 setCategory(data.data);
             })
@@ -52,8 +52,13 @@ function App() {
                                                             <NavDropdown.Item key={subCategory.subCategoryEngName}
                                                                               onClick={() => {
                                                                                   navigate(`public/items/category/${subCategory.subCategoryEngName}`)
-                                                                              }}>
-                                                                {subCategory.subCategoryKorName}
+                                                                              }}
+                                                                              disabled={
+                                                                                  subCategory.subCategoryEngName !== 'driedFruit'
+                                                                                  && subCategory.subCategoryEngName !== 'coffeeDrink'
+                                                                              }>
+                                                                        {subCategory.subCategoryKorName}
+
                                                             </NavDropdown.Item>
                                                             <NavDropdown.Divider/>
                                                         </>

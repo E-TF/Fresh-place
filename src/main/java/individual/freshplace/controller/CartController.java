@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/public/cart-item")
+@RequestMapping("/api/public/cart-item")
 public class CartController {
 
     private final CartReadService cartReadService;

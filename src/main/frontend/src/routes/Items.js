@@ -10,7 +10,7 @@ function Items() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`/public/items/category?codeEngName=${categoryName}`)
+        axios.get(`/api/public/items/category?codeEngName=${categoryName}`)
             .then(data => {
                 const copy = [...data.data];
                 setItems(copy);

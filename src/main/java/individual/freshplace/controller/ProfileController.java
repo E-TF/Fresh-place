@@ -15,17 +15,18 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/members/profile")
 public class ProfileController {
 
     private final ProfileService profileService;
 
-    @GetMapping("/members/profile")
+    @GetMapping
     @Cacheable(cacheNames = Cache.PROFILE, key = "#principalDetails.getUsername()")
     public ProfileResponse getProfile(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         return profileService.getProfile(principalDetails.getUsername());
     }
 
-    @PutMapping("/members/profile")
+    @PutMapping
     @CachePut(cacheNames = Cache.ITEM, key = "#profileUpdateRequest.getMemberId()")
     public ProfileResponse updateProfile(@AuthenticationPrincipal PrincipalDetails principalDetails, @Valid @RequestBody ProfileUpdateRequest profileUpdateRequest) {
         return profileService.updateProfile(principalDetails.getUsername(), profileUpdateRequest);

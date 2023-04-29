@@ -13,7 +13,7 @@ function Detail() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`/public/item/${itemSeq}`)
+        axios.get(`/api/public/item/${itemSeq}`)
             .then(data => {
                 const copy = data.data;
                 setItem(copy);

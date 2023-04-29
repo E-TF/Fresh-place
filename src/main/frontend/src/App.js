@@ -18,7 +18,7 @@ function App() {
     let [loginStatus, setLoginStatus] = useState();
 
     useEffect(() => {
-        axios.get('/public/category')
+        axios.get('/api/public/category')
             .then(data => {
                 setCategory(data.data);
             })

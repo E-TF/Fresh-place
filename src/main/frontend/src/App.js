@@ -7,15 +7,13 @@ import Items from "./routes/Items";
 import Signup from "./routes/Signup";
 import {getAuthorization, Login, Logout} from "./routes/Authentication";
 import Item from "./routes/Detail";
+import Cart from "./routes/Cart";
 
 function App() {
 
     const navigate = useNavigate();
-    const logout = () => {
-        Logout(navigate);
-    }
-    let [category, setCategory] = useState([]);
-    let [loginStatus, setLoginStatus] = useState();
+    const [category, setCategory] = useState([]);
+    const [loginStatus, setLoginStatus] = useState();
 
     useEffect(() => {
         axios.get('/api/public/category')
@@ -30,7 +28,7 @@ function App() {
 
     useEffect(() => {
         getAuthorization() ? setLoginStatus(getAuthorization()) : setLoginStatus(null);
-    }, []);
+    });
 
     return (
         <div className="App">
@@ -72,7 +70,7 @@ function App() {
                                 }
                             </NavDropdown>
 
-                            <Nav.Link href="/">Cart</Nav.Link>
+                            <Nav.Link href="/public/cart">Cart</Nav.Link>
                             {loginStatus == null ?
                                 <>
                                     <Nav.Link href="/login">Login</Nav.Link>
@@ -80,7 +78,7 @@ function App() {
                                 </>
                                 :
                                 <>
-                                    <Nav.Link onClick={logout}>Logout</Nav.Link>
+                                    <Nav.Link href={"/members/logout"}>Logout</Nav.Link>
                                 </>
                             }
                         </Nav>
@@ -94,10 +92,12 @@ function App() {
                         <div className="main-bg"/>
                     </>
                 }/>
-                <Route path="/public/items/category/:categoryName" element={<Items navigate={navigate}/>}/>
-                <Route path="/public/signup" element={<Signup navigate={navigate}/>}/>
+                <Route path="/public/items/category/:categoryName" element={<Items/>}/>
+                <Route path="/public/signup" element={<Signup/>}/>
                 <Route path="/login" element={<Login/>}/>
-                <Route path="/public/item/:itemSeq" element={<Item navigate={navigate}/>}/>
+                <Route path="/public/item/:itemSeq" element={<Item/>}/>
+                <Route path="/public/cart" element={<Cart/>}/>
+                <Route path="/members/logout" element={<Logout/>}/>
             </Routes>
         </div>
 

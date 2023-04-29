@@ -4,8 +4,9 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import {useForm} from "react-hook-form";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
-function Signup(props) {
+function Signup() {
 
     const {
         register,
@@ -13,11 +14,13 @@ function Signup(props) {
         formState : {errors}
     } = useForm();
 
+    const navigate = useNavigate();
+
     const onSubmit = async (formData) => {
         await axios.post('/api/public/signup', formData, {headers: {"Content-Type": `application/json`}})
             .then(() => {
                 alert('축하합니다! 회원가입에 성공하였습니다.');
-                props.navigate('/login');
+                navigate('/login');
             })
             .catch((error) => alert(error));
     }

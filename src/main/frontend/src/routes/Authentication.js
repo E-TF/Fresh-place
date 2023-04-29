@@ -32,14 +32,14 @@ export const Login = () => {
     const onSubmit = async (e) => {
         await e.preventDefault()
         const formData = {
-            "memberId" : memberId,
-            "password" : password
+            "memberId": memberId,
+            "password": password
         }
 
         await axios.post(
             '/api/login'
             , formData
-            ,{
+            , {
                 headers: {
                     'Content-Type': `application/json`
                 }
@@ -56,14 +56,14 @@ export const Login = () => {
     return (
 
         <>
-            <div className="standard-area" style={{paddingLeft:"20%", paddingRight:"20%"}}>
+            <div className="standard-area" style={{paddingLeft: "20%", paddingRight: "20%"}}>
                 <Container className="panel">
 
                     <div>
                         <h1>로그인</h1>
                     </div>
 
-                    <br /><br />
+                    <br/><br/>
 
                     <Form onSubmit={onSubmit}>
                         <Form.Group as={Row} className="mb-3" controlId="memberId">
@@ -95,7 +95,8 @@ export const Login = () => {
     );
 }
 
-export const ReissueAuthorization = (navigate) => {
+export const ReissueAuthorization = () => {
+    const navigate = useNavigate();
     axios
         .patch('/api/reissue')
         .then(response => {
@@ -107,10 +108,11 @@ export const ReissueAuthorization = (navigate) => {
             }
             alert('로그인을 다시 해주세요');
             navigate('/login');
-        })
+        });
 }
 
-export const Logout = (navigate) => {
+export const Logout = () => {
+    const navigate = useNavigate();
     axios
         .delete('/api/members/logout')
         .finally(() => {

@@ -7,12 +7,11 @@
 
 ✅ 서버 구조
 ---
-![deploy](https://user-images.githubusercontent.com/80368511/230966349-1112b1dc-bb71-47b4-ae22-ca722ca7ccb3.png)
+![deploy@1 25x](https://user-images.githubusercontent.com/80368511/235368709-709f0687-696f-4936-ad12-a0d88d06da0e.png)
 
 ✅ ERD
 ---
 ![image](https://user-images.githubusercontent.com/80368511/230974079-6e5b31b7-8f22-4a68-b4f1-9ddd3125df42.png)
-
 ✅ 중점 사항
 ---
 - 문서화

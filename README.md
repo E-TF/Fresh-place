@@ -10,7 +10,7 @@
 
 ✅ 중점 사항
 ---
-- https://github.com/E-TF/Fresh-place/wiki/Issue
+- https://github.com/E-TF/Fresh-place/wiki
 - stateless 한 토큰을 사용한 인증/인가 처리
 - BDD Mockito 단위테스트와 통홥 테스트 사용
 - Redis Cache를 사용한 카테고리와 상품조회
